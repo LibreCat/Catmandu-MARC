@@ -151,7 +151,7 @@ sub marc_field {
 
     for (@$marc_item) {
       my ($tag,$ind1,$ind2,@subfields) = @$_;
-      unless (index($tag,0) == 0 || $tag eq 'LDR') {
+      unless ($tag =~ /^00/ || $tag eq 'LDR') {
         splice(@subfields,0,2);
       }
       push(@results,\@subfields) if $tag =~ /$field/;
