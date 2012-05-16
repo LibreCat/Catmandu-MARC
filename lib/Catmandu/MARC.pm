@@ -6,11 +6,11 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0101
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 =head1 MODULES
 
@@ -37,8 +37,6 @@ our $VERSION = '0.01';
 =back
 
 =head1 LICENSE AND COPYRIGHT
-
-Copyright 2012 Ghent University Library
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
