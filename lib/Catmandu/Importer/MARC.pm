@@ -58,7 +58,7 @@ sub marc_generator {
 
     given($self->type) {
 	    when ('USMARC') {
-	        $file =  MARC::File::USMARC->in($self->fh); 
+	        $file = MARC::File::USMARC->in($self->fh); 
 	    }
         when ('MicroLIF') {
             $file = MARC::File::MicroLIF->in($self->fh);

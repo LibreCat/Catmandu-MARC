@@ -35,7 +35,7 @@ sub fix {
            $marcxml .= &marc_controlfield($tag, join("",@data));
         } 
         elsif ($tag !~ /^00.|FMT|LDR/) { 
-           $marcxml .= &marc_datafield($tag,@data);
+           $marcxml .= &marc_datafield($tag,$ind1,$ind2,@data);
         }  
     }
 
