@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0102  2012-05-25
+  - fix indicator bug
+
 0.0101  2012-05-16
   - fix control field bug
 
