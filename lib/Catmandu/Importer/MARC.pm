@@ -84,11 +84,11 @@ sub marc_generator {
 
             my @sf = ();
 
+            push @sf , '_' , ($field->is_control_field ? $field->data : '');
+
             for my $subfield ($field->subfields) {
                 push @sf , @$subfield;
             }
-
-            push @sf , '_' , $field->data if $field->is_control_field;
 
             push @result, [$tag,$ind1,$ind2,@sf];
         }
