@@ -1,5 +1,9 @@
 Revision history for Catmandu-MARC
 
+0.0103  2012-06-14
+  - add configurable identifier field (default 001)
+  - add virtual '_' to every field to make USMARC|MicroLIF|XML and ALEPHSEQ output equal
+
 0.0102  2012-05-25
   - fix indicator bug
 
