@@ -9,6 +9,7 @@ use MARC::File::XML;
 with 'Catmandu::Importer';
 
 has type => (is => 'ro' , default => sub { 'USMARC' });
+has id   => (is => 'ro' , default => sub { '001' });
 
 sub aleph_generator {
     my $self = shift;
@@ -69,6 +70,8 @@ sub marc_generator {
 	    die "unknown";
     }
 
+    my $id = $self->id;
+
     sub {
         my $record = $file->next();
         return unless $record;
@@ -84,16 +87,24 @@ sub marc_generator {
 
             my @sf = ();
 
+            push @sf , '_' , ($field->is_control_field ? $field->data : '');
+
             for my $subfield ($field->subfields) {
                 push @sf , @$subfield;
             }
 
-            push @sf , '_' , $field->data if $field->is_control_field;
-
             push @result, [$tag,$ind1,$ind2,@sf];
         }
 
-        my $sysid = $record->field('001') ? $record->field('001')->data : undef;
+        my $sysid = undef;
+
+        if ($id =~ /^00/) {
+            $sysid = $record->field($id);
+        }
+        elsif (defined $id) {
+            $sysid = $record->field($id)->subfield("a");
+        }
+
         return { _id => $sysid , record => \@result };
     };
 }
@@ -157,11 +168,13 @@ identifier of the record) and 'record' containing an ARRAY of ARRAYs for every f
 
 =head1 METHODS
 
-=head2 new(file => $filename,type=>$type)
+=head2 new(file => $filename,type=>$type,[id=>$id_field])
 
 Create a new MARC importer for $filename. Use STDIN when no filename is given. Type 
 describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF 
 , XML and ALEPHSEQ.
+Optionally provide an 'id' option pointing to the identifier field of the MARC record
+(default 001).
 
 =head2 count
 
