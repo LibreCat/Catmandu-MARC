@@ -24,7 +24,20 @@ sub aleph_generator {
            next unless (length $_ >= 18);
 
            my ($sysid,$s1,$tag,$ind1,$ind2,$s2,$char,$s3,$data) = unpack("A9A1A3A1A1A1A1A1U0A*",$_);
-           utf8::decode($data);
+           unless ($tag =~ m{^[0-9A-Z]+}) {
+               warn "skipping $sysid $tag unknown tag";
+               next;
+           }
+           unless ($ind1 =~ m{[A-Za-z0-9]}) {
+               $ind1 = " ";
+           }
+           unless ($ind2 =~ m{[A-Za-z0-9]}) {
+               $ind2 = " ";
+           }
+           unless (utf8::decode($data)) {
+               warn "skipping $sysid $tag unknown data";
+               next;
+           }
            my @parts = ('_' , split(/\$\$(.)/, $data) );
            # If we have an empty subfield at the end, then we need to add a implicit empty value
            push(@parts,'') unless int(@parts) % 2 == 0;
