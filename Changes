@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0105  2012-10-10
+  - fix missing uppercase subfield datafield
+
 0.0104  2012-10-09
   - only allow alphanumeric fields in MARCXML export
   - utf8 fixes
