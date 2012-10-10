@@ -64,7 +64,7 @@ sub marc_datafield {
     
     while (@subfields) {
         my ($n,$v) = splice(@subfields,0,2);
-        next unless $n =~ /[a-z0-9]/;
+        next unless $n =~ /[A-Za-z0-9]/;
         $buffer .= "<marc:subfield code=\"" . xml_escape($n) . "\">" . xml_escape($v) . "</marc:subfield>";
     }
 
