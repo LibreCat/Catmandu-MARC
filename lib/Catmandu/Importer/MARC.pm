@@ -112,7 +112,7 @@ sub marc_generator {
         my $sysid = undef;
 
         if ($id =~ /^00/) {
-            $sysid = $record->field($id);
+            $sysid = $record->field($id)->data();
         }
         elsif (defined $id) {
             $sysid = $record->field($id)->subfield("a");
