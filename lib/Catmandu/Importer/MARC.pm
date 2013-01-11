@@ -38,6 +38,9 @@ sub aleph_generator {
                warn "skipping $sysid $tag unknown data";
                next;
            }
+           if ($tag eq 'LDR') {
+               $data =~ s/\^/ /g;
+           }
            my @parts = ('_' , split(/\$\$(.)/, $data) );
            # If we have an empty subfield at the end, then we need to add a implicit empty value
            push(@parts,'') unless int(@parts) % 2 == 0;
