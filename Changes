@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0107  2013-01-11
+  - fix creation of undef value with nonexisting $append key
+
 0.0106  2012-11-09
   - fix _id field value
 
