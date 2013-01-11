@@ -30,6 +30,8 @@ sub fix {
 
     my $fields = &marc_field($marc,$mpath);
 
+    return $data if !@{$fields};
+
     my $match = [ grep ref, data_at($path, $data, key => $key, create => 1)]->[0];
 
     for my $field (@$fields) {
