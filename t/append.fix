@@ -1,0 +1,5 @@
+marc_map('001', 'my.id');
+marc_map('245a', 'my.title');
+marc_map('666', 'my.references.$append');
+
+remove_field('record');
