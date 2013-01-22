@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0108  2013-01-22
+  - fix leader in xml export
+
 0.0107  2013-01-11
   - fix creation of undef value with nonexisting $append key
 
