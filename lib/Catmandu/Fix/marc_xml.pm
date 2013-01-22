@@ -28,6 +28,7 @@ sub fix {
         my ($tag,$ind1,$ind2,@data) = @$f; 
 
         if ($tag eq 'LDR') { 
+           shift @data; 
            $marcxml .= &marc_leader(join("",@data));
         } 
         elsif ($tag =~ /^00/) { 
