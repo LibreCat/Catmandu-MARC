@@ -40,6 +40,8 @@ our $VERSION = '0.010702';
 
 =item * Johann Rolschewski
 
+=item * Nicolas Franck
+
 =back
 
 =head1 LICENSE AND COPYRIGHT

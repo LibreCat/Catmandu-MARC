@@ -4,7 +4,7 @@ use Catmandu::Sane;
 use Moo;
 use MARC::File::USMARC;
 use MARC::File::MicroLIF;
-use MARC::File::XML;
+use MARC::File::XML (BinaryEncoding => 'UTF-8', DefaultEncoding => 'UTF-8', RecordFormat => 'MARC21');
 
 with 'Catmandu::Importer';
 
