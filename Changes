@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0109  2013-02-01
+  - fix MARC21 xml export
+
 0.0108  2013-01-22
   - fix leader in xml export
 

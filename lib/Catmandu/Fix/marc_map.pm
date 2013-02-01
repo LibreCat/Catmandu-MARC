@@ -175,7 +175,7 @@ sub marc_subfield {
     for (my $i = 0 ; $i < @$subfields ; $i += 2) {
       my $code = $subfields->[$i];
       my $val  = $subfields->[$i+1];
-      push(@results,$val) if $code =~ /$regex/;   
+      push(@results,$val) if $code =~ /$regex/;
     }
    
     return \@results;
