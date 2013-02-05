@@ -1,91 +1,43 @@
 package Catmandu::Fix::marc_xml;
 
 use Catmandu::Sane;
-use Catmandu::Util qw(:is :data);
 use Moo;
+use Catmandu::Exporter::MARC;
+use Catmandu::Util qw(:is :data);
 
 has path  => (is => 'ro' , required => 1);
 has key   => (is => 'ro' , required => 1);
+has opts  => (is => 'ro');
 
 around BUILDARGS => sub {
-    my ($orig, $class, $path) = @_;
-    my ($p,$key) = parse_data_path($path) if defined $path && length $path;
-    $orig->($class, path => $p, key => $key);
+    my ($orig, $class, $path, %opts) = @_;
+    $opts{-record} ||= 'record';
+    my ($p, $key) = parse_data_path($path) if defined $path && length $path;;
+    $orig->($class, path => $p, key => $key, opts => \%opts);
 };
 
 # Transform a raw MARC array into MARCXML
 sub fix {
     my ($self, $data) = @_;
 
-    my $path  = $self->path;
-    my $key   = $self->key;
+    my $path = $self->path;
+    my $key  = $self->key;
+    my $marc_pointer = $self->opts->{-record};
 
-    my $match = [ grep ref, data_at($path, $data, key => $key, create => 1)]->[0];
+    my $match = [grep ref, data_at($path, $data, key => $key, create => 1)]->[0];
 
-    my $marcxml = &marc_header;
- 
-    for my $f (@{$data->{record}}) { 
-        my ($tag,$ind1,$ind2,@data) = @$f; 
-
-        if ($tag eq 'LDR') { 
-           shift @data; 
-           $marcxml .= &marc_leader(join("",@data));
-        } 
-        elsif ($tag =~ /^00/) { 
-           shift @data; 
-           $marcxml .= &marc_controlfield($tag, join("",@data));
-        } 
-        elsif ($tag !~ /^00.|FMT|LDR/) { 
-           $marcxml .= &marc_datafield($tag,$ind1,$ind2,@data);
-        }  
-    }
-
-    $marcxml .= &marc_footer;
-
-    $match->{$key} = $marcxml;
+    my $str = "";
+    my $exporter = Catmandu::Exporter::MARC->new(
+        file => \$str,
+        type => 'XML',
+        record_format => 'raw',
+        record => $self->opts->{-record},
+    );
+    $exporter->add($data);
+    $exporter->commit;
+    $match->{$key} = $str;
 
     $data;
-}
-
-sub marc_header {
-    "<marc:record xmlns:marc=\"http://www.loc.gov/MARC21/slim\">";
-}
-
-sub marc_leader {
-    "<marc:leader>" . xml_escape($_[0]) . "</marc:leader>";
-}
-
-sub marc_controlfield {
-    "<marc:controlfield tag=\"" . xml_escape($_[0]) . "\">" . xml_escape($_[1]) . "</marc:controlfield>";
-}
-
-sub marc_datafield {
-    my ($tag,$ind1,$ind2,@subfields) = @_;
-    my $buffer = "<marc:datafield tag=\"" . xml_escape($tag) . "\" ind1=\"" . xml_escape($ind1) . "\" ind2=\"" . xml_escape($ind2) . "\">";
-    
-    while (@subfields) {
-        my ($n,$v) = splice(@subfields,0,2);
-        next unless $n =~ /[A-Za-z0-9]/;
-        $buffer .= "<marc:subfield code=\"" . xml_escape($n) . "\">" . xml_escape($v) . "</marc:subfield>";
-    }
-
-    $buffer .= "</marc:datafield>";
-
-    $buffer;
-}
-
-sub marc_footer {
-    "</marc:record>";
-}
-
-sub xml_escape {
-    local $_ = $_[0];
-    s/&/\&amp;/g;
-    s/</\&lt;/g;
-    s/>/\&gt;/g;
-    s/'/\&apos;/g;
-    s/"/\&quot;/g;
-    $_;
 }
 
 =head1 NAME

@@ -12,6 +12,7 @@ has opts  => (is => 'ro');
 
 around BUILDARGS => sub {
     my ($orig, $class, $mpath, $path, %opts) = @_;
+    $opts{-record} ||= 'record';
     my ($p,$key) = parse_data_path($path) if defined $path && length $path;
     $orig->($class, path => $p, key => $key, mpath => $mpath, opts => \%opts);
 };
@@ -22,11 +23,11 @@ sub fix {
     my $path  = $self->path;
     my $key   = $self->key;
     my $mpath = $self->mpath;
-    my $opts  = $self->opts || {};
+    my $opts  = $self->opts;
     $opts->{-join} = '' unless $opts->{-join};
     
-    my $marc_pointer = $opts->{-record} || 'record';
-    my $marc  = $data->{$marc_pointer}; 
+    my $marc_pointer = $opts->{-record};
+    my $marc = $data->{$marc_pointer}; 
 
     my $fields = &marc_field($marc,$mpath);
 
