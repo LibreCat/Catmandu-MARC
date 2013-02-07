@@ -16,11 +16,11 @@ my $builder = Module::Build->new(
         'Test::More' => 0,
     },
     requires => {
-        'perl' => '5.10.0',
-        'Catmandu' => '0.01',
+        'perl' => '5.10.1',
+        'Catmandu' => '0.04',
         'MARC::File::XML' => '0.93',
         'MARC::Record' => '2.0.3',
-        'Moo' => '0.009011',
+        'Moo' => '1.0',
     },
     add_to_cleanup => [qw(
         Catmandu-MARC-*
