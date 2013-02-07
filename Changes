@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0201  2013-02-07
+  - fix dependencies
+
 0.02    2013-02-05
   - MARCXML exporter
   - make MARC record key configurable everywhere
