@@ -1,185 +1,105 @@
 package Catmandu::Fix::marc_map;
 
 use Catmandu::Sane;
-use Catmandu::Util qw(:is :data);
-use Data::Dumper;
 use Moo;
 
-has path  => (is => 'ro', required => 1);
-has key   => (is => 'ro', required => 1);
-has mpath => (is => 'ro', required => 1);
-has opts  => (is => 'ro');
+has path           => (is => 'ro', required => 1);
+has marc_path      => (is => 'ro', required => 1);
+has record_key     => (is => 'ro', default => sub { "record" });
+has join_char      => (is => 'ro', default => sub { "" });
+has value          => (is => 'ro');
+has field_regex    => (is => 'ro');
+has subfield_regex => (is => 'ro');
+has field          => (is => 'ro');
+has ind1           => (is => 'ro');
+has ind2           => (is => 'ro');
+has from           => (is => 'ro');
+has to             => (is => 'ro');
 
 around BUILDARGS => sub {
-    my ($orig, $class, $mpath, $path, %opts) = @_;
-    $opts{-record} ||= 'record';
-    my ($p,$key) = parse_data_path($path) if defined $path && length $path;
-    $orig->($class, path => $p, key => $key, mpath => $mpath, opts => \%opts);
+    my ($orig, $class, $marc_path, $path, %opts) = @_;
+
+    my $attrs = {
+        marc_path => $marc_path,
+        path => $path,
+    };
+    $attrs->{record_key} = $opts{-record} if defined $opts{-record};
+    $attrs->{join_char}  = $opts{-join}   if defined $opts{-join};
+    $attrs->{value}      = $opts{-value}  if defined $opts{-value};
+
+    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9]+)?(\/(\d+)(-(\d+))?)?/) {
+        $attrs->{field}          = $1;
+        $attrs->{ind1}           = $3;
+        $attrs->{ind2}           = $4;
+        $attrs->{subfield_regex} = $5 ? "[$5]" : "[a-z0-9_]";
+        $attrs->{from}           = $7;
+        $attrs->{to}             = $9;
+    } else {
+        confess "invalid marc path";
+    }
+
+    $attrs->{field_regex} = $attrs->{field};
+    $attrs->{field_regex} =~ s/\*/./g;
+
+    $orig->($class, $attrs);
 };
 
-sub fix {
-    my ($self, $data) = @_;
+sub emit { # TODO -in
+    my ($self, $fixer) = @_;
+    my $path = $fixer->split_path($self->path);
+    my $record_key = $fixer->emit_string($self->record_key);
+    my $join_char = $fixer->emit_string($self->join_char);
+    my $field_regex = $self->field_regex;
+    my $subfield_regex = $self->subfield_regex;
+    my $var = $fixer->var;
 
-    my $path  = $self->path;
-    my $key   = $self->key;
-    my $mpath = $self->mpath;
-    my $opts  = $self->opts;
-    $opts->{-join} = '' unless $opts->{-join};
-    
-    my $marc_pointer = $opts->{-record};
-    my $marc = $data->{$marc_pointer}; 
+    my $vals = $fixer->generate_var;
+    my $perl = $fixer->emit_declare_vars($vals, '[]');
 
-    my $fields = &marc_field($marc,$mpath);
+    $perl .= $fixer->emit_foreach("${var}->{${record_key}}", sub {
+        my $var = shift;
+        my $v = $fixer->generate_var;
+        my $perl = "";
 
-    return $data if !@{$fields};
+        $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
+        if ($self->value) {
+            $perl .= $fixer->emit_declare_vars($v, $fixer->emit_string($self->value));
+        } else {
+            my $i = $fixer->generate_var;
+            my $add_subfields = sub {
+                my $start = shift;
+                "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
+                "if (${var}->[${i}] =~ /${subfield_regex}/) {".
+                "push(\@{${v}}, ${var}->[${i} + 1]);".
+                "}".
+                "}";
+            };
+            $perl .= $fixer->emit_declare_vars($v, "[]");
+            $perl .= "if (${var}->[0] eq 'LDR' || substr(${var}->[0], 0, 2) eq '00') {";
+            $perl .= $add_subfields->(3);
+            $perl .= "} else {";
+            $perl .= $add_subfields->(5);
+            $perl .= "}";
+            $perl .= "if (\@{${v}}) {";
+            $perl .= "${v} = join(${join_char}, \@{${v}});";
+            if (defined(my $off = $self->from)) {
+                my $len = defined $self->to ? $self->to - $off + 1 : 1;
+                $perl .= "${v} = substr(${v}, ${off}, ${len});";
+            }
+            $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
+                my $var = shift;
+                "if (is_string(${var})) {".
+                "${var} = join(${join_char}, ${var}, ${v});".
+                "} else {".
+                "${var} = ${v};".
+                "}";
+            });
+            $perl .= "}";
+        }
+        $perl;
+    });
 
-    my $match = [ grep ref, data_at($path, $data, key => $key, create => 1)]->[0];
-
-    for my $field (@$fields) {
-       my $field_value = &marc_subfield($field,$mpath);
-
-       next if &is_empty($field_value);
-
-       $field_value = [$opts->{-value}] if defined $opts->{-value};
-       $field_value = join $opts->{-join} , @$field_value if defined $opts->{-join};
-       $field_value = &create_path($opts->{-in},$field_value) if defined $opts->{-in};
-       $field_value = &path_substr($mpath,$field_value) unless index($mpath,'/') == -1;
-
-       if (is_array_ref($match)) {
-          if (is_integer($key)) {
-             $match->[$key] = $field_value;
-          }
-          else {
-             push @{$match}, $field_value;
-          }
-       }
-       else {
-          if (exists $match->{$key}) {
-             $match->{$key} .= $opts->{-join} . $field_value;
-          }
-          else {
-             $match->{$key} = $field_value;
-          }
-       } 
-    }
-
-    $data;
-}
-
-sub is_empty {
-    my ($ref) = shift;
-    for (@$ref) {
-      return 0 if defined $_;
-    }
-    return 1;
-}
-
-sub path_substr {
-    my ($path,$value) = @_;
-    return $value unless is_string($value);
-    if ($path =~ /\/(\d+)(-(\d+))?/) {
-      my $from = $1;
-      my $to   = defined $3 ? $3-$from+1 : 0;
-      return substr($value,$from,$to);
-    }
-    return $value;
-}
-
-sub create_path {
-    my ($path, $value) = @_;
-    my ($p,$key,$guard) = parse_data_path($path);
-    my $leaf  = {};
-    my $match = [ grep ref, data_at($p, $leaf, key => $key, guard => $guard, create => 1) ]->[0];
-    $match->{$key} = $value;
-    $leaf;
-}
-
-# Parse a marc_path into parts
-#  245[1,2]abd  - field=245, ind1=1, ind2=2, subfields = a,d,d
-#  008/33-35    - field=008 from index 33 to 35
-sub parse_marc_path {
-    my $path = shift;
-
-    if ($path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9]+)?(\/(\d+)(-(\d+))?)?/) {
-        my $field    = $1;
-        my $ind1     = $3;
-        my $ind2     = $4;
-        my $subfield = $5 ? "[$5]" : "[a-z0-9_]";
-        my $from     = $7;
-        my $to       = $9;
-        return { field => $field , ind1 => $ind1 , ind2 => $ind2 , subfield => $subfield , from => $from , to => $to };
-    }
-    else {
-        return {};
-    }
-}
-
-# Given an Catmandu::Importer::MARC item return all the field value
-# that match the MARC path $path
-# Usage: marc_value($data,'245[a]',-join=>' ');
-sub marc_value {
-    my ($marc_item,$path,$opts) = @_;
-    my $marc_path = &parse_marc_path($path);
-
-    my $join    = $opts->{-join} || ' ';
-    my @results = ();
-
-    my $subfields = &marc_field($marc_item,$marc_path->{field});
-
-    for my $arr (@$subfields) {
-      my $res;
-      my $matched = &marc_subfield($arr,$marc_path->{subfield});      
-      if (@$matched) {
-         $res = join $join , @$matched;
-      }
-      else {
-         $res = undef;
-      }
-      push(@results, $res);
-    }
-
-    return \@results;
-}
-
-# Given a Catmandu::Importer::MARC item return for each matching field the
-# array of subfields
-# Usage: marc_field($data,'245');
-sub marc_field {
-    my ($marc_item,$path) = @_;
-    my $marc_path = &parse_marc_path($path);
-    my @results = ();
-
-    my $field = $marc_path->{field};
-    $field =~ s/\*/./g;
-
-    for (@$marc_item) {
-      my ($tag,$ind1,$ind2,@subfields) = @$_;
-      unless ($tag =~ /^00/ || $tag eq 'LDR') {
-        splice(@subfields,0,2);
-      }
-      push(@results,\@subfields) if $tag =~ /$field/;
-    }
-
-    return \@results;
-}
-
-# Given a subarray of Catmandu::Importer::MARC subfields return all
-# the subfields that match the $subfield regex
-# Usage: marc_subfield($subfields,'[a]');
-sub marc_subfield {
-    my ($subfields,$path) = @_;
-    my $marc_path = &parse_marc_path($path);
-    my $regex = $marc_path->{subfield};
-
-    my @results = ();
-
-    for (my $i = 0 ; $i < @$subfields ; $i += 2) {
-      my $code = $subfields->[$i];
-      my $val  = $subfields->[$i+1];
-      push(@results,$val) if $code =~ /$regex/;
-    }
-   
-    return \@results;
+    $perl;
 }
 
 1;

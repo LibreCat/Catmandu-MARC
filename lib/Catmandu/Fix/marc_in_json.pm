@@ -20,27 +20,26 @@ sub fix {
     my $marc_pointer = $self->opts->{-record};
 
     if (my $marc = delete $data->{$marc_pointer}) {
-        for my $f (@$marc) {
-            my ($tag, $ind1, $ind2, @data) = @$f;
+        for my $field (@$marc) {
+            my ($tag, $ind1, $ind2, @data) = @$field;
+
             if ($tag eq 'LDR') {
-               $data->{leader} = join "" , @data;
+               $data->{leader} = join "", @data;
             }
-            elsif ($tag =~ /^00|FMT/) {
+            elsif ($tag eq 'FMT' || substr($tag, 0, 2) eq '00') {
                shift @data;
                push @{$data->{fields} ||= []} , { $tag => join "" , @data };
             }
             else {
-               my @subfields = ();
-               for (my $i = 2 ; $i < @data ; $i += 2) {
-                 push @subfields , { $data[$i] => $data[$i+1] };
+               my @subfields;
+               for (my $i = 2; $i < @data; $i += 2) {
+                   push @subfields, { $data[$i] => $data[$i+1] };
                }
                push @{$data->{fields} ||= []} , { $tag => {
-                                                    subfields => \@subfields,
-                                                    ind1 => $ind1,
-                                                    ind2 => $ind2,
-                                                }
-                     };
-            } 
+                   subfields => \@subfields,
+                   ind1 => $ind1,
+                   ind2 => $ind2 } };
+            }
         }
     }
 
