@@ -69,9 +69,9 @@ sub emit { # TODO -in
             my $add_subfields = sub {
                 my $start = shift;
                 "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
-                "if (${var}->[${i}] =~ /${subfield_regex}/) {".
-                "push(\@{${v}}, ${var}->[${i} + 1]);".
-                "}".
+                    "if (${var}->[${i}] =~ /${subfield_regex}/) {".
+                        "push(\@{${v}}, ${var}->[${i} + 1]);".
+                    "}".
                 "}";
             };
             $perl .= $fixer->emit_declare_vars($v, "[]");
@@ -89,9 +89,9 @@ sub emit { # TODO -in
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var = shift;
                 "if (is_string(${var})) {".
-                "${var} = join(${join_char}, ${var}, ${v});".
+                    "${var} = join(${join_char}, ${var}, ${v});".
                 "} else {".
-                "${var} = ${v};".
+                    "${var} = ${v};".
                 "}";
             });
             $perl .= "}";
