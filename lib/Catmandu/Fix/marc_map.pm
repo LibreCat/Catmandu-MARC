@@ -44,7 +44,7 @@ around BUILDARGS => sub {
     $orig->($class, $attrs);
 };
 
-sub emit { # TODO -in
+sub emit {
     my ($self, $fixer) = @_;
     my $path = $fixer->split_path($self->path);
     my $record_key = $fixer->emit_string($self->record_key);
@@ -123,7 +123,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('710','my.authors.$append');
 
     # Copy the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
-    marc_map('600x','my.subjects.$append', -in => 'genre.text');
+    marc_map('600x','my.subjects.$append.genre.text');
 
     # Copy the 008 characters 35-35 into the my.language hash
     marc_map('008_/35-35','my.language');
