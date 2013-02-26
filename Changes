@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.03    2013-02-26
+  - compile marc_map fix
+
 0.0201  2013-02-07
   - fix dependencies
 

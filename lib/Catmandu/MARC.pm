@@ -6,11 +6,11 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =head1 VERSION
 
-Version 0.0201
+Version 0.03
 
 =cut
 
-our $VERSION = '0.0201';
+our $VERSION = '0.03';
 
 =head1 MODULES
 
@@ -38,9 +38,9 @@ our $VERSION = '0.0201';
 
 =over
 
-=item * Johann Rolschewski
+=item * Nicolas Franck, C<< <nicolas.franck at ugent.be> >>
 
-=item * Nicolas Franck
+=item * Johann Rolschewski, C<< johann.rolschewski at sbb.spk-berlin.de >>
 
 =back
 

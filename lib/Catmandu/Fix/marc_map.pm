@@ -118,7 +118,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Copy the 100 subfields into the my.authors array
     marc_map('100','my.authors.$append');
-    
+
     # Add the 710 subfields into the my.authors array
     marc_map('710','my.authors.$append');
 
