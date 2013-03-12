@@ -72,6 +72,7 @@ sub commit {
     if ($self->collection) {
         $self->fh->print('</marc:collection>');
     }
+    $self->fh->flush();
 }
 
 =head1 NAME
