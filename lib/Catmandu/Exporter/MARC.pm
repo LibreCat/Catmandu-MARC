@@ -91,7 +91,7 @@ Catmandu::Exporter::MARC - serialize parsed MARC data
         ...
         ],
     };
-    
+
     $exporter->add($data);
     $exporter->commit;
 

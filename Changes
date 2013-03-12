@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0301  2013-03-12
+  - safe substr outside string in marc_map
+
 0.03    2013-02-26
   - compile marc_map fix
 
