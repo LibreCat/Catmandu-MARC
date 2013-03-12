@@ -84,7 +84,7 @@ sub emit {
             $perl .= "${v} = join(${join_char}, \@{${v}});";
             if (defined(my $off = $self->from)) {
                 my $len = defined $self->to ? $self->to - $off + 1 : 1;
-                $perl .= "${v} = substr(${v}, ${off}, ${len});";
+                $perl .= "if (eval { ${v} = substr(${v}, ${off}, ${len}); 1 }) {";
             }
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var = shift;
@@ -94,6 +94,9 @@ sub emit {
                     "${var} = ${v};".
                 "}";
             });
+            if (defined($self->from)) {
+                $perl .= "}";
+            }
             $perl .= "}";
         }
         $perl;
