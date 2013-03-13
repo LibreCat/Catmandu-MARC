@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0302  2013-03-13
+  - fix perl version im marc_map test
+
 0.0301  2013-03-12
   - safe substr outside string in marc_map
 

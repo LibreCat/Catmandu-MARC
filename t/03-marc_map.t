@@ -1,12 +1,9 @@
 #!/usr/bin/perl
 
-use utf8;
-use v5.12; 
 use strict;
 use warnings;
-use warnings  qw(FATAL utf8); 
-use open      qw(:std :utf8);
-use charnames qw(:full :short); 
+use warnings qw(FATAL utf8); 
+use utf8;
 
 use Catmandu::Importer::MARC;
 use Catmandu::Fix;
