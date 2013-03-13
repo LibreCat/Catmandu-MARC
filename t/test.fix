@@ -2,4 +2,7 @@ marc_map('001', 'my.id');
 marc_map('245a', 'my.title');
 marc_map('666', 'my.references.$append');
 
+marc_map('001/3-5', 'my.substr_id');
+marc_map('001/1003-1005', 'my.failed_substr_id');
+
 remove_field('record');
