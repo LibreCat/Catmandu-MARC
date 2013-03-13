@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0303  2013-03-13
+  - fix MARCXML namespace
+
 0.0302  2013-03-13
   - fix perl version im marc_map test
 
