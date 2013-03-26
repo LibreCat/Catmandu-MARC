@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0304  2013-03-26
+  - import confess
+
 0.0303  2013-03-13
   - fix MARCXML namespace
 
