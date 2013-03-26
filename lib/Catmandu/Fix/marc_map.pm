@@ -1,6 +1,7 @@
 package Catmandu::Fix::marc_map;
 
 use Catmandu::Sane;
+use Carp qw(confess);
 use Moo;
 
 has path           => (is => 'ro', required => 1);
