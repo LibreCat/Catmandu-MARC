@@ -98,6 +98,14 @@ Catmandu::Exporter::MARC - serialize parsed MARC data
     # to serialize MARC-in-JSON:
     my $exporter = Catmandu::Exporter::MARC->new(record_format => "MARC-in-JSON");
 
+=head1 METHODS
+
+=head2 new(file => $file, %options)
+
+Create a new Catmandu MARC exports which serializes into a $file. Optionally 
+provide xml_declaration => 0|1 to in/exclude a XML declaration and, collection => 0|1
+to include a MARC collection header. 
+
 =cut
 
 1;
