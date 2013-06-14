@@ -6,11 +6,11 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =head1 VERSION
 
-Version 0.0304
+Version 0.04
 
 =cut
 
-our $VERSION = '0.0304';
+our $VERSION = '0.04';
 
 =head1 MODULES
 

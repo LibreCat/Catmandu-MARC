@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.04    2013-06-14
+  - faster marc_xml fix
+
 0.0304  2013-03-26
   - import confess
 
