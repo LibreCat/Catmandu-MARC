@@ -12,7 +12,7 @@ has opts  => (is => 'ro');
 around BUILDARGS => sub {
     my ($orig, $class, $path, %opts) = @_;
     $opts{-record} ||= 'record';
-    my ($p, $key) = parse_data_path($path) if defined $path && length $path;;
+    my ($p, $key) = parse_data_path($path) if defined $path && length $path;
     $orig->($class, path => $p, key => $key, opts => \%opts);
 };
 
@@ -22,20 +22,13 @@ sub fix {
 
     my $path = $self->path;
     my $key  = $self->key;
-    my $marc_pointer = $self->opts->{-record};
+    my $rec_key = $self->opts->{-record};
 
     my $match = [grep ref, data_at($path, $data, key => $key, create => 1)]->[0];
 
-    my $str = "";
-    my $exporter = Catmandu::Exporter::MARC->new(
-        file => \$str,
-        type => 'XML',
-        record_format => 'raw',
-        record => $self->opts->{-record},
-    );
-    $exporter->add($data);
-    $exporter->commit;
-    $match->{$key} = $str;
+    if ($match) {
+        $match->{$key} = Catmandu::Exporter::MARC->marc_raw_to_marc_xml($data->{$rec_key});
+    }
 
     $data;
 }

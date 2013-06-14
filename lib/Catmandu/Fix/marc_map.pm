@@ -76,7 +76,7 @@ sub emit {
                 "}";
             };
             $perl .= $fixer->emit_declare_vars($v, "[]");
-            $perl .= "if (${var}->[0] eq 'LDR' || substr(${var}->[0], 0, 2) eq '00') {";
+            $perl .= "if (${var}->[0] =~ /^LDR|^00/) {";
             $perl .= $add_subfields->(3);
             $perl .= "} else {";
             $perl .= $add_subfields->(5);

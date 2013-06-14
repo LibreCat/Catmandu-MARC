@@ -8,9 +8,9 @@ with 'Catmandu::Exporter';
 
 has type => (is => 'ro', default => sub { 'XML' });
 has xml_declaration => (is => 'ro');
-has collection => (is => 'ro');
+has collection    => (is => 'ro');
 has record_format => (is => 'ro', default => sub { 'raw' });
-has record => (is => 'ro', lazy => 1, default => sub { 'record' });
+has record        => (is => 'ro', lazy => 1, default => sub { 'record' });
 
 sub add {
     my ($self, $data) = @_;
@@ -23,48 +23,15 @@ sub add {
             push @out, qq(<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">);
         }
     }
-    push @out, $self->collection ? '<marc:record>' : qq(<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">);
 
     if ($self->record_format eq 'raw') { # raw MARC array
-        for my $field (@{$data->{$self->record}}) {
-            my ($tag, $ind1, $ind2, @data) = @$field;
-
-            if ($tag eq 'LDR') {
-                push @out, '<marc:leader>', xml_escape($data[1]), '</marc:leader>';
-            }
-            elsif ($tag =~ /^00/) {
-                push @out, '<marc:controlfield tag="', xml_escape($tag),'">', xml_escape($data[1]), '</marc:controlfield>';
-            }
-            elsif ($tag !~ /^00.|FMT|LDR/) {
-                push @out, '<marc:datafield tag="', xml_escape($tag), '" ind1="', $ind1,'" ind2="', $ind2, '">';
-                while (@data) {
-                    my ($code, $val) = splice(@data, 0, 2);
-                    next unless $code =~ /[A-Za-z0-9]/;
-                    push @out, '<marc:subfield code="', $code, '">', xml_escape($val), '</marc:subfield>';
-                }
-                push @out, '</marc:datafield>';
-            }
-        }
+        push @out, $self->marc_raw_to_marc_xml($data->{$self->record}, collection => $self->collection);
     }
     else { # MARC-in-JSON
-        push @out, '<marc:leader>', xml_escape($data->{leader}), '</marc:leader>';
-        for my $field (@{$data->{fields}}) {
-            my ($tag) = keys %$field;
-            my $val = $field->{$tag};
-            if (ref $val) {
-                push @out, '<marc:datafield tag="', xml_escape($tag), '" ind1="', $val->{ind1},'" ind2="', $val->{ind2}, '">';
-                for my $subfield (@{$val->{subfields}}) {
-                    my ($code) = keys %$subfield;
-                    push @out, '<marc:subfield code="', $code,'">', xml_escape($subfield->{$code}), '</marc:subfield>';
-                }
-                push @out, '</marc:datafield>';
-            } else {
-                push @out, '<marc:controlfield tag="', xml_escape($tag),'">', xml_escape($val), '</marc:controlfield>';
-            }
-        }
+        push @out, $self->marc_in_json_to_marc_xml($data, collection => $self->collection);
     }
 
-    $self->fh->print(join "", @out, '</marc:record>');
+    $self->fh->print(join("", @out, '</marc:record>'));
 }
 
 sub commit {
@@ -72,7 +39,63 @@ sub commit {
     if ($self->collection) {
         $self->fh->print('</marc:collection>');
     }
-    $self->fh->flush();
+}
+
+sub marc_raw_to_marc_xml {
+    my ($class, $rec, %opts) = @_;
+    my @out;
+
+    push @out, $opts{collection} ? '<marc:record>' : qq(<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">);
+
+    for my $field (@$rec) {
+        my ($tag, $ind1, $ind2, @data) = @$field;
+
+        next if $tag eq 'FMT';
+
+        if ($tag eq 'LDR') {
+            push @out, '<marc:leader>', xml_escape($data[1]), '</marc:leader>';
+        }
+        elsif ($tag =~ /^00/) {
+            push @out, '<marc:controlfield tag="', xml_escape($tag),'">', xml_escape($data[1]), '</marc:controlfield>';
+        }
+        else {
+            push @out, '<marc:datafield tag="', xml_escape($tag), '" ind1="', $ind1,'" ind2="', $ind2, '">';
+            while (@data) {
+                my ($code, $val) = splice(@data, 0, 2);
+                next unless $code =~ /[A-Za-z0-9]/;
+                push @out, '<marc:subfield code="', $code, '">', xml_escape($val), '</marc:subfield>';
+            }
+            push @out, '</marc:datafield>';
+        }
+    }
+
+    join('', @out, '</marc:record>');
+}
+
+sub marc_in_json_to_marc_xml {
+    my ($class, $rec, %opts) = @_;
+    my @out;
+
+    push @out, $opts{collection} ? '<marc:record>' : qq(<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">);
+
+    push @out, '<marc:leader>', xml_escape($rec->{leader}), '</marc:leader>';
+
+    for my $field (@{$rec->{fields}}) {
+        my ($tag) = keys %$field;
+        my $val = $field->{$tag};
+        if (ref $val) {
+            push @out, '<marc:datafield tag="', xml_escape($tag), '" ind1="', $val->{ind1},'" ind2="', $val->{ind2}, '">';
+            for my $subfield (@{$val->{subfields}}) {
+                my ($code) = keys %$subfield;
+                push @out, '<marc:subfield code="', $code,'">', xml_escape($subfield->{$code}), '</marc:subfield>';
+            }
+            push @out, '</marc:datafield>';
+        } else {
+            push @out, '<marc:controlfield tag="', xml_escape($tag),'">', xml_escape($val), '</marc:controlfield>';
+        }
+    }
+
+    join('', @out, '</marc:record>');
 }
 
 =head1 NAME
