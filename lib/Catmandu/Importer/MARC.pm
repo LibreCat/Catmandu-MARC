@@ -69,21 +69,21 @@ sub aleph_generator {
 }
 
 sub marc_generator {
-    my $self = shift;
-	
+    my ($self) = @_;
+    my $type = $self->type;
     my $file;
 
-    given($self->type) {
-	    when ('USMARC') {
-	        $file = MARC::File::USMARC->in($self->fh); 
-	    }
-        when ('MicroLIF') {
-            $file = MARC::File::MicroLIF->in($self->fh);
-        }
-        when ('XML') {
-            $file = MARC::File::XML->in($self->fh);
-        }
-	    die "unknown";
+    if ($type eq 'USMARC') {
+        $file = MARC::File::USMARC->in($self->fh);
+    }
+    elsif ($type eq 'MicroLIF') {
+        $file = MARC::File::MicroLIF->in($self->fh);
+    }
+    elsif ($type eq 'XML') {
+        $file = MARC::File::XML->in($self->fh);
+    }
+    else {
+        die "unknown";
     }
 
     my $id = $self->id;
@@ -129,15 +129,13 @@ sub generator {
     my ($self) = @_;
     my $type = $self->type;
 
-    given ($type) {
-	    when (/^USMARC|MicroLIF|XML$/) {
-           return $self->marc_generator;
-	    }
-	    when ('ALEPHSEQ') {
-           return $self->aleph_generator;
-	    }
-        die "need USMARC, MicroLIF, XML or ALEPHSEQ";
+    if ($type =~ /^USMARC|MicroLIF|XML$/) {
+       return $self->marc_generator;
     }
+    if ($type eq 'ALEPHSEQ') {
+       return $self->aleph_generator;
+    }
+    die "need USMARC, MicroLIF, XML or ALEPHSEQ";
 }
 
 =head1 NAME

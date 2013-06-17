@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.0401  2013-06-17
+  - remove given/when statements
+
 0.04    2013-06-14
   - faster marc_xml fix
 
