@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.05    2013-06-19
+  - marc_map exclude subfields syntax
+
 0.0401  2013-06-17
   - remove given/when statements
 
