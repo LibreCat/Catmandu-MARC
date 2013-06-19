@@ -28,7 +28,7 @@ around BUILDARGS => sub {
     $attrs->{join_char}  = $opts{-join}   if defined $opts{-join};
     $attrs->{value}      = $opts{-value}  if defined $opts{-value};
 
-    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9]+)?(\/(\d+)(-(\d+))?)?/) {
+    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
         $attrs->{field}          = $1;
         $attrs->{ind1}           = $3;
         $attrs->{ind2}           = $4;
@@ -140,5 +140,8 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Do the same examples now with the marc fields in 'record2'
     marc_map('245','my.title', -record => 'record2');
+
+    # Copy all 100 subfields except the digits to the 'author' field
+    marc_map('100^0123456789','author');
 
 =cut
