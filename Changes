@@ -1,5 +1,9 @@
 Revision history for Catmandu-MARC
 
+0.06    2013-06-28
+  - marc_remove fix
+  - marc_map -split option
+
 0.05    2013-06-19
   - marc_map exclude subfields syntax
 

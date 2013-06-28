@@ -11,7 +11,6 @@ my $builder = Module::Build->new(
     ],
     dist_version_from => 'lib/Catmandu/MARC.pm',
     build_requires => {
-        'Software::License' => 0,
         'Test::Exception' => 0,
         'Test::More' => 0,
     },
@@ -26,7 +25,6 @@ my $builder = Module::Build->new(
         Catmandu-MARC-*
     )],
     create_makefile_pl => 'traditional',
-    create_license => 1,
 );
 
 $builder->create_build_script;

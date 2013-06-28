@@ -8,6 +8,7 @@ has path           => (is => 'ro', required => 1);
 has marc_path      => (is => 'ro', required => 1);
 has record_key     => (is => 'ro', default => sub { "record" });
 has join_char      => (is => 'ro', default => sub { "" });
+has split          => (is => 'ro');
 has value          => (is => 'ro');
 has field_regex    => (is => 'ro');
 has subfield_regex => (is => 'ro');
@@ -25,8 +26,12 @@ around BUILDARGS => sub {
         path => $path,
     };
     $attrs->{record_key} = $opts{-record} if defined $opts{-record};
-    $attrs->{join_char}  = $opts{-join}   if defined $opts{-join};
-    $attrs->{value}      = $opts{-value}  if defined $opts{-value};
+    $attrs->{value} = $opts{-value} if defined $opts{-value};
+    if ($opts{-split}) {
+        $attrs->{split} = 1;
+    } elsif (defined $opts{-join}) {
+        $attrs->{join_char} = $opts{-join};
+    }
 
     if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
         $attrs->{field}          = $1;
@@ -82,18 +87,28 @@ sub emit {
             $perl .= $add_subfields->(5);
             $perl .= "}";
             $perl .= "if (\@{${v}}) {";
-            $perl .= "${v} = join(${join_char}, \@{${v}});";
-            if (defined(my $off = $self->from)) {
-                my $len = defined $self->to ? $self->to - $off + 1 : 1;
-                $perl .= "if (eval { ${v} = substr(${v}, ${off}, ${len}); 1 }) {";
+            if (!$self->split) {
+                $perl .= "${v} = join(${join_char}, \@{${v}});";
+                if (defined(my $off = $self->from)) {
+                    my $len = defined $self->to ? $self->to - $off + 1 : 1;
+                    $perl .= "if (eval { ${v} = substr(${v}, ${off}, ${len}); 1 }) {";
+                }
             }
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var = shift;
-                "if (is_string(${var})) {".
-                    "${var} = join(${join_char}, ${var}, ${v});".
-                "} else {".
-                    "${var} = ${v};".
-                "}";
+                if ($self->split) {
+                    "if (is_array_ref(${var})) {".
+                        "push \@{${var}}, ${v};".
+                    "} else {".
+                        "${var} = [${v}];".
+                    "}";
+                } else {
+                    "if (is_string(${var})) {".
+                        "${var} = join(${join_char}, ${var}, ${v});".
+                    "} else {".
+                        "${var} = ${v};".
+                    "}";
+                }
             });
             if (defined($self->from)) {
                 $perl .= "}";
@@ -114,8 +129,11 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
 =head1 SYNOPSIS
 
-    # Copy all 245 subfields into the my.title hash
+    # Append all 245 subfields to my.title
     marc_map('245','my.title');
+
+    # Append an array of 245 subfields to the my.title array
+    marc_map('245','my.title', -split, 1);
 
     # Copy the 245-$a$b$c subfields into the my.title hash
     marc_map('245abc','my.title');
