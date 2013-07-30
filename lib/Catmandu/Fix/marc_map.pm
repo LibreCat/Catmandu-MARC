@@ -37,7 +37,7 @@ around BUILDARGS => sub {
         $attrs->{field}          = $1;
         $attrs->{ind1}           = $3;
         $attrs->{ind2}           = $4;
-        $attrs->{subfield_regex} = $5 ? "[$5]" : "[a-z0-9_]";
+        $attrs->{subfield_regex} = defined $5 ? "[$5]" : "[a-z0-9_]";
         $attrs->{from}           = $7;
         $attrs->{to}             = $9;
     } else {
