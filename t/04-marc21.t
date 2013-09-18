@@ -22,6 +22,6 @@ ok(@records == 1);
 
 ok($records[0]->{record}->[1]->[0] eq '920');
 
-ok($records[0]->{record}->[8]->[6] eq 'TEEM (한국전기전자재료학회)');
+ok($records[0]->{record}->[8]->[4] eq 'TEEM (한국전기전자재료학회)');
 
 1;

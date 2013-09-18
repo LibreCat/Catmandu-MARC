@@ -42,6 +42,14 @@ sub aleph_generator {
                $data =~ s/\^/ /g;
            }
            my @parts = ('_' , split(/\$\$(.)/, $data) );
+
+           # All control-fields contain an underscore field containing the data
+           # all other fields not.
+           unless ($tag =~ /LDR|00./o) {
+              shift @parts;
+              shift @parts;
+           }
+
            # If we have an empty subfield at the end, then we need to add a implicit empty value
            push(@parts,'') unless int(@parts) % 2 == 0;
 
@@ -103,7 +111,9 @@ sub marc_generator {
 
             my @sf = ();
 
-            push @sf , '_' , ($field->is_control_field ? $field->data : '');
+            if ($field->is_control_field) {
+                push @sf , '_', $field->data;
+            }
 
             for my $subfield ($field->subfields) {
                 push @sf , @$subfield;

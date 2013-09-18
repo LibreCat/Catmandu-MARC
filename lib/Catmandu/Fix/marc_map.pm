@@ -83,8 +83,13 @@ sub emit {
             $perl .= $fixer->emit_declare_vars($v, "[]");
             $perl .= "if (${var}->[0] =~ /^LDR|^00/) {";
             $perl .= $add_subfields->(3);
-            $perl .= "} else {";
+            # Old Catmandu::MARC contained a bug/feature to allow
+            # for '_' subfields in non-control elements ..for beackwards
+            # compatibility we ignore them
+            $perl .= "} elsif (${var}->[5] eq '_') {";
             $perl .= $add_subfields->(5);
+            $perl .= "} else {";
+            $perl .= $add_subfields->(3);
             $perl .= "}";
             $perl .= "if (\@{${v}}) {";
             if (!$self->split) {
