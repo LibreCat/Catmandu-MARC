@@ -1,5 +1,9 @@
 Revision history for Catmandu-MARC
 
+0.07    2013-09-17
+  - fixed the underscore subfields in non-control fields
+  - adding backwards compatibility
+
 0.06    2013-06-28
   - marc_remove fix
   - marc_map -split option
