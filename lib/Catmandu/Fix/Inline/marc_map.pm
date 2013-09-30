@@ -1,4 +1,3 @@
-
 =head1 NAME
 
 Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
@@ -25,21 +24,21 @@ require Exporter;
 %EXPORT_TAGS = (all => [qw(marc_map)]);
 
 sub marc_map {
-	my ($data,$marc_path,%opts) = @_;
+    my ($data,$marc_path,%opts) = @_;
 
-	return unless exists $data->{'record'};
+    return unless exists $data->{'record'};
 
-	my $record = $data->{'record'};
+    my $record = $data->{'record'};
 
-	unless (defined $record && ref $record eq 'ARRAY') {
-		return wantarray ? () : undef;
-	}
+    unless (defined $record && ref $record eq 'ARRAY') {
+        return wantarray ? () : undef;
+    }
 
-	my $split     = $opts{'-split'};
-	my $join_char = $opts{'-join'} // '';
-	my $attrs     = {};
+    my $split     = $opts{'-split'};
+    my $join_char = $opts{'-join'} // '';
+    my $attrs     = {};
 
-	if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
+    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
         $attrs->{field}          = $1;
         $attrs->{ind1}           = $3;
         $attrs->{ind2}           = $4;
@@ -47,21 +46,21 @@ sub marc_map {
         $attrs->{from}           = $7;
         $attrs->{to}             = $9;
     } else {
-    	return wantarray ? () : undef;
+        return wantarray ? () : undef;
     }
 
     $attrs->{field_regex} = $attrs->{field};
     $attrs->{field_regex} =~ s/\*/./g;
 
     my $add_subfields = sub {
-    	my $var   = shift;
-    	my $start = shift;
+        my $var   = shift;
+        my $start = shift;
 
-    	my @v = ();
+        my @v = ();
 
         for (my $i = $start; $i < @$var; $i += 2) {
-         	if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
-            	push(@v, $var->[$i + 1]);
+            if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
+                push(@v, $var->[$i + 1]);
             }
         }
 
@@ -102,13 +101,13 @@ sub marc_map {
     }
 
     if (wantarray) {
-    	return @vals;
+        return @vals;
     }
     elsif (@vals > 0) {
-    	return join $join_char , @vals;
+        return join $join_char , @vals;
     }
     else {
-    	return undef;
+        return undef;
     }
 }
 
