@@ -80,7 +80,7 @@ sub marc_map {
     	if ($var->[0] =~ /LDR|00./) {
     		$v = $add_subfields->($var,3);
     	}
-    	elsif ($var->[5] eq '_') {
+    	elsif (defined $var->[5] && $var->[5] eq '_') {
     		$v = $add_subfields->($var,5);
     	}
     	else {

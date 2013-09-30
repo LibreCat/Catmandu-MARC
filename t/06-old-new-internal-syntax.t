@@ -6,7 +6,7 @@ use Catmandu::Importer::MARC;
 
 use Test::More tests => 11;
 
-my $fixer = Catmandu::Fix->new(fixes => ['marc_map("245a","title")']);
+my $fixer = Catmandu::Fix->new(fixes => ['marc_map("245a","title"); marc_map("500a","test")']);
 my $importer = Catmandu::Importer::JSON->new( file => 't/old_new.json' );
 my $records = $fixer->fix($importer)->to_array;
 
