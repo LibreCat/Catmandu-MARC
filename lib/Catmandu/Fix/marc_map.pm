@@ -86,7 +86,7 @@ sub emit {
             # Old Catmandu::MARC contained a bug/feature to allow
             # for '_' subfields in non-control elements ..for beackwards
             # compatibility we ignore them
-            $perl .= "} elsif (${var}->[5] eq '_') {";
+            $perl .= "} elsif (defined ${var}->[5] && ${var}->[5] eq '_') {";
             $perl .= $add_subfields->(5);
             $perl .= "} else {";
             $perl .= $add_subfields->(3);
