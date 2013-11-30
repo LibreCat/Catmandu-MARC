@@ -5,11 +5,13 @@ use Moo;
 use MARC::File::USMARC;
 use MARC::File::MicroLIF;
 use MARC::File::XML (BinaryEncoding => 'UTF-8', DefaultEncoding => 'UTF-8', RecordFormat => 'MARC21');
+use MARC::Record;
 
 with 'Catmandu::Importer';
 
-has type => (is => 'ro' , default => sub { 'USMARC' });
-has id   => (is => 'ro' , default => sub { '001' });
+has type      => (is => 'ro' , default => sub { 'USMARC' });
+has id        => (is => 'ro' , default => sub { '001' });
+has records   => (is => 'rw');
 
 sub aleph_generator {
     my $self = shift;
@@ -80,7 +82,7 @@ sub marc_generator {
     my ($self) = @_;
     my $type = $self->type;
     my $file;
-
+    
     if ($type eq 'USMARC') {
         $file = MARC::File::USMARC->in($self->fh);
     }
@@ -94,58 +96,72 @@ sub marc_generator {
         die "unknown";
     }
 
-    my $id = $self->id;
+    sub  {
+      $self->decode_marc($file->next());
+    }
+}
 
-    sub {
-        my $record = $file->next();
-        return unless $record;
+sub record_generator {
+    my ($self) = @_;
+    my @records = @{$self->records};
 
-        my @result = ();
-
-        push @result , [ 'LDR' , undef, undef, '_' , $record->leader ];
-
-        for my $field ($record->fields()) {
-            my $tag  = $field->tag;
-            my $ind1 = $field->indicator(1);
-            my $ind2 = $field->indicator(2);
-
-            my @sf = ();
-
-            if ($field->is_control_field) {
-                push @sf , '_', $field->data;
-            }
-
-            for my $subfield ($field->subfields) {
-                push @sf , @$subfield;
-            }
-
-            push @result, [$tag,$ind1,$ind2,@sf];
-        }
-
-        my $sysid = undef;
-
-        if ($id =~ /^00/) {
-            $sysid = $record->field($id)->data();
-        }
-        elsif (defined $id) {
-            $sysid = $record->field($id)->subfield("a");
-        }
-
-        return { _id => $sysid , record => \@result };
-    };
+    sub  {
+      $self->decode_marc(shift @records);
+    }
 }
 
 sub generator {
     my ($self) = @_;
     my $type = $self->type;
 
+    if ($self->records) {
+       return $self->record_generator;
+    }
     if ($type =~ /^USMARC|MicroLIF|XML$/) {
        return $self->marc_generator;
     }
     if ($type eq 'ALEPHSEQ') {
        return $self->aleph_generator;
     }
-    die "need USMARC, MicroLIF, XML or ALEPHSEQ";
+    die "need USMARC, MicroLIF, XML, ALEPHSEQ or MARC::Record";
+}
+
+sub decode_marc {
+    my ($self, $record) = @_;  
+    return unless eval { $record->isa('MARC::Record') };
+    my @result = ();
+
+    push @result , [ 'LDR' , undef, undef, '_' , $record->leader ];
+
+    for my $field ($record->fields()) {
+        my $tag  = $field->tag;
+        my $ind1 = $field->indicator(1);
+        my $ind2 = $field->indicator(2);
+
+        my @sf = ();
+
+        if ($field->is_control_field) {
+            push @sf , '_', $field->data;
+        }
+
+        for my $subfield ($field->subfields) {
+            push @sf , @$subfield;
+        }
+
+        push @result, [$tag,$ind1,$ind2,@sf];
+    }
+
+    my $sysid = undef;
+    my $id = $self->id;
+
+    if ($id =~ /^00/) {
+        $sysid = $record->field($id)->data();
+    }
+    elsif (defined $id) {
+        $sysid = $record->field($id)->subfield("a");
+    }
+
+    return { _id => $sysid , record => \@result };
 }
 
 =head1 NAME
@@ -156,12 +172,19 @@ Catmandu::Importer::MARC - Package that imports MARC data
 
     use Catmandu::Importer::MARC;
 
+    # import records from file
     my $importer = Catmandu::Importer::MARC->new(file => "/foo/bar.marc", type=> "USMARC");
 
     my $n = $importer->each(sub {
         my $hashref = $_[0];
         # ...
     });
+
+    # import from array of MARC::Record objects
+    my $importer = Catmandu::Importer::MARC->new(records => \@records);
+
+    my $records = $importer->to_array;
+
 
 =head1 MARC
 
@@ -192,11 +215,11 @@ identifier of the record) and 'record' containing an ARRAY of ARRAYs for every f
 
 =head1 METHODS
 
-=head2 new(file => $filename,type=>$type,[id=>$id_field])
+=head2 new(file => $filename, type => $type, $records => $records, [id=>$id_field])
 
-Create a new MARC importer for $filename. Use STDIN when no filename is given. Type 
-describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF 
-, XML and ALEPHSEQ.
+Create a new MARC importer for $filename or $records. Use STDIN when no filename is given. 
+Type describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF 
+, XML, ALEPHSEQ or MARC::Record.
 Optionally provide an 'id' option pointing to the identifier field of the MARC record
 (default 001).
 
