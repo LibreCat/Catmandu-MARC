@@ -31,7 +31,7 @@ sub add {
         push @out, $self->marc_in_json_to_marc_xml($data, collection => $self->collection);
     }
 
-    $self->fh->print(join("", @out, '</marc:record>'));
+    $self->fh->print(join("", @out));
 }
 
 sub commit {
