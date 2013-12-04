@@ -13,7 +13,7 @@ my $importer = Catmandu::Importer::MARC->new(
 );
 my $records = $importer->to_array();
 
-ok( scalar keys $records == 10,                           'got all records' );
+ok( @$records == 10,                                      'got all records' );
 ok( $records->[0]->{'_id'} eq 'fol05731351 ',             'got _id' );
 ok( $records->[0]->{'record'}->[1][-1] eq 'fol05731351 ', 'got subfield' );
 ok( $records->[0]->{'_id'} eq $records->[0]->{'record'}->[1][-1],
@@ -29,8 +29,9 @@ undef $file;
 $importer = Catmandu::Importer::MARC->new( records => \@marc_objects );
 $records = $importer->to_array();
 
-ok( scalar keys $records == 10,                           'got all records' );
+ok( @$records == 10,                                      'got all records' );
 ok( $records->[0]->{'_id'} eq 'fol05731351 ',             'got _id' );
 ok( $records->[0]->{'record'}->[1][-1] eq 'fol05731351 ', 'got subfield' );
 ok( $records->[0]->{'_id'} eq $records->[0]->{'record'}->[1][-1],
     '_id matches record id' );
+
