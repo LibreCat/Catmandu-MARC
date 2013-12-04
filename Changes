@@ -1,6 +1,9 @@
 Revision history for Catmandu-MARC
 
-0.1     2013-11-03
+0.101   2013-12-04
+  - fix importer tests
+
+0.1     2013-12-03
   - consume MARC::Record objects
 
 0.09    2013-10-31
