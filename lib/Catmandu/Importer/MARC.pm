@@ -154,10 +154,10 @@ sub decode_marc {
     my $sysid = undef;
     my $id = $self->id;
 
-    if ($id =~ /^00/) {
+    if ($id =~ /^00/ && $record->field($id)) {
         $sysid = $record->field($id)->data();
     }
-    elsif (defined $id) {
+    elsif (defined $id  && $record->field($id)) {
         $sysid = $record->field($id)->subfield("a");
     }
 
