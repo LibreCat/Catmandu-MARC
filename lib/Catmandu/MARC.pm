@@ -42,6 +42,8 @@ our $VERSION = '0.101';
 
 =item * Johann Rolschewski, C<< johann.rolschewski at sbb.spk-berlin.de >>
 
+=item * Chris Cormack
+
 =back
 
 =head1 LICENSE AND COPYRIGHT
