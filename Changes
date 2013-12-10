@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.102   2013-12-10
+  - Importer::MARC skips empty tags
+
 0.101   2013-12-04
   - fix importer tests
 
