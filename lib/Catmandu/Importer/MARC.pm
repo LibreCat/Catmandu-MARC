@@ -19,7 +19,7 @@ sub aleph_generator {
     sub {
         state $fh = $self->fh;
         state $prev_id;
-	    state $record = [];
+        state $record = [];
 
         while(<$fh>) {
            chop;
@@ -56,25 +56,25 @@ sub aleph_generator {
            push(@parts,'') unless int(@parts) % 2 == 0;
 
            if (defined $prev_id && $prev_id != $sysid) {
-		       my $result = { _id => $prev_id , record => [ @$record ] };
-		       $record  = [[$tag, $ind1, $ind2, @parts]];
-           	   $prev_id = $sysid;
-		       return $result;
-	       }
+               my $result = { _id => $prev_id , record => [ @$record ] };
+               $record  = [[$tag, $ind1, $ind2, @parts]];
+               $prev_id = $sysid;
+               return $result;
+           }
 
            push @$record, [$tag, $ind1, $ind2, @parts];
 
            $prev_id = $sysid;
         }
 
-	    if (@$record > 0) {
-    	   my $result = { _id => $prev_id , record => [ @$record ] };
-	       $record = [];
-	       return $result;
+        if (@$record > 0) {
+           my $result = { _id => $prev_id , record => [ @$record ] };
+           $record = [];
+           return $result;
         }
-	    else {
-	       return;
- 	    }
+        else {
+           return;
+        }
     };
 }
 
@@ -82,7 +82,7 @@ sub marc_generator {
     my ($self) = @_;
     my $type = $self->type;
     my $file;
-    
+
     if ($type eq 'USMARC') {
         $file = MARC::File::USMARC->in($self->fh);
     }
@@ -127,7 +127,7 @@ sub generator {
 }
 
 sub decode_marc {
-    my ($self, $record) = @_;  
+    my ($self, $record) = @_;
     return unless eval { $record->isa('MARC::Record') };
     my @result = ();
 
@@ -200,7 +200,7 @@ identifier of the record) and 'record' containing an ARRAY of ARRAYs for every f
                         '_',
                         'fol05882032 '
                       ],
- 		      [
+              [
                         245,
                         '1',
                         '0',
@@ -209,16 +209,16 @@ identifier of the record) and 'record' containing an ARRAY of ARRAYs for every f
                         'c',
                         'Eric F. Johnson.'
                       ],
-	      ],
+          ],
   '_id' => 'fol05882032'
- } 
+ }
 
 =head1 METHODS
 
 =head2 new(file => $filename, type => $type, $records => $records, [id=>$id_field])
 
-Create a new MARC importer for $filename or $records. Use STDIN when no filename is given. 
-Type describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF 
+Create a new MARC importer for $filename or $records. Use STDIN when no filename is given.
+Type describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF
 , XML, ALEPHSEQ or MARC::Record.
 Optionally provide an 'id' option pointing to the identifier field of the MARC record
 (default 001).
