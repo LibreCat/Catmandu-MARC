@@ -7,6 +7,7 @@ use Moo;
 with 'Catmandu::Exporter';
 
 has type => (is => 'ro', default => sub { 'XML' });
+has skip_empty_subfields => (is => 'ro' , default => sub { 1 });
 has xml_declaration => (is => 'ro');
 has collection    => (is => 'ro');
 has record_format => (is => 'ro', default => sub { 'raw' });
@@ -49,8 +50,14 @@ sub marc_raw_to_marc_xml {
 
     for my $field (@$rec) {
         my ($tag, $ind1, $ind2, @data) = @$field;
+        
+        $ind1 = ' ' unless defined $ind1;
+        $ind2 = ' ' unless defined $ind2;
+
+        @data = _clean_raw_data($tag,@data) if $class->skip_empty_subfields;
 
         next if $tag eq 'FMT';
+        next if @data == 0;
 
         if ($tag eq 'LDR') {
             push @out, '<marc:leader>', xml_escape($data[1]), '</marc:leader>';
@@ -72,15 +79,29 @@ sub marc_raw_to_marc_xml {
     join('', @out, '</marc:record>');
 }
 
+sub _clean_raw_data {
+    my ($tag,@data) = @_;
+    my @result = ();
+    for (my $i = 0 ; $i < @data ; $i += 2) {
+        if (($tag =~ /^00/ || defined $data[$i]) && defined $data[$i+1]) {
+            push(@result, $data[$i], $data[$i+1]);
+        }
+    }
+    return @result;
+}
+
 sub marc_in_json_to_marc_xml {
     my ($class, $rec, %opts) = @_;
     my @out;
 
     push @out, $opts{collection} ? '<marc:record>' : qq(<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">);
 
-    push @out, '<marc:leader>', xml_escape($rec->{leader}), '</marc:leader>';
+    push @out, '<marc:leader>', xml_escape($rec->{leader}), '</marc:leader>' if defined $rec->{leader};
 
     for my $field (@{$rec->{fields}}) {
+        $field = _clean_json_data($field) if $class->skip_empty_subfields;
+        next unless defined $field;
+
         my ($tag) = keys %$field;
         my $val = $field->{$tag};
         if (ref $val) {
@@ -98,6 +119,30 @@ sub marc_in_json_to_marc_xml {
     join('', @out, '</marc:record>');
 }
 
+sub _clean_json_data {
+    my $field = shift;
+    my ($tag) = keys %$field;
+    my $val   = $field->{$tag};
+    return undef unless defined $val;
+
+    return $field unless ref $val;
+    return undef unless defined $val->{subfields};
+
+    my @subfields;
+
+    for (@{$val->{subfields}}) {
+        my ($code) = keys %$_;
+        my $code_val = $_->{$code};
+        push (@subfields, {$code => $code_val}) if defined $code && defined $code_val;
+    }
+
+    return undef unless @subfields > 0;
+
+    $field->{$tag}->{subfields} = \@subfields;
+
+    return $field;
+}
+
 =head1 NAME
 
 Catmandu::Exporter::MARC - serialize parsed MARC data
@@ -106,7 +151,7 @@ Catmandu::Exporter::MARC - serialize parsed MARC data
 
     use Catmandu::Exporter::MARC;
 
-    my $exporter = Catmandu::Exporter::MARC->new(file => "marc.xml", type => "XML");
+    my $exporter = Catmandu::Exporter::MARC->new(file => "marc.xml", type => "XML" );
     my $data = {
      record => [
         ...
@@ -127,7 +172,8 @@ Catmandu::Exporter::MARC - serialize parsed MARC data
 
 Create a new Catmandu MARC exports which serializes into a $file. Optionally 
 provide xml_declaration => 0|1 to in/exclude a XML declaration and, collection => 0|1
-to include a MARC collection header. 
+to include a MARC collection header and skip_empty_subfields => 0|1 to skip fields
+that contain no data.
 
 =cut
 
