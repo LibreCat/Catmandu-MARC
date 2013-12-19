@@ -5,7 +5,7 @@ use warnings;
 
 use Catmandu::Exporter::MARC;
 use XML::XPath;
-use Test::Simple tests => 14;
+use Test::Simple tests => 16;
 
 my $xml = '';
 
@@ -23,6 +23,7 @@ $exporter->add({
             ['500', ' ', ' ', 'a', undef],
             ['501', ' ', ' ' ],
             ['502', ' ', ' ', 'a', undef, 'b' , 'ok'],
+            ['503'. ' ', ' ', 'a', ''],
         ]
 });
 
@@ -34,7 +35,8 @@ ok($xp->findvalue('/marc:record/marc:controlfield[@tag="001"]') eq 'rec001','tes
 ok($xp->findvalue('/marc:record/marc:datafield[@tag="245"]/marc:subfield[@code="a"]') eq 'Sketches in Blue','test 245');
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="500"]') ,'skipped 500 - only empty subfields');
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="501"]') ,'skipped 501 - no subfields');
-ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a"]') ,'skipper 502a - empty subfields');
+ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a"]') ,'skipped 502a - empty subfields');
+ok(! $xp->exists('/marc:record/marc:datafield[@tag="503"]/marc:subfield[@code="a"]') ,'skipped 503a - empty subfields');
 
 $xml = '';
 $exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'XML', record_format => 'MARC-in-JSON');
@@ -49,6 +51,7 @@ $exporter->add({
   	{ '500' => { 'subfields' => [ { 'a' => undef }] , 'ind1' => ' ', 'ind2' => ' '}} ,
   	{ '501' => { 'ind1' => ' ', 'ind2' => ' ' }} ,
   	{ '502' => { 'subfields' => [ { 'a' => undef} , { 'b' , 'ok' } ] , 'ind1' => ' ', 'ind2' => ' ' } } ,
+    { '503' => { 'subfields' => [ { 'a' => '' }] , 'ind1' => ' ', 'ind2' => ' '}} ,
   ]
 });
 
@@ -57,4 +60,5 @@ ok($xp->findvalue('/marc:record/marc:controlfield[@tag="001"]') eq 'rec001','tes
 ok($xp->findvalue('/marc:record/marc:datafield[@tag="245"]/marc:subfield[@code="a"]') eq 'Sketches in Blue','test 245');
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="500"]') ,'skipped 500 - only empty subfields');
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="501"]') ,'skipped 501 - no subfields');
-ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a"]') ,'skipper 502a - empty subfields');
+ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a"]') ,'skipped 502a - empty subfields');
+ok(! $xp->exists('/marc:record/marc:datafield[@tag="503"]/marc:subfield[@code="a"]') ,'skipped 503a - empty subfields');

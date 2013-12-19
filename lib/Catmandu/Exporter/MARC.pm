@@ -83,7 +83,7 @@ sub _clean_raw_data {
     my ($tag,@data) = @_;
     my @result = ();
     for (my $i = 0 ; $i < @data ; $i += 2) {
-        if (($tag =~ /^00/ || defined $data[$i]) && defined $data[$i+1]) {
+        if (($tag =~ /^00/ || defined $data[$i]) && defined $data[$i+1] && $data[$i+1] =~ /\S+/) {
             push(@result, $data[$i], $data[$i+1]);
         }
     }
@@ -133,7 +133,7 @@ sub _clean_json_data {
     for (@{$val->{subfields}}) {
         my ($code) = keys %$_;
         my $code_val = $_->{$code};
-        push (@subfields, {$code => $code_val}) if defined $code && defined $code_val;
+        push (@subfields, {$code => $code_val}) if defined $code && defined $code_val && $code_val =~ /\S+/;
     }
 
     return undef unless @subfields > 0;
