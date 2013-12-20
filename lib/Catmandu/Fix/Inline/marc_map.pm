@@ -9,6 +9,37 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
  my $title   = marc_map($data,'245a');
  my @authors = marc_map($data,'100ab');
 
+ # Get all 245 in an array
+ @arr = marc_map($data,'245');
+
+ # Or as a string
+ $str = marc_map($data,'245');
+
+ # str joined by a semi-colon
+ $f245 = marc_map($data, '245', -join , ';');
+
+ # Get the 245-$a$b$c subfields 
+ $str = marc_map($data,'245abc');
+
+ # Get the 008 characters 35-35 
+ $str = marc_map($data,'008_/35-35');
+
+ # Get all 100 subfields except the digits
+ $str = marc_map($data,'100^0123456789');
+
+ # The $data should be a Catmandu-style MARC hash
+ { record => [
+    ['field', 'ind1' , 'ind2' , 'subfieldcode or underscore' , 'data' , 'subfield' , 'data' , ...] ,
+     ...
+ ]};
+
+ # Example
+ $data = { record => [
+    ['001' , ' ', ' ' , '_' , 'myrecord-001' ] ,
+    ['020' , ' ', ' ' , 'a' , '978-1449303587' ] ,
+    ['245' , ' ', ' ' , 'a' , 'Learning Per' , 'c', '/ by Randal L. Schwartz'],
+ ]};
+
 =head1 SEE ALSO
 
 Catmandu::Fix::marc_map
