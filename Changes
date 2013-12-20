@@ -1,7 +1,14 @@
 Revision history for Catmandu-MARC
 
+0.104   2013-12-2020
+  - Exporter::MARC now skips also skips empty strings by default
+  - improved marc_map pod
+
+0.103   2013-12-18
+  - Exporter::MARC skips undef (sub)fields by default
+
 0.102   2013-12-10
-  - Importer::MARC skips empty tags
+  - Importer::MARC skips empty fields
 
 0.101   2013-12-04
   - fix importer tests
