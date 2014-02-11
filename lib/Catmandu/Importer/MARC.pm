@@ -47,7 +47,7 @@ sub aleph_generator {
 
            # All control-fields contain an underscore field containing the data
            # all other fields not.
-           unless ($tag =~ /LDR|00./o) {
+           unless ($tag =~ /FMT|LDR|00./o) {
               shift @parts;
               shift @parts;
            }
