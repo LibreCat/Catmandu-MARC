@@ -1,6 +1,9 @@
 Revision history for Catmandu-MARC
 
-0.104   2013-12-2020
+0.105   2014-02-11
+  - handle Aleph FMT tags
+
+0.104   2013-12-20
   - Exporter::MARC now skips also skips empty strings by default
   - improved marc_map pod
 
