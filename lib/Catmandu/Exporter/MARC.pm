@@ -26,7 +26,11 @@ sub add {
     }
 
     if ($self->record_format eq 'raw') { # raw MARC array
-        push @out, $self->marc_raw_to_marc_xml($data->{$self->record}, collection => $self->collection);
+        push @out, $self->marc_raw_to_marc_xml(
+                            $data->{$self->record}, 
+                            collection => $self->collection,
+                            skip_empty_subfields => $self->skip_empty_subfields
+                        );
     }
     else { # MARC-in-JSON
         push @out, $self->marc_in_json_to_marc_xml($data, collection => $self->collection);
@@ -54,7 +58,7 @@ sub marc_raw_to_marc_xml {
         $ind1 = ' ' unless defined $ind1;
         $ind2 = ' ' unless defined $ind2;
 
-        @data = _clean_raw_data($tag,@data) if $class->skip_empty_subfields;
+        @data = _clean_raw_data($tag,@data) if $opts{skip_empty_subfields};
 
         next if $tag eq 'FMT';
         next if @data == 0;
