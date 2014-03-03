@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.106   2014-03-03
+  - allow for non-standard system identifier fields
+  
 0.105   2014-02-11
   - handle Aleph FMT tags
 
