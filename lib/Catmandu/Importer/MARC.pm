@@ -157,6 +157,10 @@ sub decode_marc {
     if ($id =~ /^00/ && $record->field($id)) {
         $sysid = $record->field($id)->data();
     }
+    elsif ($id =~ /^(\d{3})([\da-zA-Z])$/) {
+        my $field = $record->field($1);
+        $sysid = $field->subfield($2) if ($field);
+    }
     elsif (defined $id  && $record->field($id)) {
         $sysid = $record->field($id)->subfield("a");
     }
@@ -221,7 +225,8 @@ Create a new MARC importer for $filename or $records. Use STDIN when no filename
 Type describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF
 , XML, ALEPHSEQ or MARC::Record.
 Optionally provide an 'id' option pointing to the identifier field of the MARC record
-(default 001).
+(default 001). If the field isn't a control field, it'll default to the 'a'
+subfield. A subfield can be provided like '999c'.
 
 =head2 count
 
