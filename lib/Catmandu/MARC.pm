@@ -34,6 +34,8 @@ our $VERSION = '0.107';
 
 =item * Nicolas Steenlant, C<< <nicolas.steenlant at ugent.be> >>
 
+=back
+
 =head1 CONTRIBUTORS
 
 =over
