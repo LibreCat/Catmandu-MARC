@@ -1,5 +1,9 @@
 Revision history for Catmandu-MARC
 
+0.107   2014-03-04
+  - adding Robin Sheat as contributor
+  - bumping version to resolve verson conflict at CPAN
+
 0.106   2014-03-03
   - allow for non-standard system identifier fields
   
