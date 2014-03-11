@@ -31,5 +31,7 @@ is $records->[0]->{my}{substr_id}, "057";
 
 ok !exists $records->[0]->{my}{failed_substr_id};
 
-done_testing 6;
+ok $records->[0]->{record} =~ /marc:datafield/ , "marcxml";
+
+done_testing 7;
 

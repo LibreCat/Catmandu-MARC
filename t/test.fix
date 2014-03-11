@@ -7,4 +7,6 @@ marc_map('001/1003-1005', 'my.failed_substr_id');
 
 marc_map('245', 'my.split_title', '-split', 1);
 
-remove_field('record');
+marc_xml('record');
+
+#remove_field('record');

@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.108   2014-03-11
+  - all Catmandu::Exporter::MARC methods should be instance and class methods to make marc_xml work
+
 0.107   2014-03-04
   - adding Robin Sheat as contributor
   - bumping version to resolve verson conflict at CPAN
