@@ -55,7 +55,7 @@ sub aleph_generator {
            # If we have an empty subfield at the end, then we need to add a implicit empty value
            push(@parts,'') unless int(@parts) % 2 == 0;
 
-           if (defined $prev_id && $prev_id != $sysid) {
+           if (@$record > 0 && $tag eq 'FMT') {
                my $result = { _id => $prev_id , record => [ @$record ] };
                $record  = [[$tag, $ind1, $ind2, @parts]];
                $prev_id = $sysid;
