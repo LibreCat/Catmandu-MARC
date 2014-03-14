@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.109   2014-03-14
+  - in response to popular request adding Aleph sequential export support
+  
 0.108   2014-03-11
   - all Catmandu::Exporter::MARC methods should be instance and class methods to make marc_xml work
 

@@ -1,7 +1,8 @@
 package Catmandu::Exporter::MARC;
 
+use Carp;
 use Catmandu::Sane;
-use Catmandu::Util qw(xml_escape is_different);
+use Catmandu::Util qw(xml_escape is_different :array :is);
 use Moo;
 
 with 'Catmandu::Exporter';
@@ -14,6 +15,22 @@ has record_format => (is => 'ro', default => sub { 'raw' });
 has record        => (is => 'ro', lazy => 1, default => sub { 'record' });
 
 sub add {
+    my ($self, $data) = @_;
+
+    my $type = $self->type();
+    
+    if ($type eq 'XML') {
+        $self->add_xml($data);
+    }
+    elsif ($type eq 'ALEPHSEQ') {
+        $self->add_alephseq($data);
+    }
+    else {
+        croak "unknown export type: $type";
+    }
+}
+
+sub add_xml {
     my ($self, $data) = @_;
     my @out;
     if (!$self->count) {
@@ -33,7 +50,33 @@ sub add {
                         );
     }
     else { # MARC-in-JSON
-        push @out, $self->marc_in_json_to_marc_xml($data, collection => $self->collection);
+        push @out, $self->marc_in_json_to_marc_xml(
+                            $data, 
+                            collection => $self->collection,
+                            skip_empty_subfields => $self->skip_empty_subfields
+                        );
+    }
+
+    $self->fh->print(join("", @out));
+}
+
+sub add_alephseq {
+    my ($self, $data) = @_;
+    my @out;
+
+    if($self->record_format eq 'raw'){ # raw MARC array
+        push @out,$self->marc_raw_to_alephseq(
+            $data->{$self->record}, 
+            _id => $data->{_id},
+            skip_empty_subfields => $self->skip_empty_subfields
+        );
+    }
+    else{ # MARC-in-JSON
+        push @out, $self->marc_in_json_to_alephseq(
+            $data,
+            _id => $data->{_id},
+            skip_empty_subfields => $self->skip_empty_subfields
+        );
     }
 
     $self->fh->print(join("", @out));
@@ -41,9 +84,12 @@ sub add {
 
 sub commit {
     my ($self) = @_;
-    if ($self->collection) {
+
+    if($self->collection && $self->type eq "XML"){
         $self->fh->print('</marc:collection>');
     }
+
+    $self->fh->flush;
 }
 
 sub marc_raw_to_marc_xml {
@@ -103,7 +149,7 @@ sub marc_in_json_to_marc_xml {
     push @out, '<marc:leader>', xml_escape($rec->{leader}), '</marc:leader>' if defined $rec->{leader};
 
     for my $field (@{$rec->{fields}}) {
-        $field = _clean_json_data($field) if $class->skip_empty_subfields;
+        $field = _clean_json_data($field) if $opts{skip_empty_subfields};;
         next unless defined $field;
 
         my ($tag) = keys %$field;
@@ -147,6 +193,76 @@ sub _clean_json_data {
     return $field;
 }
 
+sub marc_in_json_to_alephseq {
+    my ($class,$rec,%opts) = @_;
+
+    my @lines;
+    my $_id = sprintf("%-9.9d", $opts{_id} // 0); 
+  
+    push @lines, " LDR   L " . $rec->{leader} . "\n" if defined $rec->{leader};;
+
+    for my $field(@{$rec->{fields}}){
+        $field = _clean_json_data($field) if $opts{skip_empty_subfields};;
+        next unless defined $field;
+
+        my ($tag) = keys %$field;
+
+        my $val = $field->{$tag};
+
+        my @parts = (" ${tag}");
+
+        if(ref $val) {
+            push @parts, $val->{ind1}, $val->{ind2} . " L ";
+            for my $subfield (@{$val->{subfields}}) {
+                my($code) = keys %$subfield;
+                push @parts,"\$\$${code}".$subfield->{$code};
+            }
+        } else {
+            push @parts,"   L ";
+            push @parts, $val;
+        }
+
+        push @lines,join('', @parts, "\n");
+    }
+
+    @lines = map { "$_id$_" } @lines;
+
+    join('',@lines);
+}
+
+sub marc_raw_to_alephseq {
+    my($class,$rec,%opts) = @_;
+    my $_id = sprintf("%-9.9d", $opts{_id} // 0);
+    my @out;
+
+    for my $field (@$rec) {
+        my($tag,$ind1,$ind2,@data) = @$field;
+    
+        $ind1 = ' ' unless defined $ind1;
+        $ind2 = ' ' unless defined $ind2;
+
+        @data = _clean_raw_data($tag,@data) if $opts{skip_empty_subfields};;
+
+        next if @data == 0;
+
+        push @out, "${_id} ${tag}${ind1}${ind2} L ";
+  
+        if (array_includes([qw(LDR FMT)],$tag) || $tag =~ /^00/) {
+            push @out,$data[1];
+        } 
+        else {
+            while (@data) {
+                my ($code,$val) = splice(@data, 0, 2);
+                next unless $code =~ /[A-Za-z0-9]/;
+                push @out,"\$\$${code}${val}";
+            }
+        }
+        push @out,"\n";
+    }
+
+    join('',@out);
+}
+
 =head1 NAME
 
 Catmandu::Exporter::MARC - serialize parsed MARC data
@@ -167,8 +283,24 @@ Catmandu::Exporter::MARC - serialize parsed MARC data
     $exporter->add($data);
     $exporter->commit;
 
-    # to serialize MARC-in-JSON:
-    my $exporter = Catmandu::Exporter::MARC->new(record_format => "MARC-in-JSON");
+    #  When the record format is MARC-in-JSON:
+    my $exporter = Catmandu::Exporter::MARC->new(
+                        file => 'marc.xml' ,
+                        type => 'XML'
+                        record_format => "MARC-in-JSON");
+    my $data = {
+        'leader' => '01471cjm a2200349 a 4500',
+        fields => [
+            { '001' => '5674874' } ,
+            { '245' => { subfields => [ { a => 'My Title ' } ] }} ,
+            ...
+        ]
+    };
+    $exporter->add($data);
+    $exporter->commit;
+
+    # Export record to ALEPH sequential
+    my $exporter = Catmandu::Exporter::MARC->new(file => 'aleph.txt' , type => 'ALEPHSEQ');
 
 =head1 METHODS
 
@@ -178,6 +310,13 @@ Create a new Catmandu MARC exports which serializes into a $file. Optionally
 provide xml_declaration => 0|1 to in/exclude a XML declaration and, collection => 0|1
 to include a MARC collection header and skip_empty_subfields => 0|1 to skip fields
 that contain no data.
+
+Other supported export formats:
+    * type => ALEPHSEQ
+
+=head1 SEE ALSO
+
+L<Catmandu::Exporter>
 
 =cut
 
