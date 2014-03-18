@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.110   2014-03-18
+  - adding support for marc_add fixes
+  
 0.109   2014-03-14
   - in response to popular request adding Aleph sequential export support
   

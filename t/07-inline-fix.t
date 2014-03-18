@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
+use Catmandu::Fix::Inline::marc_add qw(marc_add);
 use Catmandu::Importer::JSON;
 use Data::Dumper;
 
@@ -19,3 +20,6 @@ ok ! defined(scalar marc_map($records->[0],'245x')) , q|marc_map(245x) not defin
 
 my @res = marc_map($records->[0],'630');
 ok(@res == 2 , q|marc_map(630)|);
+
+my $rec = marc_add($records->[0],'900', a => 'test');
+is scalar marc_map($rec,'900a'), q|test|, q|marc_add(900)|;
