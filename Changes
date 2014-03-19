@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.111   2014-03-19
+  - fixed marc_add test to reflect the correct number of tests
+  
 0.110   2014-03-18
   - adding support for marc_add fixes
   

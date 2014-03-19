@@ -20,5 +20,5 @@ is $record->{record}->[0]->[2] , '1', 'created 999 ind2';
 is $record->{record}->[0]->[3] , 'a', 'created 999 subfield a';
 is $record->{record}->[0]->[4] , 'test', 'created 999 subfield a value';
 
-done_testing 2;
+done_testing 6;
 
