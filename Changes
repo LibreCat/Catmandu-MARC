@@ -1,6 +1,9 @@
 Revision history for Catmandu-MARC
 
 0.112   2014-04-03
+  - Adding the new files to the manifest :-/
+
+0.112   2014-04-03
   - Adding the inline marc_remove fix
   
 0.111   2014-03-19
