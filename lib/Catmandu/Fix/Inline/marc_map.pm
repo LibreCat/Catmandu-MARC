@@ -42,7 +42,7 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
 
 =head1 SEE ALSO
 
-Catmandu::Fix::marc_map
+L<Catmandu::Fix::Inline::marc_add> , L<Catmandu::Fix::Inline::marc_remove> 
 
 =cut
 
