@@ -9,8 +9,10 @@ use Test::More;
 
 use Catmandu::Importer::MARC;
 use Catmandu::Fix;
+use Log::Log4perl;
+use Log::Any::Adapter;
 
-my $fixer = Catmandu::Fix->new(fixes => ['t/test.fix']);
+my $fixer = Catmandu::Fix->new(fixes => ['t/test.fix'], tidy => 1);
 my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
 my $records = $fixer->fix($importer)->to_array;
 
@@ -33,5 +35,8 @@ ok !exists $records->[0]->{my}{failed_substr_id};
 
 ok $records->[0]->{record} =~ /marc:datafield/ , "marcxml";
 
-done_testing 7;
+is $records->[0]->{my}->{found005} , 1 , 'if marc_match';
 
+is $records->[0]->{my}->{found008} , 1 , 'if marc_match';
+
+done_testing 9;

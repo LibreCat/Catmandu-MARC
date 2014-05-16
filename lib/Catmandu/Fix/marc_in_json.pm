@@ -48,10 +48,10 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
 =head1 SYNOPSIS
 
    # Create a deeply nested key
-   marc_in_json();
+   marc_in_json()
 
    # Optionally provide a pointer to the marc record
-   marc_in_json(-record => 'record');
+   marc_in_json(-record => 'record')
 
 =head1 SEE ALSO
 

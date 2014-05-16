@@ -7,6 +7,16 @@ marc_map('001/1003-1005', 'my.failed_substr_id');
 
 marc_map('245', 'my.split_title', '-split', 1);
 
+add_field('my.found005',0);
+if_marc_match('005','20000613133448.0');
+	set_field('my.found005',1);
+end();
+
+add_field('my.found008','0');
+if_marc_match('008_/6-7','s');
+	set_field('my.found008','1');
+end();
+
 marc_xml('record');
 
 #remove_field('record');

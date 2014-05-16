@@ -115,36 +115,36 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 =head1 SYNOPSIS
 
     # Append all 245 subfields to my.title
-    marc_map('245','my.title');
+    marc_map('245','my.title')
 
     # Append an array of 245 subfields to the my.title array
-    marc_map('245','my.title', -split, 1);
+    marc_map('245','my.title', -split, 1)
 
     # Copy the 245-$a$b$c subfields into the my.title hash
-    marc_map('245abc','my.title');
+    marc_map('245abc','my.title')
 
     # Copy the 100 subfields into the my.authors array
-    marc_map('100','my.authors.$append');
+    marc_map('100','my.authors.$append')
 
     # Add the 710 subfields into the my.authors array
-    marc_map('710','my.authors.$append');
+    marc_map('710','my.authors.$append')
 
     # Copy the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
-    marc_map('600x','my.subjects.$append.genre.text');
+    marc_map('600x','my.subjects.$append.genre.text')
 
     # Copy the 008 characters 35-35 into the my.language hash
-    marc_map('008_/35-35','my.language');
+    marc_map('008_/35-35','my.language')
 
     # Copy all the 600 fields into a my.stringy hash joining them by '; '
-    marc_map('600','my.stringy', -join => '; ');
+    marc_map('600','my.stringy', -join => '; ')
 
     # When 024 field exists create the my.has024 hash with value 'found'
-    marc_map('024','my.has024', -value => 'found');
+    marc_map('024','my.has024', -value => 'found')
 
     # Do the same examples now with the marc fields in 'record2'
-    marc_map('245','my.title', -record => 'record2');
+    marc_map('245','my.title', -record => 'record2')
 
     # Copy all 100 subfields except the digits to the 'author' field
-    marc_map('100^0123456789','author');
+    marc_map('100^0123456789','author')
 
 =cut

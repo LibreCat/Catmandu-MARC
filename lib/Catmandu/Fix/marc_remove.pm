@@ -30,10 +30,10 @@ Catmandu::Fix::marc_remove - remove marc fields
 =head1 SYNOPSIS
 
     # remove all marc 600 fields
-    marc_remove('600');
+    marc_remove('600')
 
     # the same with the marc fields in 'record2'
-    marc_remove('600', '-record', 'record2');
+    marc_remove('600', '-record', 'record2')
 
 =head1 SEE ALSO
 
