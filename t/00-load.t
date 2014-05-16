@@ -13,4 +13,4 @@ BEGIN {
     use_ok 'Catmandu::Fix::Condition::marc_match';
 }
 
-done_testing 5;
+done_testing 6;
