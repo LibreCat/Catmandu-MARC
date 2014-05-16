@@ -17,7 +17,7 @@ my $builder = Module::Build->new(
     },
     requires => {
         'perl' => '5.10.1',
-        'Catmandu' => '0.08',
+        'Catmandu' => '0.9',
         'MARC::File::XML' => '0.93',
         'MARC::Record' => '2.0.3',
         'Moo' => '1.0',

@@ -3,68 +3,48 @@ package Catmandu::Fix::marc_map;
 use Catmandu::Sane;
 use Carp qw(confess);
 use Moo;
+use Catmandu::Fix::Has;
 
-has path           => (is => 'ro', required => 1);
-has marc_path      => (is => 'ro', required => 1);
-has record_key     => (is => 'ro', default => sub { "record" });
-has join_char      => (is => 'ro', default => sub { "" });
-has split          => (is => 'ro');
-has value          => (is => 'ro');
-has field_regex    => (is => 'ro');
-has subfield_regex => (is => 'ro');
-has field          => (is => 'ro');
-has ind1           => (is => 'ro');
-has ind2           => (is => 'ro');
-has from           => (is => 'ro');
-has to             => (is => 'ro');
+has marc_path      => (fix_arg => 1);
+has path           => (fix_arg => 1);
+has record         => (fix_opt => 1);
+has split          => (fix_opt => 1);
+has join           => (fix_opt => 1);
+has value          => (fix_opt => 1);
 
-around BUILDARGS => sub {
-    my ($orig, $class, $marc_path, $path, %opts) = @_;
+sub emit {
+    my ($self,$fixer) = @_;
+    my $path        = $fixer->split_path($self->path);
+    my $record_key  = $fixer->emit_string($self->record // 'record');
+    my $join_char   = $fixer->emit_string($self->join // '');
+    my $marc_path   = $self->marc_path;
 
-    my $attrs = {
-        marc_path => $marc_path,
-        path => $path,
-    };
-    $attrs->{record_key} = $opts{-record} if defined $opts{-record};
-    $attrs->{value} = $opts{-value} if defined $opts{-value};
-    if ($opts{-split}) {
-        $attrs->{split} = 1;
-    } elsif (defined $opts{-join}) {
-        $attrs->{join_char} = $opts{-join};
-    }
+    my $field_regex;
+    my ($field,$ind1,$ind2,$subfield_regex,$from,$to);
 
     if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
-        $attrs->{field}          = $1;
-        $attrs->{ind1}           = $3;
-        $attrs->{ind2}           = $4;
-        $attrs->{subfield_regex} = defined $5 ? "[$5]" : "[a-z0-9_]";
-        $attrs->{from}           = $7;
-        $attrs->{to}             = $9;
-    } else {
+        $field          = $1;
+        $ind1           = $3;
+        $ind2           = $4;
+        $subfield_regex = defined $5 ? "[$5]" : "[a-z0-9_]";
+        $from           = $7;
+        $to             = $9;
+    }
+    else {
         confess "invalid marc path";
     }
 
-    $attrs->{field_regex} = $attrs->{field};
-    $attrs->{field_regex} =~ s/\*/./g;
+    $field_regex = $field;
+    $field_regex =~ s/\*/./g;
 
-    $orig->($class, $attrs);
-};
-
-sub emit {
-    my ($self, $fixer) = @_;
-    my $path = $fixer->split_path($self->path);
-    my $record_key = $fixer->emit_string($self->record_key);
-    my $join_char = $fixer->emit_string($self->join_char);
-    my $field_regex = $self->field_regex;
-    my $subfield_regex = $self->subfield_regex;
     my $var = $fixer->var;
-
     my $vals = $fixer->generate_var;
     my $perl = $fixer->emit_declare_vars($vals, '[]');
 
+
     $perl .= $fixer->emit_foreach("${var}->{${record_key}}", sub {
-        my $var = shift;
-        my $v = $fixer->generate_var;
+        my $var  = shift;
+        my $v    = $fixer->generate_var;
         my $perl = "";
 
         $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
@@ -94,8 +74,8 @@ sub emit {
             $perl .= "if (\@{${v}}) {";
             if (!$self->split) {
                 $perl .= "${v} = join(${join_char}, \@{${v}});";
-                if (defined(my $off = $self->from)) {
-                    my $len = defined $self->to ? $self->to - $off + 1 : 1;
+                if (defined(my $off = $from)) {
+                    my $len = defined $to ? $to - $off + 1 : 1;
                     $perl .= "if (eval { ${v} = substr(${v}, ${off}, ${len}); 1 }) {";
                 }
             }
@@ -115,7 +95,7 @@ sub emit {
                     "}";
                 }
             });
-            if (defined($self->from)) {
+            if (defined($from)) {
                 $perl .= "}";
             }
             $perl .= "}";

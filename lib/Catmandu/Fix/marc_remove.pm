@@ -2,22 +2,17 @@ package Catmandu::Fix::marc_remove;
 
 use Catmandu::Sane;
 use Moo;
+use Catmandu::Fix::Has;
 
-has marc_tag => (is => 'ro', required => 1);
-has record_key => (is => 'ro', default => sub { "record" });
-
-around BUILDARGS => sub {
-    my ($orig, $class, $marc_tag, %opts) = @_;
-    my $attrs = { marc_tag => $marc_tag };
-    $attrs->{record_key} = $opts{-record} if defined $opts{-record};
-    $orig->($class, $attrs);
-};
+has marc_tag => (fix_arg => 1);
+has record   => (fix_opt => 1);
 
 sub fix {
     my ($self, $data) = @_;
-    my $marc_tag = $self->marc_tag;
+    my $marc_tag   = $self->marc_tag;
+    my $record_tag = $self->record // 'record';
 
-    if (my $marc = $data->{$self->record_key}) {
+    if (my $marc = $data->{$record_tag}) {
         for (my $i = @$marc - 1; $i >= 0; $i--) {
             if ($marc->[$i][0] eq $marc_tag) {
                 splice @$marc, $i, 1;
