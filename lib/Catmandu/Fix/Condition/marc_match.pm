@@ -38,6 +38,8 @@ Catmandu::Fix::Condition::marc_match - Conditionals on MARC fields
 
 =head1 SYNOPSIS
    
+   # marc_match(MARC_PATH,REGEX)
+   
    if marc_match('245','My funny title')
    	add_field('my.funny.title','true')
    end
