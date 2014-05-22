@@ -9,8 +9,6 @@ use Test::More;
 
 use Catmandu::Importer::MARC;
 use Catmandu::Fix;
-use Log::Log4perl;
-use Log::Any::Adapter;
 
 my $fixer = Catmandu::Fix->new(fixes => ['t/test.fix'], tidy => 1);
 my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
