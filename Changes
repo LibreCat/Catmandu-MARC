@@ -1,5 +1,8 @@
 Revision history for Catmandu-MARC
 
+0.115   2014-05-22
+  - Fixed broken MANIFEST
+  
 0.114   2014-05-20
   - Adding the if marc_match condition
 
