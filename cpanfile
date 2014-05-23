@@ -1,0 +1,17 @@
+requires 'perl', 'v5.10.1';
+
+on 'test', sub {
+  requires 'Test::Simple', '1.001003';
+  requires 'Test::More', '1.001003';
+  requires 'XML::XPath', '1.13';
+};
+
+requires 'Catmandu', '0.90';
+requires 'JSON::XS', '2.3';
+requires 'YAML::XS', '0.34';
+requires 'MARC::File::XML', '0.93';
+requires 'MARC::Record', '2.0.3';
+requires 'Moo', '1.0';
+
+
+

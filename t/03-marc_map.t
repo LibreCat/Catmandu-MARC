@@ -10,7 +10,7 @@ use Test::More;
 use Catmandu::Importer::MARC;
 use Catmandu::Fix;
 
-my $fixer = Catmandu::Fix->new(fixes => ['t/test.fix'], tidy => 1);
+my $fixer = Catmandu::Fix->new(fixes => ['t/test.fix']);
 my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
 my $records = $fixer->fix($importer)->to_array;
 

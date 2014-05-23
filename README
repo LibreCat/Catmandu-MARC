@@ -1,18 +1,7 @@
-Catmandu-MARC
+Catmandu::MARC - Catmandu modules for working with MARC data
 
-INSTALLATION
+To install run:
 
-To install this module, run the following commands:
-
-  perl Build.PL
-	./Build
-	./Build test
-	./Build install
-
-SUPPORT AND DOCUMENTATION
-
-After installing, you can find documentation for this module with the
-perldoc command.
-
-  perldoc Catmandu::MARC
-
+ $ perl ./Build.PL
+ $ ./Build test
+ $ ./Build install

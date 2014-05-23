@@ -4,10 +4,6 @@ package Catmandu::MARC;
 
 Catmandu::MARC - Catmandu modules for working with MARC data
 
-=head1 VERSION
-
-Version 0.115
-
 =cut
 
 our $VERSION = '0.115';
@@ -28,17 +24,13 @@ our $VERSION = '0.115';
 
 =head1 AUTHOR
 
-=over
-
-=item * Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
-
-=item * Nicolas Steenlant, C<< <nicolas.steenlant at ugent.be> >>
-
-=back
+Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
 
 =head1 CONTRIBUTORS
 
 =over
+
+=item * Nicolas Steenlant, C<< <nicolas.steenlant at ugent.be> >>
 
 =item * Nicolas Franck, C<< <nicolas.franck at ugent.be> >>
 
