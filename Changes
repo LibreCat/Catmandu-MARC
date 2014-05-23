@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.117  2014-05-23 12:06:40 CEST
   - Adding more documentation hints
   - Fixing the marc_match (deleting temporary keys)
 
