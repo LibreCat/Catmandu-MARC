@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Adding more documentation hints
 
 0.116  2014-05-23 09:31:14 CEST
   - Switched to Dist::Milla
