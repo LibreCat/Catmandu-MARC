@@ -2,10 +2,6 @@
 
 Catmandu::MARC - Catmandu modules for working with MARC data
 
-# VERSION
-
-Version 0.115
-
 # MODULES
 
 - [Catmandu::Importer::MARC](https://metacpan.org/pod/Catmandu::Importer::MARC)
