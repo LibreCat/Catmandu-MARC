@@ -49,7 +49,7 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
                         '_',
                         'fol05882032 '
                       ],
-              [
+                      [
                         '245',
                         '1',
                         '0',
@@ -58,7 +58,7 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
                         'c',
                         'Eric F. Johnson.'
                       ],
-          ],
+              ],
   '_id' => 'fol05882032'
  }
 
@@ -71,6 +71,8 @@ Type describes the MARC parser to be used. Currently we support:
         
     USMARC    L<Catmandu::Importer::MARC::USMARC>
     MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
+    MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
+    JSON      L<Catmandu::Importer::MARC::MiJ>
     XML       L<Catmandu::Importer::MARC::XML>
     RAW       L<Catmandu::Importer::MARC::RAW>
     Lint      L<Catmandu::Importer::MARC::Lint>

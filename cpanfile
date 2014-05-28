@@ -10,7 +10,9 @@ requires 'Catmandu', '0.90';
 requires 'JSON::XS', '2.3';
 requires 'YAML::XS', '0.34';
 requires 'MARC::File::XML', '0.93';
-requires 'MARC::Record', '2.0.3';
+requires 'MARC::File::MARCMaker', '0.05';
+requires 'MARC::File::MiJ' , '0.04';
+requires 'MARC::Record', '2.0.6';
 requires 'Moo', '1.0';
 
 
