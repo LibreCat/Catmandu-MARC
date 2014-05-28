@@ -2,6 +2,12 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+0.2  2014-05-28 15:24:03 CEST
+  - Refactoring MARC import and export parsers and serializers
+  - Add importers for MARCMaker, MARC-in-JSON and MARC::Catmandu
+  - Add Lint based validator for USMARC
+  - Add exporters for USMARC, MARCMaker and MARC-in-JSON
+  
 0.117  2014-05-23 12:06:40 CEST
   - Adding more documentation hints
   - Fixing the marc_match (deleting temporary keys)
