@@ -14,6 +14,3 @@ requires 'MARC::File::MARCMaker', '0.05';
 requires 'MARC::File::MiJ' , '0.04';
 requires 'MARC::Record', '2.0.6';
 requires 'Moo', '1.0';
-
-
-
