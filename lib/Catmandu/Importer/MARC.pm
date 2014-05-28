@@ -1,3 +1,104 @@
+=head1 NAME
+
+Catmandu::Importer::MARC - Package that imports MARC data
+
+=head1 SYNOPSIS
+
+    # From the command line
+    $ catmandu convert MARC --fix "marc_map('245a','title')" < /foo/bar.mrc
+
+    # From perl
+    use Catmandu;
+
+    # import records from file
+    my $importer = Catmandu->importer('MARC',file => '/foo/bar.mrc');
+    my $fixer    = Catmandu->fixer("marc_map('245a','title')");
+
+    $importer->each(sub {
+        my $item = shift;
+        ...
+    });
+
+    # or using the fixer
+
+    $fixer->fix($importer)->each(sub {
+        my $item = shift;
+        printf "title: %s\n" , $item->{title};
+    });
+
+
+=head1 DESCRIPTION
+
+Catmandu::Importer::MARC is a L<Catmandu::Iterable> to import MARC records from an
+external source. When given an input file an Catmandu::Iterable is create generating 
+items as perl HASH-es containing two keys:
+
+     '_id'    : the system identifier of the record (usually the 001 field) 
+     'record' : an ARRAY of ARRAYs containing the record data
+
+Read more about processing data with Catmandu on the wiki: L<https://github.com/LibreCat/Catmandu/wiki>
+
+=head1 EXAMPLE ITEM
+
+ {
+  'record' => [
+                      [
+                        '001',
+                        undef,
+                        undef,
+                        '_',
+                        'fol05882032 '
+                      ],
+              [
+                        '245',
+                        '1',
+                        '0',
+                        'a',
+                        'Cross-platform Perl /',
+                        'c',
+                        'Eric F. Johnson.'
+                      ],
+          ],
+  '_id' => 'fol05882032'
+ }
+
+=head1 METHODS
+
+=head2 new(file => $filename, type => $type)
+
+Create a new MARC importer for $filename or $records. Use STDIN when no filename is given.
+Type describes the MARC parser to be used. Currently we support: 
+        
+    USMARC    L<Catmandu::Importer::MARC::USMARC>
+    MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
+    XML       L<Catmandu::Importer::MARC::XML>
+    RAW       L<Catmandu::Importer::MARC::RAW>
+    Lint      L<Catmandu::Importer::MARC::Lint>
+    ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
+
+Read the documentation of the parser modules for extra configuration options.
+
+=head1 INHERTED METHODS
+
+=head2 count
+
+=head2 each(&callback)
+
+=head2 ...
+
+Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. 
+
+=head1 WARNING
+
+The Catmandu::Importer::MARC methods are not idempotent: MARC feeds can only be read once.
+
+=head1 SEE ALSO
+
+L<Catmandu::Iterable>, 
+L<Catmandu::Fix::marc_map> , 
+L<Catmandu::Fix::marc_xml>
+
+=cut
 package Catmandu::Importer::MARC;
 use Catmandu::Sane;
 use Catmandu::Util;
@@ -22,80 +123,5 @@ sub BUILD {
     my ($self,$args) = @_;
     $self->_set_importer_args($args);
 }
-
-=head1 NAME
-
-Catmandu::Importer::MARC - Package that imports MARC data
-
-=head1 SYNOPSIS
-
-    use Catmandu::Importer::MARC;
-
-    # import records from file
-    my $importer = Catmandu::Importer::MARC->new(file => "/foo/bar.marc", type=> "USMARC");
-
-    my $n = $importer->each(sub {
-        my $hashref = $_[0];
-        # ...
-    });
-
-    # import from array of MARC::Record objects
-    my $importer = Catmandu::Importer::MARC->new(records => \@records);
-
-    my $records = $importer->to_array;
-
-
-=head1 MARC
-
-The parsed MARC is a HASH containing two keys '_id' containing the 001 field (or the system
-identifier of the record) and 'record' containing an ARRAY of ARRAYs for every field:
-
- {
-  'record' => [
-                      [
-                        '001',
-                        undef,
-                        undef,
-                        '_',
-                        'fol05882032 '
-                      ],
-              [
-                        245,
-                        '1',
-                        '0',
-                        'a',
-                        'Cross-platform Perl /',
-                        'c',
-                        'Eric F. Johnson.'
-                      ],
-          ],
-  '_id' => 'fol05882032'
- }
-
-=head1 METHODS
-
-=head2 new(file => $filename, type => $type, $records => $records, [id=>$id_field])
-
-Create a new MARC importer for $filename or $records. Use STDIN when no filename is given.
-Type describes the sytax of the MARC records. Currently we support: USMARC, MicroLIF
-, XML, ALEPHSEQ or MARC::Record.
-Optionally provide an 'id' option pointing to the identifier field of the MARC record
-(default 001). If the field isn't a control field, it'll default to the 'a'
-subfield. A subfield can be provided like '999c'.
-
-=head2 count
-
-=head2 each(&callback)
-
-=head2 ...
-
-Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. The
-Catmandu::Importer::MARC methods are not idempotent: MARC feeds can only be read once.
-
-=head1 SEE ALSO
-
-L<Catmandu::Iterable>
-
-=cut
 
 1;
