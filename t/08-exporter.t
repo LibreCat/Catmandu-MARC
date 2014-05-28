@@ -7,9 +7,9 @@ use Catmandu::Exporter::MARC;
 use XML::XPath;
 use Test::Simple tests => 24;
 
-my $xml = '';
+my $xml = undef;
 
-my $exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'XML');
+my $exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'XML' , collection => 0);
 
 ok($exporter, "create exporter RAW");
 
@@ -38,8 +38,8 @@ ok(! $xp->exists('/marc:record/marc:datafield[@tag="501"]') ,'skipped 501 - no s
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a"]') ,'skipped 502a - empty subfields');
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="503"]/marc:subfield[@code="a"]') ,'skipped 503a - empty subfields');
 
-$xml = '';
-$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'XML', record_format => 'MARC-in-JSON');
+$xml = undef;
+$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'XML', record_format => 'MARC-in-JSON', collection => 0);
 
 ok($exporter, "create exporter MARC-in-JSON");
 

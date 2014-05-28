@@ -45,7 +45,7 @@ Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
 =head1 SEE ALSO
 
-L<MARC::Catmandu>
+L<https://github.com/jorol/MARC-Catmandu>
 
 =cut
 package Catmandu::Importer::MARC::RAW;

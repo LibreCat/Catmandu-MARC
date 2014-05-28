@@ -2,7 +2,8 @@ package Catmandu::Fix::marc_xml;
 
 use Catmandu::Sane;
 use Moo;
-use Catmandu::Exporter::MARC;
+use IO::String;
+use Catmandu::Exporter::MARC::XML;
 use Catmandu::Util qw(:is :data);
 use Catmandu::Fix::Has;
 
@@ -13,7 +14,12 @@ sub fix {
     my ($self, $data) = @_;
     my $path    = $self->path;
 
-    $data->{$path} = Catmandu::Exporter::MARC->marc_raw_to_marc_xml($data->{$path});
+    my $xml;
+    my $exporter = Catmandu::Exporter::MARC::XML->new(file => \$xml , xml_declaration => 0 , collection => 0);
+    $exporter->add($data);
+    $exporter->commit;
+
+    $data->{$path} = $xml;
 
     $data;
 }

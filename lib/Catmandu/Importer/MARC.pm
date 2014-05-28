@@ -7,7 +7,7 @@ Catmandu::Importer::MARC - Package that imports MARC data
     # From the command line
     $ catmandu convert MARC --fix "marc_map('245a','title')" < /foo/bar.mrc
 
-    # From perl
+    # From Perl
     use Catmandu;
 
     # import records from file
