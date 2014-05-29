@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.202  2014-05-29 19:46:40 CEST
   - Fixing the catmandu command line fixes bug
   
 0.201  2014-05-29 09:11:24 CEST
