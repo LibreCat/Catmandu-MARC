@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding marc_set fix
+  
 0.202  2014-05-29 19:46:40 CEST
   - Fixing the catmandu command line fixes bug
   

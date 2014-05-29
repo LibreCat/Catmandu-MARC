@@ -60,6 +60,8 @@ our $VERSION = '0.202';
 
 =item * L<Catmandu::Fix::marc_in_json>
 
+=item * L<Catmandu::Fix::marc_set>
+
 =item * L<Catmandu::Fix::Condition::marc_match>
 
 =item * L<Catmandu::Fix::Inline::marc_map>
