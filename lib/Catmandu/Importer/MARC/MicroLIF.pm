@@ -1,6 +1,6 @@
 =head1 NAME
 
-Catmandu::Importer::MARC::MicroLIF- Package that imports MicroLIF records
+Catmandu::Importer::MARC::MicroLIF - Package that imports MicroLIF records
 
 =head1 SYNOPSIS
 

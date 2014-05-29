@@ -35,6 +35,11 @@ Catmandu::Fix::marc_remove - remove marc fields
     # the same with the marc fields in 'record2'
     marc_remove('600', '-record', 'record2')
 
+=head1 DESCRIPTION
+
+Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
+overview of the Fix language.
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

@@ -66,17 +66,28 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
 
 =head2 new(file => $filename, type => $type)
 
-Create a new MARC importer for $filename or $records. Use STDIN when no filename is given.
+Create a new MARC importer for $filename. Use STDIN when no filename is given.
 Type describes the MARC parser to be used. Currently we support: 
-        
-    USMARC    L<Catmandu::Importer::MARC::USMARC>
-    MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
-    MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
-    JSON      L<Catmandu::Importer::MARC::MiJ>
-    XML       L<Catmandu::Importer::MARC::XML>
-    RAW       L<Catmandu::Importer::MARC::RAW>
-    Lint      L<Catmandu::Importer::MARC::Lint>
-    ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
+
+=over 2
+
+=item USMARC    L<Catmandu::Importer::MARC::USMARC>
+
+=item MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
+
+=item MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
+
+=item JSON      L<Catmandu::Importer::MARC::MiJ>
+
+=item XML       L<Catmandu::Importer::MARC::XML>
+
+=item RAW       L<Catmandu::Importer::MARC::RAW>
+
+=item Lint      L<Catmandu::Importer::MARC::Lint>
+
+=item ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
+
+=back
 
 Read the documentation of the parser modules for extra configuration options.
 
@@ -88,14 +99,11 @@ Read the documentation of the parser modules for extra configuration options.
 
 =head2 ...
 
-Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. 
-
-=head1 WARNING
-
-The Catmandu::Importer::MARC methods are not idempotent: MARC feeds can only be read once.
+Every L<Catmandu::Importer> is a L<Catmandu::Iterable> all its methods are inherited. 
 
 =head1 SEE ALSO
 
+L<Catmandu::Importer>,
 L<Catmandu::Iterable>, 
 L<Catmandu::Fix::marc_map> , 
 L<Catmandu::Fix::marc_xml>
