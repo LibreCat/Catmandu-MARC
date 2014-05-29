@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing the catmandu command line fixes bug
+  
 0.201  2014-05-29 09:11:24 CEST
   - Adding the MARC::Parser::RAW and updating the pod
   
