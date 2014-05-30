@@ -48,6 +48,13 @@ sub emit {
 
         $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
 
+        if (defined $ind1) {
+            $perl .= "next if (!defined ${var}->[1] || ${var}->[1] ne '${ind1}');";
+        }
+        if (defined $ind2) {
+            $perl .= "next if (!defined ${var}->[2] || ${var}->[2] ne '${ind2}');";
+        }
+
         my $i = $fixer->generate_var;
         my $set_subfields = sub {
                 my $start = shift;
@@ -103,6 +110,9 @@ Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
 
     # Set all the 650-p fields to 'test'
     marc_set('650p','test')
+
+    # Set the 100-a subfield where indicator-1 is 3
+    marc_set('100[3]a','Farquhar family.')
 
 =head1 DESCRIPTION
 

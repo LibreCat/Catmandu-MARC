@@ -48,6 +48,14 @@ sub emit {
         my $perl = "";
 
         $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
+
+        if (defined $ind1) {
+            $perl .= "next if (!defined ${var}->[1] || ${var}->[1] ne '${ind1}');";
+        }
+        if (defined $ind2) {
+            $perl .= "next if (!defined ${var}->[2] || ${var}->[2] ne '${ind2}');";
+        }
+
         if ($self->value) {
             $perl .= $fixer->emit_declare_vars($v, $fixer->emit_string($self->value));
         } else {
@@ -149,6 +157,9 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Map all the 500 - 599 fields to my.notes
     marc_map('5**','my.motes')
+
+    # Map the 100-a field where indicator-1 is 3
+    marc_map('100[3]a','name.family')
 
 =head1 DESCRIPTION
 
