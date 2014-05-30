@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.203  2014-05-30 17:37:37 CEST
   - Adding marc_set fix
   - Making marc_map and marc_set indicator aware
   - Supporting deletion of subfields for marc_remove
