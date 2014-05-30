@@ -32,4 +32,4 @@ $record = $fixer->fix($importer->first);
 
 like $record->{test}, qr/^Martinsson, Tobias,$/, q|fix: marc_set('100[3]a','XXX');|;
 
-done_testing 2;
+done_testing 3;

@@ -39,14 +39,14 @@ sub emit {
         my $var  = shift;
         my $perl = "";
 
-        $perl .= "if ( ${var}->[0] =~ /${field_regex}/) { ";
+        $perl .= "if (${var}->[0] =~ /${field_regex}/) { ";
 
         if (defined $ind1) {
             $perl .= "next if (defined ${var}->[1] && ${var}->[1] eq '${ind1}');";
         }
 
         if (defined $ind2) {
-            $perl .= "next if (!defined ${var}->[2] || ${var}->[2] ne '${ind2}');";
+            $perl .= "next if (defined ${var}->[2] && ${var}->[2] eq '${ind2}');";
         }   
 
         unless (defined $ind1 || defined $ind2 || defined $subfield_regex) {
@@ -63,14 +63,14 @@ sub emit {
         my $del_subfields = sub {
                 my $start    = shift;
                 my $perl     =<<EOF;
+${new_subf} = [];
 for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {
     unless (${var}->[${i}] =~ /${subfield_regex}/) {
          push \@{${new_subf}} , ${var}->[${i}]; 
          push \@{${new_subf}} , ${var}->[${i}+1];                       
     }
 }
-splice \@{${var}} , ${start} , int(\@{${var}});
-push  \@{${var}} , \@{${new_subf}};
+splice \@{${var}} , ${start} , int(\@{${var}}), \@{${new_subf}};
 EOF
                 $perl;
         };
@@ -104,7 +104,7 @@ EOF
 
 =head1 NAME
 
-Catmandu::Fix::marc_remove - remove marc fields
+Catmandu::Fix::marc_remove - remove marc (sub)fields
 
 =head1 SYNOPSIS
 

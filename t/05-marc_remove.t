@@ -30,5 +30,5 @@ ok (!defined $title2, 'deleted the title');
 
 like $author2 , qr/^1976-$/ , 'removed 100-a';
 
-done_testing 2;
+done_testing 4;
 
