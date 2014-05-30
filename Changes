@@ -4,6 +4,7 @@ Revision history for Catmandu-MARC
   - Adding marc_set fix
   - Making marc_map and marc_set indicator aware
   - Supporting deletion of subfields for marc_remove
+  - Fixing EOF bug in RAW importer
   
 0.202  2014-05-29 19:46:40 CEST
   - Fixing the catmandu command line fixes bug

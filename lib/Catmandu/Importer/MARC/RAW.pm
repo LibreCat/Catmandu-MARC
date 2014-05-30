@@ -62,6 +62,9 @@ sub generator {
     my $parser = MARC::Parser::RAW->new($self->fh);
     sub {
     	my $record = $parser->next();
+
+        return undef unless defined $record;
+
     	my $id;
     	for my $field (@$record) {
     		my ($field,$ind1,$ind2,$p,$data,@q) = @$field;
