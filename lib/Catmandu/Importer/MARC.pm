@@ -110,6 +110,15 @@ has type           => (is => 'ro' , default => sub { 'USMARC' });
 has _importer      => (is => 'ro' , lazy => 1 , builder => '_build_importer' , handles => 'Catmandu::Importer');
 has _importer_args => (is => 'rwp', writer => '_set_importer_args');
 
+around generator => sub {
+    my ($orig, $self) = @_;
+    my $generator = $orig->($self);
+    if (my $fixer = $self->_fixer) {
+        return $fixer->fix($generator);
+    }
+    $generator;
+};
+
 sub _build_importer {
     my ($self) = @_;
     my $type = $self->type;
