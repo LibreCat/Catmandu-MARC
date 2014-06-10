@@ -23,11 +23,19 @@ Catmandu::Exporter::MARC - Exporter for MARC records
 Create a new L<Catmandu::Exporter> which serializes MARC records into a $file. 
 Type describes the MARC serializer to be used. Currently we support: 
 
-    USMARC    L<Catmandu::Exporter::MARC::USMARC>
-    XML       L<Catmandu::Exporter::MARC::XML>
-    MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
-    MiJ       L<Catmandu::Exporter::MARC::MiJ>
-    ALEPHSEQ  L<Catmandu::Exporter::MARC::ALEPHSEQ>
+=over 2
+
+=item  USMARC    L<Catmandu::Exporter::MARC::USMARC>
+
+=item  XML       L<Catmandu::Exporter::MARC::XML>
+    
+=item  MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
+   
+=item  MiJ       L<Catmandu::Exporter::MARC::MiJ>
+    
+=item  ALEPHSEQ  L<Catmandu::Exporter::MARC::ALEPHSEQ>
+
+=back
 
 Read the documentation of the parser modules for extra configuration options.
 

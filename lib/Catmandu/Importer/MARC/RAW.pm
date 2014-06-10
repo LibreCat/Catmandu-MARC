@@ -45,7 +45,7 @@ Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
 =head1 SEE ALSO
 
-L<https://github.com/jorol/MARC-Catmandu>
+L<MARC::Parser::RAW>
 
 =cut
 package Catmandu::Importer::MARC::RAW;
@@ -62,6 +62,9 @@ sub generator {
     my $parser = MARC::Parser::RAW->new($self->fh);
     sub {
     	my $record = $parser->next();
+
+        return undef unless defined $record;
+
     	my $id;
     	for my $field (@$record) {
     		my ($field,$ind1,$ind2,$p,$data,@q) = @$field;

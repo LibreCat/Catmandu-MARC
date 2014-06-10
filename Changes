@@ -2,6 +2,18 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+0.203  2014-05-30 17:37:37 CEST
+  - Adding marc_set fix
+  - Making marc_map and marc_set indicator aware
+  - Supporting deletion of subfields for marc_remove
+  - Fixing EOF bug in RAW importer
+  
+0.202  2014-05-29 19:46:40 CEST
+  - Fixing the catmandu command line fixes bug
+  
+0.201  2014-05-29 09:11:24 CEST
+  - Adding the MARC::Parser::RAW and updating the pod
+  
 0.2  2014-05-28 15:24:03 CEST
   - Refactoring MARC import and export parsers and serializers
   - Add importers for MARCMaker, MARC-in-JSON and MARC::Catmandu
