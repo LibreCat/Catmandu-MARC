@@ -1,6 +1,6 @@
 =head1 NAME
 
-Catmandu::Importer::MARC::MARCMaker- Package that imports MARCMaker records
+Catmandu::Importer::MARC::MARCMaker - Package that imports MARCMaker records
 
 =head1 SYNOPSIS
 

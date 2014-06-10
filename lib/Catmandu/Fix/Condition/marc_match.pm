@@ -47,9 +47,14 @@ Catmandu::Fix::Condition::marc_match - Conditionals on MARC fields
    	add_field('my.funny.title','true')
    end
 
+=head1 DESCRIPTION
+
+Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
+overview of the Fix language.
+
 =head1 SEE ALSO
 
-L<Catmandu::Fix::marc_map>
+L<Catmandu::Fix>
 
 =cut
 

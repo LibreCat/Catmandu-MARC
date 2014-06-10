@@ -1,6 +1,6 @@
 =head1 NAME
 
-Catmandu::Importer::MARC::USMARC - Package that imports an array of MARC::Record  
+Catmandu::Importer::MARC::Record - Package that imports an array of MARC::Record  
 
 =head1 SYNOPSIS
 

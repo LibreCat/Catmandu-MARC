@@ -53,6 +53,11 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
    # Optionally provide a pointer to the marc record
    marc_in_json(-record => 'record')
 
+=head1 DESCRIPTION
+
+Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
+overview of the Fix language.
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>
