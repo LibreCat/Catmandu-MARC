@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.204  2014-06-11 07:41:39 BST
   - Need Catmandu 0.9202 to get the delegations working properly
 
 0.203  2014-05-30 17:37:37 CEST
