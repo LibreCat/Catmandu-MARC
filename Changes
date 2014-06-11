@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Need Catmandu 0.9202 to get the delegations working properly
 
 0.203  2014-05-30 17:37:37 CEST
   - Adding marc_set fix
