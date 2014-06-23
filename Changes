@@ -2,6 +2,9 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+0.205  2014-06-23 21:18:06 CEST
+  - Fixed collection bug in the MARC exporter
+
 0.204  2014-06-11 07:41:39 BST
   - Need Catmandu 0.9202 to get the delegations working properly
 
