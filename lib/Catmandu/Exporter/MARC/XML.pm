@@ -63,12 +63,12 @@ has record_format        => (is => 'ro' , default => sub { 'raw'} );
 has skip_empty_subfields => (is => 'ro' , default => sub { 1 });
 has collection           => (is => 'ro' , default => sub { 1 });
 has xml_declaration      => (is => 'ro' , default => sub { 1 });
+has _n                   => (is => 'rw' , default => sub { 0 });
 
 sub add {
     my ($self, $data) = @_;
- 	state $start = 0;
 
- 	if ($start) {
+ 	if ($self->_n == 0) {
     	if ($self->xml_declaration) {
     		$self->fh->print(Catmandu::Util::xml_declaration);
     	}
@@ -77,7 +77,7 @@ sub add {
     		$self->fh->print('<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">');
     	}
 
-    	$start = 1;
+    	$self->_n(1);
     }
  
 
