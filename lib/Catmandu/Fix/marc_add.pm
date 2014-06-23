@@ -2,20 +2,15 @@ package Catmandu::Fix::marc_add;
 
 use Catmandu::Sane;
 use Moo;
+use Catmandu::Fix::Has;
 
-has marc_tag   => (is => 'ro', required => 1);
-has subfields  => (is => 'ro', default => sub { [] });
-
-around BUILDARGS => sub {
-    my ($orig, $class, $marc_tag, @subfields) = @_;
-    my $attrs = { marc_tag => $marc_tag };
-    $attrs->{subfields} = \@subfields if @subfields != 0;
-    $orig->($class, $attrs);
-};
+has marc_tag    => (fix_arg => 1);
+has subfields   => (fix_arg => 'collect');
 
 sub fix {
     my ($self, $data) = @_;
     my $marc_tag   = $self->marc_tag;
+
     my @subfields  = @{$self->subfields};
     my %subfields  = @subfields;
     my $record_key = $subfields{'-record'} // 'record';
