@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.206  2014-10-21 12:01:35 CEST
   - Adding pluck support
   
 0.205  2014-06-23 21:18:06 CEST

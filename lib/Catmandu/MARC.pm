@@ -6,7 +6,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =cut
 
-our $VERSION = '0.205';
+our $VERSION = '0.206';
 
 =head1 SYNOPSIS
 
