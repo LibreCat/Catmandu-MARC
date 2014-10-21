@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding pluck support
+  
 0.205  2014-06-23 21:18:06 CEST
   - Fixed collection bug in the MARC exporter
 
