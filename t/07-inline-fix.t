@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
 use Catmandu::Fix::Inline::marc_add qw(marc_add);
@@ -27,3 +27,6 @@ is scalar marc_map($rec,'900a'), q|test|, q|marc_add(900)|;
 
 my $rec2 = marc_remove($records->[0],'900');
 ok ! defined scalar marc_map($rec2,'900a') , q|marc_map(900) removed|;
+
+my $f050 = marc_map($records->[0],'050ba',-pluck=>1);
+is $f050 , "M33 2000QA76.73.P22" , q|pluck test|;

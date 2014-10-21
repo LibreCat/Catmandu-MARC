@@ -37,4 +37,6 @@ is $records->[0]->{my}->{found005} , 1 , 'if marc_match';
 
 is $records->[0]->{my}->{found008} , 1 , 'if marc_match';
 
-done_testing 9;
+is $records->[0]->{my}->{pluck} , "M33 2000QA76.73.P22" , 'pluck feature';
+
+done_testing 10;

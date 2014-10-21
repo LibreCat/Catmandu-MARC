@@ -11,6 +11,7 @@ has record         => (fix_opt => 1);
 has split          => (fix_opt => 1);
 has join           => (fix_opt => 1);
 has value          => (fix_opt => 1);
+has pluck          => (fix_opt => 1);
 
 sub emit {
     my ($self,$fixer) = @_;
@@ -37,7 +38,7 @@ sub emit {
     $field_regex = $field;
     $field_regex =~ s/\*/./g;
 
-    my $var = $fixer->var;
+    my $var  = $fixer->var;
     my $vals = $fixer->generate_var;
     my $perl = $fixer->emit_declare_vars($vals, '[]');
 
@@ -62,11 +63,27 @@ sub emit {
             my $i = $fixer->generate_var;
             my $add_subfields = sub {
                 my $start = shift;
-                "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
-                    "if (${var}->[${i}] =~ /${subfield_regex}/) {".
-                        "push(\@{${v}}, ${var}->[${i} + 1]);".
-                    "}".
-                "}";
+                if ($self->pluck) {
+                    # Treat the subfield_regex as a hash index
+                    my $pluck = $fixer->generate_var;
+                    return 
+                    "my ${pluck}  = {};" .
+                    "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
+                        "push(\@{ ${pluck}->{ ${var}->[${i}] } }, ${var}->[${i} + 1]);" .
+                    "}" .
+                    "for my ${i} (split('','${subfield_regex}')) { " .
+                        "push(\@{${v}}, \@{ ${pluck}->{${i}} }) if exists ${pluck}->{${i}};" .
+                    "}";
+                }
+                else {
+                    # Treat the subfield_regex as regex that needs to match the subfields
+                    return 
+                    "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
+                        "if (${var}->[${i}] =~ /${subfield_regex}/) {".
+                            "push(\@{${v}}, ${var}->[${i} + 1]);".
+                        "}".
+                    "}";
+                }
             };
             $perl .= $fixer->emit_declare_vars($v, "[]");
             $perl .= "if (${var}->[0] =~ /^LDR|^00/) {";
@@ -126,10 +143,13 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('245','my.title')
 
     # Append an array of 245 subfields to the my.title array
-    marc_map('245','my.title', -split, 1)
+    marc_map('245','my.title', -split => 1)
 
-    # Copy the 245-$a$b$c subfields into the my.title hash
+    # Copy the 245-$a$b$c subfields into the my.title hash in the order provided in the record
     marc_map('245abc','my.title')
+
+    # Copy the 245-$c$b$a subfields into the my.title hash in the order c,b,a
+    marc_map('245cba','my.title', -pluck => 1)
 
     # Copy the 100 subfields into the my.authors array
     marc_map('100','my.authors.$append')

@@ -18,8 +18,11 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
  # str joined by a semi-colon
  $f245 = marc_map($data, '245', -join , ';');
 
- # Get the 245-$a$b$c subfields 
+ # Get the 245-$a$b$c subfields ordered as given in the record
  $str = marc_map($data,'245abc');
+
+ # Get the 245-$c$b$a subfields orders as given in the mapping
+ $str = marc_map($data,'245cba', -pluck => 1);
 
  # Get the 008 characters 35-35 
  $str = marc_map($data,'008_/35-35');
@@ -67,6 +70,7 @@ sub marc_map {
 
     my $split     = $opts{'-split'};
     my $join_char = $opts{'-join'} // '';
+    my $pluck     = $opts{'-pluck'};
     my $attrs     = {};
 
     if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
@@ -89,9 +93,21 @@ sub marc_map {
 
         my @v = ();
 
-        for (my $i = $start; $i < @$var; $i += 2) {
-            if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
-                push(@v, $var->[$i + 1]);
+        if ($pluck) {
+            # Treat the subfield_regex as a hash index
+            my $_h = {};
+            for (my $i = $start; $i < @$var; $i += 2) {
+                push @{ $_h->{ $var->[$i] } } , $var->[$i + 1];
+            }
+            for my $c (split('',$attrs->{subfield_regex})) {
+                push @v , @{ $_h->{$c} } if exists $_h->{$c};
+            }
+        }
+        else {
+            for (my $i = $start; $i < @$var; $i += 2) {
+                if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
+                    push(@v, $var->[$i + 1]);
+                }
             }
         }
 
