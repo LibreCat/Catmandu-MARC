@@ -6,6 +6,7 @@ _build
 blib
 Build
 Makefile.PL
+Build.PL
 MANIFEST*
 META.*
 MYMETA.*
