@@ -2,6 +2,10 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+0.207  2015-01-09 10:02:48 CET
+  - Fixed: Parser "RAW" and fix "marc_map": got field content twice #12
+  - Removed double generator fix magic for command line support
+
 0.206  2014-10-21 12:01:35 CEST
   - Adding pluck support
   
