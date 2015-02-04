@@ -52,15 +52,24 @@ package Catmandu::Importer::MARC::MiJ;
 use Catmandu::Sane;
 use Moo;
 use MARC::Record;
+use Catmandu::Importer::MARC::Decoder;
 use MARC::File::MiJ;
 
-extends 'Catmandu::Importer::MARC::Record';
+with 'Catmandu::Importer';
+
+has id        => (is => 'ro' , default => sub { '001' });
+has decoder   => (
+    is   => 'ro',
+    lazy => 1 , 
+    builder => sub {
+        Catmandu::Importer::MARC::Decoder->new;
+    } );
 
 sub generator {
     my ($self) = @_;
     my $file = MARC::File::MiJ->in($self->file);
     sub  {
-      $self->decode_marc($file->next());
+      $self->decoder->decode($file->next(),$self->id);
     }
 }
 
