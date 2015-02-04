@@ -2,6 +2,10 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+0.208  2015-02-04 20:16:39 CET
+  - Fixing CLI arguments and options bug #12
+  - Adding support for double encoded subfields
+
 0.207  2015-01-09 10:02:48 CET
   - Fixed: Parser "RAW" and fix "marc_map": got field content twice #12
   - Removed double generator fix magic for command line support
