@@ -62,8 +62,17 @@ use Catmandu::Sane;
 use Moo;
 use MARC::File::USMARC;
 use MARC::Lint;
+use Catmandu::Importer::MARC::Decoder;
 
-extends 'Catmandu::Importer::MARC::Record';
+with 'Catmandu::Importer';
+
+has id        => (is => 'ro' , default => sub { '001' });
+has decoder   => (
+    is   => 'ro',
+    lazy => 1 , 
+    builder => sub {
+        Catmandu::Importer::MARC::Decoder->new;
+    } );
 
 sub generator {
     my ($self) = @_;
@@ -71,7 +80,7 @@ sub generator {
     my $file = MARC::File::USMARC->in($self->fh);
     sub  {
        my $marc = $file->next();
-       my $doc  = $self->decode_marc($marc);
+       my $doc  = $self->decoder->decode($marc,$self->id);
        $lint->check_record( $marc );
        $doc->{lint} = [$lint->warnings];
        $doc;
