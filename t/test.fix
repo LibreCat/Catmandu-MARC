@@ -19,6 +19,8 @@ end();
 
 marc_map('050ba','my.pluck', -pluck => 1)
 
+marc_map('245','my.has_title', -value => 'Y')
+
 marc_xml('record');
 
 #remove_field('record');

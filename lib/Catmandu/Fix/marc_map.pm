@@ -59,6 +59,10 @@ sub emit {
 
         if ($self->value) {
             $perl .= $fixer->emit_declare_vars($v, $fixer->emit_string($self->value));
+            $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
+                my $var = shift;
+                "${var} = ${v};";
+            });
         } else {
             my $i = $fixer->generate_var;
             my $add_subfields = sub {
