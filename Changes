@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Fixed value feature 
 
 0.206  2014-10-21 12:01:35 CEST
   - Adding pluck support
