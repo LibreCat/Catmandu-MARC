@@ -62,14 +62,14 @@ sub generator {
            next unless (length $_ >= 18);
 
            my ($sysid,$s1,$tag,$ind1,$ind2,$s2,$char,$s3,$data) = unpack("A9A1A3A1A1A1A1A1U0A*",$_);
-           unless ($tag =~ m{^[0-9A-Z]+}) {
+           unless ($tag =~ m{^[0-9A-Z]+}o) {
                warn "skipping $sysid $tag unknown tag";
                next;
            }
-           unless ($ind1 =~ m{[A-Za-z0-9]}) {
+           unless ($ind1 =~ m{^[A-Za-z0-9-]$}o) {
                $ind1 = " ";
            }
-           unless ($ind2 =~ m{[A-Za-z0-9]}) {
+           unless ($ind2 =~ m{^[A-Za-z0-9-]$}o) {
                $ind2 = " ";
            }
            unless (utf8::decode($data)) {
@@ -83,7 +83,7 @@ sub generator {
 
            # All control-fields contain an underscore field containing the data
            # all other fields not.
-           unless ($tag =~ /FMT|LDR|00./o) {
+           unless ($tag =~ /^FMT|LDR|00.$/o) {
               shift @parts;
               shift @parts;
            }

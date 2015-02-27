@@ -84,9 +84,14 @@ sub add {
         next if $#data == -1;
 
         # Joins are faster than perl string concatenation 
-        if (index($tag,'LDR') == 0 || index($tag,'LDR') == 0 || index($tag,'00') == 0) {
+        if (index($tag,'FMT') == 0 || index($tag,'00') == 0) {
             push @lines , join('', $_id , ' ' , $tag , $ind1 , $ind2 , ' L ', $data[1] );
         } 
+        elsif (index($tag,'LDR') == 0) {
+            my $ldr = $data[1];
+            $ldr =~ s/ /^/og;
+            push @lines , join('', $_id , ' ' , $tag , $ind1 , $ind2 , ' L ', $ldr );
+        }
         else {
              my @line = ('', $_id , ' ' , $tag , $ind1 , $ind2 , ' L ');
              while (@data) {
@@ -98,7 +103,7 @@ sub add {
        }
     }
 
-    $self->fh->print(join("\n",@lines));
+    $self->fh->print(join("\n",@lines) , "\n");
 }
 
 sub commit {
