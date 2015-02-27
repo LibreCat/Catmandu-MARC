@@ -64,7 +64,7 @@ ok(! $xp->exists('/marc:record/marc:datafield[@tag="502"]/marc:subfield[@code="a
 ok(! $xp->exists('/marc:record/marc:datafield[@tag="503"]/marc:subfield[@code="a"]') ,'skipped 503a - empty subfields');
 
 $xml = '';
-$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'ALEPHSEQ');
+$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'ALEPHSEQ' , skip_empty_subfields => 1);
 
 ok($exporter, "create exporter ALEPHSEQ");
 
@@ -89,7 +89,12 @@ ok($xml =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
 ok($xml !~ /000000001 500/, 'test skip empty subfields');
 
 $xml = '';
-$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'ALEPHSEQ', record_format => 'MARC-in-JSON');
+$exporter = Catmandu::Exporter::MARC->new(
+                  file => \$xml, 
+                  type=> 'ALEPHSEQ', 
+                  record_format => 'MARC-in-JSON',
+                  skip_empty_subfields => 1
+);
 
 ok($exporter, "create exporter ALEPHSEQ for MARC-in-JSON");
 

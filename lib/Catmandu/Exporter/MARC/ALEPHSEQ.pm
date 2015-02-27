@@ -97,6 +97,7 @@ sub add {
              while (@data) {
                  my ($code,$val) = splice(@data, 0, 2);
                  next unless $code =~ /[A-Za-z0-9]/o;
+                 next unless is_string($val);
                  push @line , '$$' , $code , $val;
              }
              push @lines , join('', @line);

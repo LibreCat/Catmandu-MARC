@@ -2,6 +2,7 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
   - Optimizing Aleph sequentials exports
+  - Fixed round tripping of Aleph sequential
   
 0.209  2015-02-20 13:39:05 CET
   - Fixed value feature 
