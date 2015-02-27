@@ -52,13 +52,14 @@ L<Catmandu::Exporter>
 package Catmandu::Exporter::MARC::ALEPHSEQ;
 use Catmandu::Sane;
 use Catmandu::Util qw(xml_escape is_different :array :is);
+use List::Util;
 use Moo;
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
 has record               => (is => 'ro' , default => sub { 'record'});
 has record_format        => (is => 'ro', default => sub { 'raw'} );
-has skip_empty_subfields => (is => 'ro' , default => sub { 1 });
+has skip_empty_subfields => (is => 'ro' , default => sub { 0 });
 
 sub add {
     my ($self,$data) = @_;
@@ -70,31 +71,34 @@ sub add {
     my $_id    = sprintf("%-9.9d", $data->{_id} // 0);
 	my $record = $data->{$self->record};  
 
+    my @lines = ();
+
     for my $field (@$record) {
-    	my($tag,$ind1,$ind2,@data) = @$field;
+        my ($tag,$ind1,$ind2,@data) = @$field;
     
         $ind1 = ' ' unless defined $ind1;
         $ind2 = ' ' unless defined $ind2;
 
         @data = $self->_clean_raw_data($tag,@data) if $self->skip_empty_subfields;
 
-        next if @data == 0;
+        next if $#data == -1;
 
-        my $seq =  "${_id} ${tag}${ind1}${ind2} L ";
-  
-        if (array_includes([qw(LDR FMT)],$tag) || $tag =~ /^00/) {
-            $seq .= $data[1];
+        # Joins are faster than perl string concatenation 
+        if (index($tag,'LDR') == 0 || index($tag,'LDR') == 0 || index($tag,'00') == 0) {
+            push @lines , join('', $_id , ' ' , $tag , $ind1 , $ind2 , ' L ', $data[1] );
         } 
         else {
-            while (@data) {
-                my ($code,$val) = splice(@data, 0, 2);
-                next unless $code =~ /[A-Za-z0-9]/;
-                $seq .= "\$\$${code}${val}";
-            }
-        }
-
-        $self->fh->print("$seq\n");
+             my @line = ('', $_id , ' ' , $tag , $ind1 , $ind2 , ' L ');
+             while (@data) {
+                 my ($code,$val) = splice(@data, 0, 2);
+                 next unless $code =~ /[A-Za-z0-9]/o;
+                 push @line , '$$' , $code , $val;
+             }
+             push @lines , join('', @line);
+       }
     }
+
+    $self->fh->print(join("\n",@lines));
 }
 
 sub commit {
