@@ -67,8 +67,8 @@ sub generator {
 
     	my $id;
     	for my $field (@$record) {
-    		my ($field,$ind1,$ind2,$p,$data,@q) = @$field;
-    		if ($field eq $self->id) {
+    		my ($tag,$ind1,$ind2,$p,$data,@q) = @$field;
+    		if ($tag eq $self->id) {
     			$id = $data;
     			last;
     		}
