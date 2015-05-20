@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.210  2015-05-20 11:23:46 CEST
   - Optimizing Aleph sequentials exports
   - Fixed round tripping of Aleph sequential
   - Fixing marc_in_json
