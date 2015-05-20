@@ -13,3 +13,4 @@ MYMETA.*
 Catmandu-MARC-*
 data
 local
+cpanfile.snapshot
