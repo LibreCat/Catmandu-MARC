@@ -3,6 +3,8 @@ Revision history for Catmandu-MARC
 {{$NEXT}}
   - Optimizing Aleph sequentials exports
   - Fixed round tripping of Aleph sequential
+  - Fixing marc_in_json
+  - Adding support for marc_in_json back to catmandu marc mapping
   
 0.209  2015-02-20 13:39:05 CET
   - Fixed value feature 

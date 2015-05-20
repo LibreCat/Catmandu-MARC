@@ -37,6 +37,7 @@ my %module_build_args = (
   },
   "script_files" => [],
   "test_requires" => {
+    "Test::Deep" => "0.115",
     "Test::More" => "1.001003",
     "Test::Simple" => "1.001003",
     "XML::XPath" => "1.13"
@@ -46,6 +47,7 @@ my %module_build_args = (
 
 my %fallback_build_requires = (
   "Module::Build" => "0.28",
+  "Test::Deep" => "0.115",
   "Test::More" => "1.001003",
   "Test::Simple" => "1.001003",
   "XML::XPath" => "1.13"
