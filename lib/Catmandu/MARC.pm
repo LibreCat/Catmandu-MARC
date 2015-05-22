@@ -18,7 +18,7 @@ our $VERSION = '0.209';
 
  $ catmandu convert MARC --fix "marc_map(245,title)" < data.mrc
 
- $ catmandu covert MARC --fix myfixes.txt < data.mrc
+ $ catmandu convert MARC --fix myfixes.txt < data.mrc
 
  myfixes:
  
