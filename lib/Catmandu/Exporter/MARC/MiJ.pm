@@ -21,7 +21,7 @@ Catmandu::Exporter::MARC::MiJ - Exporter for MARC records to MARC in JSON
 =head2 new(file => $file , %opts)
 
 Create a new L<Catmandu::Exporter> to serialize MARC record into MiJ. Provide the path
-of a $file to write exported records to. Optionally the following paramters can be
+of a $file to write exported records to. Optionally the following parameters can be
 specified:
 
 	record : the key containing the marc record (default: 'record')

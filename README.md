@@ -12,7 +12,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
     $ catmandu convert MARC --fix "marc_map(245,title)" < data.mrc
 
-    $ catmandu covert MARC --fix myfixes.txt < data.mrc
+    $ catmandu convert MARC --fix myfixes.txt < data.mrc
 
     myfixes:
     

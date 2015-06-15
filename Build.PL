@@ -18,7 +18,7 @@ my %module_build_args = (
     "Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>"
   ],
   "dist_name" => "Catmandu-MARC",
-  "dist_version" => "0.210",
+  "dist_version" => "0.209",
   "license" => "perl",
   "module_name" => "Catmandu::MARC",
   "recommends" => {},
