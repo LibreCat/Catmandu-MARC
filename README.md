@@ -2,9 +2,11 @@
 
 Catmandu::MARC - Catmandu modules for working with MARC data
 
-\[!\[Build Status\](https://travis-ci.org/LibreCat/Catmandu-MARC.svg?branch=master)\](https://travis-ci.org/LibreCat/Catmandu-MARC)
-\[!\[Coverage\](https://coveralls.io/repos/LibreCat/Catmandu-MARC/badge.png?branch=master)\](https://coveralls.io/r/LibreCat/Catmandu-MARC)
-\[!\[CPANTS kwalitee\](http://cpants.cpanauthors.org/dist/Catmandu-MARC.png)\](http://cpants.cpanauthors.org/dist/Catmandu-MARC)
+# STATUS
+
+[![Build Status](https://travis-ci.org/LibreCat/Catmandu-MARC.svg?branch=master)](https://travis-ci.org/LibreCat/Catmandu-MARC)
+[![Coverage](https://coveralls.io/repos/LibreCat/Catmandu-MARC/badge.png?branch=master)](https://coveralls.io/r/LibreCat/Catmandu-MARC)
+[![CPANTS kwalitee](http://cpants.cpanauthors.org/dist/Catmandu-MARC.png)](http://cpants.cpanauthors.org/dist/Catmandu-MARC)
 
 # SYNOPSIS
 
