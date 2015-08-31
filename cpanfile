@@ -7,7 +7,7 @@ on 'test', sub {
   requires 'XML::XPath', '1.13';
 };
 
-requires 'Catmandu', '0.9202';
+requires 'Catmandu', '0.94';
 requires 'JSON::XS', '2.3';
 requires 'YAML::XS', '0.34';
 requires 'MARC::File::XML', '0.93';
