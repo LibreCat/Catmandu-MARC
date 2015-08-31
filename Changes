@@ -2,6 +2,7 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
   - Fixed POD spelling
+  - Adding marc_each bind
   
 0.210  2015-05-20 11:23:46 CEST
   - Optimizing Aleph sequentials exports
