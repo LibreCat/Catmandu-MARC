@@ -72,6 +72,8 @@ our $VERSION = '0.211';
 
 =item * L<Catmandu::Fix::marc_set>
 
+=item * L<Catmandu::Fix::Bind::marc_each>
+
 =item * L<Catmandu::Fix::Condition::marc_match>
 
 =item * L<Catmandu::Fix::Inline::marc_map>
