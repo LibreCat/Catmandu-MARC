@@ -45,7 +45,7 @@ Catmandu::Fix::marc_add - add new fields to marc
 
     marc_add('900', a, 'test' , 'b', test)
     marc_add('900', ind1 , ' ' , a, 'test' , 'b', test)
-    marc_add('900', ind1 , ' ' , a, 'test' , 'b', test , -record => 'record2')
+    marc_add('900', ind1 , ' ' , a, 'test' , 'b', test , record:record2)
 
 =head1 DESCRIPTION
 

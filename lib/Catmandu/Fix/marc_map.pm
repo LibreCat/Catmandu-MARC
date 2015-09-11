@@ -147,13 +147,13 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('245','my.title')
 
     # Append an array of 245 subfields to the my.title array
-    marc_map('245','my.title', -split => 1)
+    marc_map('245','my.title', split:1)
 
     # Copy the 245-$a$b$c subfields into the my.title hash in the order provided in the record
     marc_map('245abc','my.title')
 
     # Copy the 245-$c$b$a subfields into the my.title hash in the order c,b,a
-    marc_map('245cba','my.title', -pluck => 1)
+    marc_map('245cba','my.title', pluck:1)
 
     # Copy the 100 subfields into the my.authors array
     marc_map('100','my.authors.$append')
@@ -168,13 +168,13 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('008_/35-35','my.language')
 
     # Copy all the 600 fields into a my.stringy hash joining them by '; '
-    marc_map('600','my.stringy', -join => '; ')
+    marc_map('600','my.stringy', join:'; ')
 
     # When 024 field exists create the my.has024 hash with value 'found'
-    marc_map('024','my.has024', -value => 'found')
+    marc_map('024','my.has024', value:found)
 
     # Do the same examples now with the marc fields in 'record2'
-    marc_map('245','my.title', -record => 'record2')
+    marc_map('245','my.title', record:record2)
 
     # Copy all 100 subfields except the digits to the 'author' field
     marc_map('100^0123456789','author')

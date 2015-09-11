@@ -109,10 +109,10 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
    marc_in_json()
 
    # Optionally provide a pointer to the marc record
-   marc_in_json(-record => 'record')
+   marc_in_json(record:record)
 
    # Reverse, transform a MARC-in-JSON record into a Catmandu MARC record
-   marc_in_json(-reverse => 1)
+   marc_in_json(reverse:1)
 
 =head1 DESCRIPTION
 

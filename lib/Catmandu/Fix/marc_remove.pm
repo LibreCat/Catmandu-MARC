@@ -115,7 +115,7 @@ Catmandu::Fix::marc_remove - remove marc (sub)fields
     marc_remove('245a')
 
     # the same with the marc fields in 'record2'
-    marc_remove('600', '-record', 'record2')
+    marc_remove('600', record:record2)
 
 =head1 DESCRIPTION
 
