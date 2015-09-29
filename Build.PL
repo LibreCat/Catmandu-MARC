@@ -38,6 +38,7 @@ my %module_build_args = (
     "Pod::Simple::HTML" => "3.23",
     "Test::Deep" => "0.115",
     "Test::More" => "1.001003",
+    "Test::Pod" => 0,
     "Test::Simple" => "1.001003",
     "XML::XPath" => "1.13"
   }
@@ -49,6 +50,7 @@ my %fallback_build_requires = (
   "Pod::Simple::HTML" => "3.23",
   "Test::Deep" => "0.115",
   "Test::More" => "1.001003",
+  "Test::Pod" => 0,
   "Test::Simple" => "1.001003",
   "XML::XPath" => "1.13"
 );

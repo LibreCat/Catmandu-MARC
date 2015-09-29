@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.212  2015-09-29 11:07:13 CEST
   - Fixed marc_each single execution bug
   
 0.211  2015-08-31 16:17:42 CEST
