@@ -6,6 +6,7 @@ on 'test', sub {
   requires 'Test::Deep', '0.115';
   requires 'XML::XPath', '1.13';
   requires 'Pod::Simple::HTML', '>=3.23';
+  requires 'Test::Pod' , '0';
 };
 
 requires 'Catmandu', '0.94';
