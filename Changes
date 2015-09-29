@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixed marc_each single execution bug
+  
 0.211  2015-08-31 16:17:42 CEST
   - Fixed POD spelling
   - Adding marc_each bind

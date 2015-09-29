@@ -19,21 +19,25 @@ require_ok $pkg;
 
 my $fixer = Catmandu::Fix->new(fixes => [q|
 	do marc_each()
-		if marc_match("***d",'DLC')
-			add_field(has_dlc,true)
+		if marc_match("***a",'Perl')
+			add_field(has_perl,true)
 		end
-		if marc_match("300",'.*')
+		if marc_match("100",'.*')
 			reject()
 		end
 	end
-	marc_map("300",test)
+	marc_map("100",test)
 |]);
 
 my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
-my $record = $fixer->fix($importer->first);
 
-ok exists $record->{record}, 'created a marc record';
-is $record->{has_dlc}, 'true', 'created has_dlc tag';
-ok ! exists $record->{test} , 'field 300 deleted';
+$fixer->fix($importer)->each(sub {
+	my $record = $_[0];
+	my $id = $record->{_id};
 
-done_testing 5;
+	ok exists $record->{record}, "created a marc record $id";
+	is $record->{has_perl}, 'true', "created has_dlc tag $id";
+	ok ! exists $record->{test} , "field 300 deleted $id";
+});
+
+done_testing;

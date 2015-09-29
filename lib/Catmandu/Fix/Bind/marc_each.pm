@@ -5,11 +5,13 @@ use Catmandu::Util;
 
 with 'Catmandu::Fix::Bind';
 
-has done => (is => 'ro', default => sub { 0 });
+has done => (is => 'ro');
 
 sub unit {
     my ($self,$data) = @_;
 
+    $self->{done} = 0;
+    
     $data;
 }
 
