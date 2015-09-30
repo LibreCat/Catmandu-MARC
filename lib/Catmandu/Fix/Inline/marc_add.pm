@@ -43,7 +43,7 @@ sub marc_add {
                 push @field , $value->{$_};
             }
         }
-        else {
+        elsif (is_value($value) && length($value) > 0) {
             push @field , $code;
             push @field , $value;
         }

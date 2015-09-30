@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding support for setting anf adding JSON paths
+  
 0.212  2015-09-29 11:07:13 CEST
   - Fixed marc_each single execution bug
   

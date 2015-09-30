@@ -1,6 +1,7 @@
 package Catmandu::Fix::marc_set;
 
 use Catmandu::Sane;
+use Catmandu::Util qw(:is);
 use Carp qw(confess);
 use Moo;
 use Catmandu::Fix::Has;
@@ -67,6 +68,7 @@ sub emit {
         my $var  = shift;
         my $perl = "";
 
+        $perl .= "next unless is_value ${value};";
         $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
 
         if (defined $ind1) {

@@ -22,6 +22,8 @@ sub fix {
         push @field , $marc_tag;
         push @field , $subfields{ind1} // ' ';
         push @field , $subfields{ind2} // ' ';
+
+
         for (my $i = 0 ; $i < @subfields ; $i += 2) {
             my $code  = $subfields[$i];
             next unless length $code == 1;
@@ -44,16 +46,16 @@ sub fix {
                     push @field , $value->{$_};
                 }
             }
-            else {
+            elsif (is_value($value) && length($value) > 0) {
                 push @field , $code;
                 push @field , $value;
             }
         }
 
-        push @{ $marc } , \@field;
-
-        $data->{$record_key} = $marc;
+        push @{ $marc } , \@field if @field > 3;
     }
+
+    $data->{$record_key} = $marc;
 
     $data;
 }
