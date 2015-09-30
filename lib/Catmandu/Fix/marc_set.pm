@@ -12,7 +12,6 @@ has record         => (fix_opt => 1);
 sub emit {
     my ($self,$fixer) = @_;
     my $record_key  = $fixer->emit_string($self->record // 'record');
-    my $value       = $fixer->emit_string($self->value);
     my $marc_path   = $self->marc_path;
 
     my $field_regex;
@@ -36,11 +35,33 @@ sub emit {
         confess "invalid marc path";
     }
 
+    my $perl = "";
+
+    # Find out if we need to insert a literal value or a value from a JSON path
+    my $value;
+
+    if ($self->value =~ /^\$\.(\S+)$/) {
+        my $path = $fixer->split_path($1);
+        my $key  = pop @$path;
+        $value =  $fixer->generate_var;
+        $perl .= $fixer->emit_declare_vars($value, '""');
+        $perl .= $fixer->emit_walk_path($fixer->var, $path, sub {
+            my $var = shift;
+            $fixer->emit_get_key($var, $key, sub {
+                my $var = shift;
+                "${value} = ${var};";
+            });
+        });
+    }
+    else {
+        $value = $fixer->emit_string($self->value);
+    }
+    ##############
+
     $field_regex = $field;
     $field_regex =~ s/\*/./g;
 
     my $var  = $fixer->var;
-    my $perl = "";
 
     $perl .= $fixer->emit_foreach("${var}->{${record_key}}", sub {
         my $var  = shift;
@@ -113,6 +134,9 @@ Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
 
     # Set the 100-a subfield where indicator-1 is 3
     marc_set('100[3]a','Farquhar family.')
+
+    # Copy data from another field in a subfield
+    marc_set('100a','$.my.deep.field')
 
 =head1 DESCRIPTION
 

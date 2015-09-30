@@ -39,7 +39,9 @@ Catmandu::Fix::Inline::marc_remove - remove marc fields
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix::Inline::marc_map> , L<Catmandu::Fix::Inline::marc_add> 
+L<Catmandu::Fix::Inline::marc_set> , 
+L<Catmandu::Fix::Inline::marc_add> , 
+L<Catmandu::Fix::Inline::marc_map> 
 
 =cut
 

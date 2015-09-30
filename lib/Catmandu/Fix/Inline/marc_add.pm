@@ -2,6 +2,7 @@ package Catmandu::Fix::Inline::marc_add;
 
 use Clone qw(clone);
 use Carp;
+use Catmandu::Util qw(:is);
 require Exporter;
 
 @ISA = qw(Exporter);
@@ -24,8 +25,28 @@ sub marc_add {
         my $code  = $subfields[$i];
         next unless length $code == 1;
         my $value = $subfields[$i+1];
-        push @field , $code;
-        push @field , $value;
+
+        if ($value =~ /^\$\.(\S+)/) {
+            my $path = $1;
+            $value = Catmandu::Util::data_at($path,$data);
+        }
+
+        if (is_array_ref $value) {
+            for (@$value) {
+                push @field , $code;
+                push @field , $_;
+            }
+        }
+        elsif (is_hash_ref $value) {
+            for (keys %$value) {
+                push @field , $code;
+                push @field , $value->{$_};
+            }
+        }
+        else {
+            push @field , $code;
+            push @field , $value;
+        }
     }
 
     push @{ $ret->{record} } , \@field;
@@ -35,17 +56,23 @@ sub marc_add {
 
 =head1 NAME
 
-Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
+Catmandu::Fix::Inline::marc_add- A marc_add-er for Perl scripts
 
 =head1 SYNOPSIS
 
  use Catmandu::Fix::Inline::marc_add qw(:all);
 
- my $data  = marc_add($data,'245',  a => 'value' );
+ # Set to a literal value
+ my $data  = marc_add($data, '245',  a => 'value');
+
+ # Set to a copy of a deeply nested JSON path
+ my $data  = marc_add($data, '245',  a => '$.my.deep.field');
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix::Inline::marc_map> , L<Catmandu::Fix::Inline::marc_remove> 
+L<Catmandu::Fix::Inline::marc_set> , 
+L<Catmandu::Fix::Inline::marc_map> , 
+L<Catmandu::Fix::Inline::marc_remove> 
 
 =cut
 

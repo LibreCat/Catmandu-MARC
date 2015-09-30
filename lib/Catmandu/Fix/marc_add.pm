@@ -1,6 +1,7 @@
 package Catmandu::Fix::marc_add;
 
 use Catmandu::Sane;
+use Catmandu::Util qw(:is);
 use Moo;
 use Catmandu::Fix::Has;
 
@@ -25,8 +26,28 @@ sub fix {
             my $code  = $subfields[$i];
             next unless length $code == 1;
             my $value = $subfields[$i+1];
-            push @field , $code;
-            push @field , $value;
+
+            if ($value =~ /^\$\.(\S+)$/) {
+                my $path = $1;
+                $value = Catmandu::Util::data_at($path,$data);
+            }
+
+            if (is_array_ref $value) {
+                for (@$value) {
+                    push @field , $code;
+                    push @field , $_;
+                }
+            }
+            elsif (is_hash_ref $value) {
+                for (keys %$value) {
+                    push @field , $code;
+                    push @field , $value->{$_};
+                }
+            }
+            else {
+                push @field , $code;
+                push @field , $value;
+            }
         }
 
         push @{ $marc } , \@field;
@@ -43,9 +64,14 @@ Catmandu::Fix::marc_add - add new fields to marc
 
 =head1 SYNOPSIS
 
+    # Set literal values
     marc_add('900', a, 'test' , 'b', test)
     marc_add('900', ind1 , ' ' , a, 'test' , 'b', test)
     marc_add('900', ind1 , ' ' , a, 'test' , 'b', test , record:record2)
+
+    # Copy data from an other field (when the field value is an array, the
+    # subfield will be repeated)
+    marc_add('900', a, '$.my.data.field')
 
 =head1 DESCRIPTION
 

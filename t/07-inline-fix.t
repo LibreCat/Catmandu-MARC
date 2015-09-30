@@ -1,32 +1,71 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 13;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
 use Catmandu::Fix::Inline::marc_add qw(marc_add);
+use Catmandu::Fix::Inline::marc_set qw(marc_set);
 use Catmandu::Fix::Inline::marc_remove qw(marc_remove);
 use Catmandu::Importer::JSON;
 use Data::Dumper;
 
 my $importer = Catmandu::Importer::JSON->new( file => 't/old_new.json' );
-my $records = $importer->to_array;
+
+my $fixer = Catmandu::Fix->new(fixes => [
+	q|add_field(my.deep.field,foo)|,
+	q|add_field(my.deep.array.$append,red)|,
+	q|add_field(my.deep.array.$append,green)|,
+	q|add_field(my.deep.array.$append,blue)|,
+]);
+
+my $records = $fixer->fix($importer)->to_array;
 
 ok(@$records == 2 , "Found 2 records");
 
-is scalar marc_map($records->[0],'245a'), q|ActivePerl with ASP and ADO /|, q|marc_map(245a)|;
-is scalar marc_map($records->[0],'001') , q|fol05731351 | , q|marc_map(001)|;
-ok ! defined(scalar marc_map($records->[0],'191')) , q|marc_map(191) not defined|;
-ok ! defined(scalar marc_map($records->[0],'245x')) , q|marc_map(245x) not defined|;
+{
+	is scalar marc_map($records->[0],'245a'), q|ActivePerl with ASP and ADO /|, q|marc_map(245a)|;
+	is scalar marc_map($records->[0],'001') , q|fol05731351 | , q|marc_map(001)|;
+	ok ! defined(scalar marc_map($records->[0],'191')) , q|marc_map(191) not defined|;
+	ok ! defined(scalar marc_map($records->[0],'245x')) , q|marc_map(245x) not defined|;
+}
 
-my @res = marc_map($records->[0],'630');
-ok(@res == 2 , q|marc_map(630)|);
+{
+	my @res = marc_map($records->[0],'630');
+	ok(@res == 2 , q|marc_map(630)|);
+}
 
-my $rec = marc_add($records->[0],'900', a => 'test');
-is scalar marc_map($rec,'900a'), q|test|, q|marc_add(900)|;
+{
+	my $rec = marc_add($records->[0],'900', a => 'test');
+	is scalar marc_map($rec,'900a'), q|test|, q|marc_add(900)|;
+}
 
-my $rec2 = marc_remove($records->[0],'900');
-ok ! defined scalar marc_map($rec2,'900a') , q|marc_map(900) removed|;
+{
+	my $rec = marc_add($records->[0],'901', a => '$.my.deep.field');
+	is scalar marc_map($rec,'901a'), q|foo|, q|marc_add(901)|;
+}
 
-my $f050 = marc_map($records->[0],'050ba',-pluck=>1);
-is $f050 , "M33 2000QA76.73.P22" , q|pluck test|;
+{
+	my $rec = marc_add($records->[0],'902', a => '$.my.deep.array');
+	is scalar marc_map($rec,'902a'), q|redgreenblue|, q|marc_add(902)|;
+}
+
+{
+	my $rec = marc_set($records->[0],'010b', 'test');
+	is scalar marc_map($rec,'010b'), q|test|, q|marc_set(010)|;
+}
+
+{
+	my $rec = marc_set($records->[0],'010b', '$.my.deep.field');
+	is scalar marc_map($rec,'010b'), q|foo|, q|marc_set(010)|;
+}
+
+{
+	my $rec = marc_remove($records->[0],'900');
+	ok ! defined scalar marc_map($rec,'900a') , q|marc_map(900) removed|;
+}
+
+{
+	my $f050 = marc_map($records->[0],'050ba',-pluck=>1);
+	is $f050 , "M33 2000QA76.73.P22" , q|pluck test|;
+}
