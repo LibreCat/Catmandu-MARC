@@ -36,7 +36,7 @@ my %module_build_args = (
   },
   "test_requires" => {
     "Pod::Simple::HTML" => "3.23",
-    "Test::Deep" => "0.115",
+    "Test::Deep" => 0,
     "Test::More" => "1.001003",
     "Test::Pod" => 0,
     "Test::Simple" => "1.001003",
@@ -48,7 +48,7 @@ my %module_build_args = (
 my %fallback_build_requires = (
   "Module::Build" => "0.28",
   "Pod::Simple::HTML" => "3.23",
-  "Test::Deep" => "0.115",
+  "Test::Deep" => 0,
   "Test::More" => "1.001003",
   "Test::Pod" => 0,
   "Test::Simple" => "1.001003",

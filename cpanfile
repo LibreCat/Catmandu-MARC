@@ -3,13 +3,13 @@ requires 'perl', 'v5.10.1';
 on 'test', sub {
   requires 'Test::Simple', '1.001003';
   requires 'Test::More', '1.001003';
-  requires 'Test::Deep', '0.115';
+  requires 'Test::Deep', '0';
   requires 'XML::XPath', '1.13';
   requires 'Pod::Simple::HTML', '>=3.23';
   requires 'Test::Pod' , '0';
 };
 
-requires 'Catmandu', '0.94';
+requires 'Catmandu', '>=0.94';
 requires 'JSON::XS', '2.3';
 requires 'YAML::XS', '0.34';
 requires 'MARC::File::XML', '0.93';
