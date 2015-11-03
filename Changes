@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Maintenance release skipping buggy Catmandu versions
 
 0.213  2015-09-30 16:00:11 CEST
   - Adding support for setting anf adding JSON paths
