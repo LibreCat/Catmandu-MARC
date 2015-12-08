@@ -5,7 +5,7 @@ use warnings;
 
 use Catmandu::Exporter::MARC;
 use XML::XPath;
-use Test::Simple tests => 24;
+use Test::Simple tests => 26;
 
 my $xml = undef;
 
@@ -115,3 +115,16 @@ ok($xml =~ /^000000001/, 'test id');
 ok($xml =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
 ok($xml !~ /000000001 500/, 'test skip empty subfields');
 
+$xml = '';
+$exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'ISO');
+
+ok($exporter, "create exporter ISO/USMARC");
+
+$exporter->add({
+  _id => '1' ,
+  record => [
+            ['001', undef, undef, '_', 'rec001'],
+            ['100', ' ', ' ', 'a', 'Davis, Miles' , 'c' , 'Test'],
+        ]
+});
+ok($xml =~ /^00080     2200049   4500001000700000100002300007rec001  aDavis, MilescTest$/, 'test ISO/USMARC');

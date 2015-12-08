@@ -120,7 +120,7 @@ has _importer_args => (is => 'rwp', writer => '_set_importer_args');
 
 sub _build_importer {
     my ($self) = @_;
-    my $type = $self->type;
+    my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
 
     $type = 'Record' if exists $self->_importer_args->{records};
     
