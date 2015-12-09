@@ -27,7 +27,7 @@ Type describes the MARC serializer to be used. Currently we support:
 
 =item  USMARC    L<Catmandu::Exporter::MARC::USMARC>
 
-=item ISO       alias for USMARC
+=item  ISO       alias for USMARC
 
 =item  XML       L<Catmandu::Exporter::MARC::XML>
     
