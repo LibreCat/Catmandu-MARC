@@ -73,6 +73,8 @@ Type describes the MARC parser to be used. Currently we support:
 
 =item USMARC    L<Catmandu::Importer::MARC::USMARC>
 
+=item ISO       alias for USMARC
+
 =item MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
 
 =item MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
