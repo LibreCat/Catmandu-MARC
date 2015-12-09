@@ -27,6 +27,8 @@ Type describes the MARC serializer to be used. Currently we support:
 
 =item  USMARC    L<Catmandu::Exporter::MARC::USMARC>
 
+=item  ISO       alias for USMARC
+
 =item  XML       L<Catmandu::Exporter::MARC::XML>
     
 =item  MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
@@ -54,7 +56,7 @@ has _exporter_args => (is => 'rwp', writer => '_set_exporter_args');
 
 sub _build_exporter {
     my ($self) = @_;
-    my $type = $self->type;
+    my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
     
     my $pkg = Catmandu::Util::require_package($type,'Catmandu::Exporter::MARC');
 
