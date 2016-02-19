@@ -117,8 +117,10 @@ use Catmandu::Util;
 use Moo;
 
 has type           => (is => 'ro' , default => sub { 'USMARC' });
-has _importer      => (is => 'ro' , lazy => 1 , builder => '_build_importer' , handles => 'Catmandu::Importer');
+has _importer      => (is => 'ro' , lazy => 1 , builder => '_build_importer' , handles => ['generator']);
 has _importer_args => (is => 'rwp', writer => '_set_importer_args');
+
+with 'Catmandu::Importer';
 
 sub _build_importer {
     my ($self) = @_;
