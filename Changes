@@ -4,6 +4,7 @@ Revision history for Catmandu-MARC
   - Supporting ISO alias for USMARC importer and exporter
   - Fixing MicroLIF importer
   - Making Catmandu::MARC forwards compatible with Catmandu 1.0
+  - Adding a pretty option for XML
   
 0.214  2015-11-03 11:46:22 CET
   - Maintenance release skipping buggy Catmandu versions
