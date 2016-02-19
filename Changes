@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Supporting ISO alias for USMARC importer and exporter
+  
 0.214  2015-11-03 11:46:22 CET
   - Maintenance release skipping buggy Catmandu versions
 

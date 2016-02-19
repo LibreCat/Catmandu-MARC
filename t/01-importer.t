@@ -5,7 +5,7 @@ use warnings;
 
 use Catmandu::Importer::MARC;
 use MARC::File::USMARC;
-use Test::Simple tests => 9;
+use Test::Simple tests => 10;
 
 my $importer = Catmandu::Importer::MARC->new(
     file => 't/camel.usmarc',
@@ -13,8 +13,8 @@ my $importer = Catmandu::Importer::MARC->new(
 );
 my $records = $importer->to_array();
 
-ok( @$records == 10,                                      'got all records' );
-ok( $records->[0]->{'_id'} eq 'fol05731351 ',             'got _id' );
+ok( @$records == 10, 'got all records' );
+ok( $records->[0]->{'_id'}             eq 'fol05731351 ', 'got _id' );
 ok( $records->[0]->{'record'}->[1][-1] eq 'fol05731351 ', 'got subfield' );
 ok( $records->[0]->{'_id'} eq $records->[0]->{'record'}->[1][-1],
     '_id matches record id' );
@@ -29,8 +29,8 @@ undef $file;
 $importer = Catmandu::Importer::MARC->new( records => \@marc_objects );
 $records = $importer->to_array();
 
-ok( @$records == 10,                                      'got all records' );
-ok( $records->[0]->{'_id'} eq 'fol05731351 ',             'got _id' );
+ok( @$records == 10, 'got all records' );
+ok( $records->[0]->{'_id'}             eq 'fol05731351 ', 'got _id' );
 ok( $records->[0]->{'record'}->[1][-1] eq 'fol05731351 ', 'got subfield' );
 ok( $records->[0]->{'_id'} eq $records->[0]->{'record'}->[1][-1],
     '_id matches record id' );
@@ -43,3 +43,10 @@ $importer = Catmandu::Importer::MARC->new(
 );
 $records = $importer->to_array();
 ok( $records->[0]->{'_id'} eq '2000.', 'got _id from subfield' );
+
+# ISO as alias for USMARC
+$importer
+    = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "ISO",
+    );
+$records = $importer->to_array();
+ok( @$records == 10, 'type ISO' );

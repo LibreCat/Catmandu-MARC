@@ -114,7 +114,7 @@ Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
 
 =item * Nicolas Franck, C<< <nicolas.franck at ugent.be> >>
 
-=item * Johann Rolschewski, C<< johann.rolschewski at sbb.spk-berlin.de >>
+=item * Johann Rolschewski, C<< jorol at cpan.org >>
 
 =item * Chris Cormack
 

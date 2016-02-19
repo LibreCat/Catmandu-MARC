@@ -73,6 +73,8 @@ Type describes the MARC parser to be used. Currently we support:
 
 =item USMARC    L<Catmandu::Importer::MARC::USMARC>
 
+=item ISO       alias for USMARC
+
 =item MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
 
 =item MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
@@ -120,7 +122,7 @@ has _importer_args => (is => 'rwp', writer => '_set_importer_args');
 
 sub _build_importer {
     my ($self) = @_;
-    my $type = $self->type;
+    my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
 
     $type = 'Record' if exists $self->_importer_args->{records};
     

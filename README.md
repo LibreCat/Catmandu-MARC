@@ -84,7 +84,7 @@ Patrick Hochstenbach, `<patrick.hochstenbach at ugent.be>`
 
 - Nicolas Steenlant, `<nicolas.steenlant at ugent.be>`
 - Nicolas Franck, `<nicolas.franck at ugent.be>`
-- Johann Rolschewski, `johann.rolschewski at sbb.spk-berlin.de`
+- Johann Rolschewski, `jorol at cpan.org`
 - Chris Cormack
 - Robin Sheat
 
