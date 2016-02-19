@@ -68,7 +68,7 @@ sub generator {
     my ($self) = @_;
     my $file = MARC::File::MicroLIF->in($self->fh);
     sub  {
-      $self->decode_marc($file->next(),$self->id);
+      $self->decoder->decode($file->next(),$self->id);
     }
 }
 

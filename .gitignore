@@ -13,3 +13,4 @@ Catmandu-MARC-*
 data
 local
 cpanfile.snapshot
+.perl-version
