@@ -164,6 +164,8 @@ skip fields which don't contain any data (default: false)
 
 pretty-print XML
 
+=back
+
 =head1 METHODS
 
 See L<Catmandu::Exporter>, L<Catmandu::Addable>, L<Catmandu::Fixable>,
