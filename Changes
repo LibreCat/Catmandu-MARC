@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.215  2016-02-22 09:57:07 CET
   - Supporting ISO alias for USMARC importer and exporter
   - Fixing MicroLIF importer
   - Making Catmandu::MARC forwards compatible with Catmandu 1.0
