@@ -3,6 +3,8 @@ package Catmandu::Fix::marc_decode_dollar_subfields;
 use Moo;
 use Data::Dumper;
 
+our $VERSION = '0.215';
+
 sub fix {
 	my ($self,$data) = @_;
 

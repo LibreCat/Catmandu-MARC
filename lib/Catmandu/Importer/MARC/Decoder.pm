@@ -3,6 +3,8 @@ package Catmandu::Importer::MARC::Decoder;
 use Catmandu::Sane;
 use Moo;
 
+our $VERSION = '0.215';
+
 sub decode {
     my ($self, $record, $id) = @_;
     return unless eval { $record->isa('MARC::Record') };

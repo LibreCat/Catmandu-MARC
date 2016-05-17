@@ -56,6 +56,8 @@ use MARC::Record;
 use MARC::Field;
 use MARC::File::USMARC;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
 has record               => (is => 'ro' , default => sub { 'record'});

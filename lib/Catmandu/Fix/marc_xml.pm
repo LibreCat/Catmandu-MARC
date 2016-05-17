@@ -7,6 +7,8 @@ use Catmandu::Exporter::MARC::XML;
 use Catmandu::Util qw(:is :data);
 use Catmandu::Fix::Has;
 
+our $VERSION = '0.215';
+
 has path  => (fix_arg => 1);
 
 # Transform a raw MARC array into MARCXML

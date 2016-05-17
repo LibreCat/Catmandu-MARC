@@ -55,6 +55,8 @@ use Catmandu::Sane;
 use Catmandu::Importer::MARC::Decoder;
 use Moo;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Importer';
 
 has id        => (is => 'ro' , default => sub { '001' });

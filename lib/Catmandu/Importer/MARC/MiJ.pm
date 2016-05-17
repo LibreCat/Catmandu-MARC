@@ -55,6 +55,8 @@ use MARC::Record;
 use Catmandu::Importer::MARC::Decoder;
 use MARC::File::MiJ;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Importer';
 
 has id        => (is => 'ro' , default => sub { '001' });

@@ -47,6 +47,8 @@ package Catmandu::Importer::MARC::ALEPHSEQ;
 use Catmandu::Sane;
 use Moo;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Importer';
 
 sub generator {

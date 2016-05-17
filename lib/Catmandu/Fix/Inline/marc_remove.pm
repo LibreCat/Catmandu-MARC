@@ -8,6 +8,8 @@ require Exporter;
 @EXPORT_OK = qw(marc_remove);
 %EXPORT_TAGS = (all => [qw(marc_remove)]);
 
+our $VERSION = '0.215';
+
 sub marc_remove {
     my ($data,$marc_path) = @_;
     my $ret = defined $data ? clone($data) : { record => [] };

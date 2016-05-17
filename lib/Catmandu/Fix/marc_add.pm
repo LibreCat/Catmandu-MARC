@@ -5,6 +5,8 @@ use Catmandu::Util qw(:is);
 use Moo;
 use Catmandu::Fix::Has;
 
+our $VERSION = '0.215';
+
 has marc_tag    => (fix_arg => 1);
 has subfields   => (fix_arg => 'collect');
 

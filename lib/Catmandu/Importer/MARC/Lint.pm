@@ -64,6 +64,8 @@ use MARC::File::USMARC;
 use MARC::Lint;
 use Catmandu::Importer::MARC::Decoder;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Importer';
 
 has id        => (is => 'ro' , default => sub { '001' });

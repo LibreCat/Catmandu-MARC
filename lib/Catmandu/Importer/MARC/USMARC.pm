@@ -53,6 +53,8 @@ use Catmandu::Sane;
 use Moo;
 use MARC::File::USMARC;
 
+our $VERSION = '0.215';
+
 with 'Catmandu::Importer';
 
 has id        => (is => 'ro' , default => sub { '001' });

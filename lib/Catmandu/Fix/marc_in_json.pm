@@ -5,6 +5,8 @@ use Catmandu::Util qw(:is);
 use Moo;
 use Catmandu::Fix::Has;
 
+our $VERSION = '0.215';
+
 has record  => (fix_opt => 1);
 has reverse => (fix_opt => 1);
 
