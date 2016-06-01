@@ -5,6 +5,8 @@ use Catmandu::Util qw(:is);
 use Moo;
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Inlineable';
+
 our $VERSION = '0.215';
 
 has marc_tag    => (fix_arg => 1);

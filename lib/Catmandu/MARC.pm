@@ -1,5 +1,79 @@
 package Catmandu::MARC;
 
+use Catmandu::Util;
+use Catmandu::Exporter::MARC::XML;
+
+our $VERSION = '0.215';
+
+sub marc_add {
+    my ($data,$marc_tag,$subfield_array) = @_;
+
+    my @subfields  = @{$subfield_array};
+    my %subfields  = @subfields;
+    my $record_key = $subfields{'-record'} // 'record';
+    my $marc       = $data->{$record_key} // [];
+
+    if ($marc_tag =~ /^\w{3}$/) {
+        my @field = ();
+        push @field , $marc_tag;
+        push @field , $subfields{ind1} // ' ';
+        push @field , $subfields{ind2} // ' ';
+
+
+        for (my $i = 0 ; $i < @subfields ; $i += 2) {
+            my $code  = $subfields[$i];
+            next unless length $code == 1;
+            my $value = $subfields[$i+1];
+
+            if ($value =~ /^\$\.(\S+)$/) {
+                my $path = $1;
+                $value = Catmandu::Util::data_at($path,$data);
+            }
+
+            if (Catmandu::Util::is_array_ref $value) {
+                for (@$value) {
+                    push @field , $code;
+                    push @field , $_;
+                }
+            }
+            elsif (Catmandu::Util::is_hash_ref $value) {
+                for (keys %$value) {
+                    push @field , $code;
+                    push @field , $value->{$_};
+                }
+            }
+            elsif (Catmandu::Util::is_value($value) && length($value) > 0) {
+                push @field , $code;
+                push @field , $value;
+            }
+        }
+
+        push @{ $marc } , \@field if @field > 3;
+    }
+
+    $data->{$record_key} = $marc;
+
+    $data;
+}
+
+sub marc_xml {
+    my ($data,$path) = @_;
+    $path //= 'record';
+
+    my $xml;
+    my $exporter = Catmandu::Exporter::MARC::XML->new(file => \$xml , xml_declaration => 0 , collection => 0);
+    $exporter->add($data);
+    $exporter->commit;
+
+    $data->{$path} = $xml;
+
+    $data;
+}
+
+1;
+
+__END__
+
 =head1 NAME
 
 Catmandu::MARC - Catmandu modules for working with MARC data
@@ -13,10 +87,6 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 [![CPANTS kwalitee](http://cpants.cpanauthors.org/dist/Catmandu-MARC.png)](http://cpants.cpanauthors.org/dist/Catmandu-MARC)
 
 =end markdown
-
-=cut
-
-our $VERSION = '0.215';
 
 =head1 SYNOPSIS
 
@@ -131,6 +201,3 @@ by the Free Software Foundation; or the Artistic License.
 See http://dev.perl.org/licenses/ for more information.
 
 =cut
-
-1;
-

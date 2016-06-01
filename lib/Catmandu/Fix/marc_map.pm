@@ -25,7 +25,7 @@ sub emit {
     my $field_regex;
     my ($field,$ind1,$ind2,$subfield_regex,$from,$to);
 
-    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
+    if ($marc_path =~ /(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
         $field          = $1;
         $ind1           = $3;
         $ind2           = $4;
@@ -43,7 +43,6 @@ sub emit {
     my $var  = $fixer->var;
     my $vals = $fixer->generate_var;
     my $perl = $fixer->emit_declare_vars($vals, '[]');
-
 
     $perl .= $fixer->emit_foreach("${var}->{${record_key}}", sub {
         my $var  = shift;
@@ -186,6 +185,12 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Map the 100-a field where indicator-1 is 3
     marc_map('100[3]a','name.family')
+
+    # Map the 245-a field where indicator-2 is 0
+    marc_map('245[,0]a','title')
+
+    # Map the 245-a field where indicator-1 is 1 and indicator-2 is 0
+    marc_map('245[1,0]a','title')
 
 =head1 DESCRIPTION
 
