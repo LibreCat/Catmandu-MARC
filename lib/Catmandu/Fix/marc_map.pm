@@ -166,7 +166,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('600x','my.subjects.$append.genre.text')
 
     # Copy the 008 characters 35-35 into the my.language hash
-    marc_map('008_/35-35','my.language')
+    marc_map('008/35-35','my.language')
 
     # Copy all the 600 fields into a my.stringy hash joining them by '; '
     marc_map('600','my.stringy', join:'; ')
