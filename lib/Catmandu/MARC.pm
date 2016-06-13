@@ -3,7 +3,7 @@ package Catmandu::MARC;
 use Catmandu::Util;
 use Catmandu::Exporter::MARC::XML;
 
-our $VERSION = '0.215';
+our $VERSION = '0.216';
 
 sub marc_add {
     my ($data,$marc_tag,$subfield_array) = @_;

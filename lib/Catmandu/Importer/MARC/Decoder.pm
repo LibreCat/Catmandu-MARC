@@ -3,7 +3,7 @@ package Catmandu::Importer::MARC::Decoder;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '0.215';
+our $VERSION = '0.216';
 
 sub decode {
     my ($self, $record, $id) = @_;

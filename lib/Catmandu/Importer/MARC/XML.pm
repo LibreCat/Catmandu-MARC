@@ -54,7 +54,7 @@ use Moo;
 use Catmandu::Importer::MARC::Decoder;
 use MARC::File::XML (BinaryEncoding => 'UTF-8', DefaultEncoding => 'UTF-8', RecordFormat => 'MARC21');
 
-our $VERSION = '0.215';
+our $VERSION = '0.216';
 
 with 'Catmandu::Importer';
 

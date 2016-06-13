@@ -54,7 +54,7 @@ use Moo;
 use MARC::File::MicroLIF;
 use Catmandu::Importer::MARC::Decoder;
 
-our $VERSION = '0.215';
+our $VERSION = '0.216';
 
 with 'Catmandu::Importer';
 

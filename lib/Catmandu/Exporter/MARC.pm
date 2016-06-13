@@ -50,7 +50,7 @@ package Catmandu::Exporter::MARC;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '0.215';
+our $VERSION = '0.216';
 
 has type           => (is => 'ro' , default => sub { 'XML' });
 has _exporter      => (is => 'ro' , lazy => 1 , builder => '_build_exporter' , handles => 'Catmandu::Exporter');

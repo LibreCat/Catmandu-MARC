@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.216  2016-06-13 16:57:49 CEST
   - Fixed indicator-2 selection bug
   - Fixed marc_map value bug
   - Support for the value in the inline fixes
