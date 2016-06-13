@@ -81,7 +81,7 @@ sub marc_map {
     my $value_set = $opts{'-value'};
     my $attrs     = {};
 
-    if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
+    if ($marc_path =~ /(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
         $attrs->{field}          = $1;
         $attrs->{ind1}           = $3;
         $attrs->{ind2}           = $4;
