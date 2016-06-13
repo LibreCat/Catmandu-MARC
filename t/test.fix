@@ -23,6 +23,9 @@ marc_map('050ba','my.pluck', pluck:1)
 
 marc_map('245','my.has_title', value:'Y')
 
-marc_xml('record');
+marc_map('245','my.has_title', value:'Y')
 
-#remove_field('record')
+marc_map('260c','has_260c', value:'OK')
+marc_map('260h','has_260h', value:'BAD')
+
+marc_xml('record')

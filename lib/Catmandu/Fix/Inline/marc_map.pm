@@ -75,6 +75,7 @@ sub marc_map {
     my $split     = $opts{'-split'};
     my $join_char = $opts{'-join'} // '';
     my $pluck     = $opts{'-pluck'};
+    my $value_set = $opts{'-value'};
     my $attrs     = {};
 
     if ($marc_path =~ /(\S{3})(\[(.)?,?(.)?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
@@ -127,27 +128,36 @@ sub marc_map {
 
     	my $v;
 
-    	if ($var->[0] =~ /LDR|00./) {
-    		$v = $add_subfields->($var,3);
-    	}
-    	elsif (defined $var->[5] && $var->[5] eq '_') {
-    		$v = $add_subfields->($var,5);
-    	}
-    	else {
-    		$v = $add_subfields->($var,3);
-    	}
+        if ($value_set) {
+            for (my $i = 3; $i < @$var; $i += 2) {
+                if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
+                    $v = $value_set;
+                    last;
+                }
+            }
+        }
+        else {
+        	if ($var->[0] =~ /LDR|00./) {
+        		$v = $add_subfields->($var,3);
+        	}
+        	elsif (defined $var->[5] && $var->[5] eq '_') {
+        		$v = $add_subfields->($var,5);
+        	}
+        	else {
+        		$v = $add_subfields->($var,3);
+        	}
 
-    	if (@$v) {
-    		if (!$split) {
-    			$v = join $join_char, @$v;
+        	if (@$v) {
+        		if (!$split) {
+        			$v = join $join_char, @$v;
 
-    			if (defined(my $off = $attrs->{from})) {
-    				my $len = defined $attrs->{to} ? $attrs->{to} - $off + 1 : 1;
-    				$v = substr($v,$off,$len);
-    			}
-    		}
-    	}
-
+        			if (defined(my $off = $attrs->{from})) {
+        				my $len = defined $attrs->{to} ? $attrs->{to} - $off + 1 : 1;
+        				$v = substr($v,$off,$len);
+        			}
+        		}
+        	}
+        }
     	push (@vals,$v) if ( (ref $v eq 'ARRAY' && @$v) || (ref $v eq '' && length $v ));
     }
 

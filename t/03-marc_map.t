@@ -41,4 +41,8 @@ is $records->[0]->{my}->{pluck} , "M33 2000QA76.73.P22" , 'pluck feature';
 
 is $records->[0]->{my}->{has_title}, 'Y' , 'value feature';
 
+is $records->[0]->{has_260c}, 'OK' , 'value subfield';
+
+ok ! $records->[0]->{has_260h}, 'value subfield';
+
 done_testing;

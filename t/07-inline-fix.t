@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 15;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
 use Catmandu::Fix::Inline::marc_add qw(marc_add);
@@ -68,4 +68,14 @@ ok(@$records == 2 , "Found 2 records");
 {
 	my $f050 = marc_map($records->[0],'050ba',-pluck=>1);
 	is $f050 , "M33 2000QA76.73.P22" , q|pluck test|;
+}
+
+{
+	my $f260c = marc_map($records->[0],'260c',-value=>'OK');
+	is $f260c , "OK" , q|value test|;
+}
+
+{
+	my $f260h = marc_map($records->[0],'260h',-value=>'BAD');
+	ok ! $f260h , q|value test|;
 }
