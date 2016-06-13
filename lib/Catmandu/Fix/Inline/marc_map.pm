@@ -30,6 +30,9 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
  # Get all 100 subfields except the digits
  $str = marc_map($data,'100^0123456789');
 
+ # If the 260c exist set the output to 'OK' (else undef)
+ $ok  = marc_map($data,'260c',-value => 'OK');
+
  # The $data should be a Catmandu-style MARC hash
  { record => [
     ['field', 'ind1' , 'ind2' , 'subfieldcode or underscore' , 'data' , 'subfield' , 'data' , ...] ,

@@ -180,6 +180,9 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     # When 024 field exists create the my.has024 hash with value 'found'
     marc_map('024','my.has024', value:found)
 
+    # When 260c field exists create the my.has260c hash with value 'found'
+    marc_map('260c','my.has260c', value:found)
+
     # Do the same examples now with the marc fields in 'record2'
     marc_map('245','my.title', record:record2)
 

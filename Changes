@@ -3,6 +3,7 @@ Revision history for Catmandu-MARC
 {{$NEXT}}
   - Fixed indicator-2 selection bug
   - Fixed marc_map value bug
+  - Support for the value in the inline fixes
   
 0.215  2016-02-22 09:57:07 CET
   - Supporting ISO alias for USMARC importer and exporter
