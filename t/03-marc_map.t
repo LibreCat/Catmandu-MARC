@@ -20,7 +20,7 @@ is $records->[0]->{my}{title}, 'ActivePerl with ASP and ADO /', q|fix: marc_map(
 
 is_deeply
     $records->[0]->{my}{split_title},
-    [['ActivePerl with ASP and ADO /', 'Tobias Martinsson.']],
+    ['ActivePerl with ASP and ADO /', 'Tobias Martinsson.'],
     q|fix: marc_map('245','my.split.title','-split', 1);|;
 
 # field 666 does not exist in camel.usmarc

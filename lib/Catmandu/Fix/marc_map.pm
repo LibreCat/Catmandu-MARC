@@ -102,7 +102,7 @@ sub emit {
             # Old Catmandu::MARC contained a bug/feature to allow
             # for '_' subfields in non-control elements ..for beackwards
             # compatibility we ignore them
-            $perl .= "} elsif (defined ${var}->[5] && ${var}->[5] eq '_') {";
+            $perl .= "} elsif (defined ${var}->[3] && ${var}->[3] eq '_') {";
             $perl .= $add_subfields->(5);
             $perl .= "} else {";
             $perl .= $add_subfields->(3);
@@ -129,10 +129,11 @@ sub emit {
                 $perl .= "if (defined ${v}) {";
                 if ($self->split) {
                     $perl .= 
+                    "${v} = [ ${v} ] unless ref ${v} eq 'ARRAY';" .
                     "if (is_array_ref(${var})) {".
-                        "push \@{${var}}, ${v};".
+                        "push \@{${var}}, \@{${v}};".
                     "} else {".
-                        "${var} = [${v}];".
+                        "${var} = [\@{${v}}];".
                     "}";
                 } else {
                     $perl .= 
@@ -162,10 +163,10 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
 =head1 SYNOPSIS
 
-    # Append all 245 subfields to my.title
-    marc_map('245','my.title')
+    # Append all 245 subfields to my.title field the values are joined into one string 
+    marc_map('245','my.title') 
 
-    # Append an array of 245 subfields to the my.title array
+    # Append al 245 subfields to the my.title keeping all subfields as an array
     marc_map('245','my.title', split:1)
 
     # Copy the 245-$a$b$c subfields into the my.title hash in the order provided in the record
@@ -182,7 +183,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Copy the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
     marc_map('600x','my.subjects.$append.genre.text')
-
+    
     # Copy the 008 characters 35-35 into the my.language hash
     marc_map('008/35-35','my.language')
 
