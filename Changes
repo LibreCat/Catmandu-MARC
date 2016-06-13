@@ -5,7 +5,8 @@ Revision history for Catmandu-MARC
   - Fixed marc_map value bug
   - Support for the value in the inline fixes
   - Fixing combinations of substring and split
-  
+  - Fixing array in array bugs when using split and $append combinations
+
 0.215  2016-02-22 09:57:07 CET
   - Supporting ISO alias for USMARC importer and exporter
   - Fixing MicroLIF importer
