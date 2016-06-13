@@ -153,12 +153,13 @@ sub marc_map {
         	if (@$v) {
         		if (!$split) {
         			$v = join $join_char, @$v;
+                }
 
-        			if (defined(my $off = $attrs->{from})) {
-        				my $len = defined $attrs->{to} ? $attrs->{to} - $off + 1 : 1;
-        				$v = substr($v,$off,$len);
-        			}
-        		}
+    			if (defined(my $off = $attrs->{from})) {
+                    $v = join $join_char, @$v if (ref $v eq 'ARRAY');
+    				my $len = defined $attrs->{to} ? $attrs->{to} - $off + 1 : 1;
+    				$v = substr($v,$off,$len);
+    			}
         	}
         }
     	push (@vals,$v) if ( (ref $v eq 'ARRAY' && @$v) || (ref $v eq '' && length $v ));

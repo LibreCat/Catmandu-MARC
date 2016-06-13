@@ -108,32 +108,44 @@ sub emit {
             $perl .= $add_subfields->(3);
             $perl .= "}";
             $perl .= "if (\@{${v}}) {";
+
             if (!$self->split) {
                 $perl .= "${v} = join(${join_char}, \@{${v}});";
-                if (defined(my $off = $from)) {
-                    my $len = defined $to ? $to - $off + 1 : 1;
-                    $perl .= "if (eval { ${v} = substr(${v}, ${off}, ${len}); 1 }) {";
-                }
             }
+
+            if (defined(my $off = $from)) {
+                my $len = defined $to ? $to - $off + 1 : 1;
+                $perl .= "${v} = join(${join_char}, \@{${v}}) if (is_array_ref(${v}));";
+                $perl .= "if (length(${v}) > ${off}) {" .
+                         "  ${v} = substr(${v}, ${off}, ${len});" .
+                         "} else {" .
+                         "  ${v} = undef;".
+                         "}";
+            }
+        
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var = shift;
+                my $perl = "";
+                $perl .= "if (defined ${v}) {";
                 if ($self->split) {
+                    $perl .= 
                     "if (is_array_ref(${var})) {".
                         "push \@{${var}}, ${v};".
                     "} else {".
                         "${var} = [${v}];".
                     "}";
                 } else {
+                    $perl .= 
                     "if (is_string(${var})) {".
                         "${var} = join(${join_char}, ${var}, ${v});".
                     "} else {".
                         "${var} = ${v};".
                     "}";
                 }
-            });
-            if (defined($from)) {
                 $perl .= "}";
-            }
+                $perl;
+            });
+        
             $perl .= "}";
         }
         $perl;

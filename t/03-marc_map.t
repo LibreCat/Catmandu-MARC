@@ -27,9 +27,11 @@ is_deeply
 # the '$append' fix creates $my->{'references'} hash key with empty array ref as value
 ok !$records->[0]->{'my'}{'references'}, q|fix: marc_map('666', 'my.references.$append');|;
 
-is $records->[0]->{my}{substr_id}, "057";
+is $records->[0]->{my}{substr_id}, "057" , 'substring';
 
-ok !exists $records->[0]->{my}{failed_substr_id};
+is $records->[0]->{my}{substr_id2}->[0], "057", 'substring + split';
+
+ok !exists $records->[0]->{my}{failed_substr_id} , 'failed substring';
 
 ok $records->[0]->{record} =~ /marc:datafield/ , "marcxml";
 

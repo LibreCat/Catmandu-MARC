@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
 use Catmandu::Fix::Inline::marc_add qw(marc_add);
@@ -78,4 +78,9 @@ ok(@$records == 2 , "Found 2 records");
 {
 	my $f260h = marc_map($records->[0],'260h',-value=>'BAD');
 	ok ! $f260h , q|value test|;
+}
+
+{
+	my @arr = marc_map($records->[0],'245a/0-3',-split=>1);
+	is $arr[0] , q|Acti|;
 }
