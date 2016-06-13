@@ -61,8 +61,14 @@ sub emit {
         if ($self->value) {
             $perl .= $fixer->emit_declare_vars($v, $fixer->emit_string($self->value));
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
-                my $var = shift;
-                "${var} = ${v};";
+                my $var2 = shift;
+                my $i = $fixer->generate_var;
+                return 
+                "for (my ${i} = 3; ${i} < \@{${var}}; ${i} += 2) {".
+                    "if (${var}->[${i}] =~ /${subfield_regex}/) {".
+                        "${var2} = ${v}; last;".
+                    "}".
+                "}";
             });
         } else {
             my $i = $fixer->generate_var;
