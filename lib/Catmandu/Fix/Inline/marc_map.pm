@@ -162,7 +162,12 @@ sub marc_map {
     			}
         	}
         }
-    	push (@vals,$v) if ( (ref $v eq 'ARRAY' && @$v) || (ref $v eq '' && length $v ));
+        if (ref $v eq 'ARRAY' && @$v) {
+            push (@vals,@$v);
+        }
+        elsif (ref $v eq '' && length $v ) {
+            push (@vals,$v);
+        }
     }
 
     if (wantarray) {

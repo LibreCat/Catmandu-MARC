@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Fixing marc_map for inline fixes 
 
 0.217  2016-06-14 09:48:59 CEST
   - Fixed dependency on Catmandu 1.0201 for Inlineable
