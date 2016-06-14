@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.217  2016-06-14 09:48:59 CEST
   - Fixed dependency on Catmandu 1.0201 for Inlineable
   
 0.216  2016-06-13 16:57:49 CEST

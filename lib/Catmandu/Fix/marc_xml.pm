@@ -7,7 +7,7 @@ use Catmandu::Exporter::MARC::XML;
 use Catmandu::Util qw(:is :data);
 use Catmandu::Fix::Has;
 
-our $VERSION = '0.216';
+our $VERSION = '0.217';
 
 has path  => (fix_arg => 1);
 
