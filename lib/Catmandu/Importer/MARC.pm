@@ -116,7 +116,7 @@ use Catmandu::Sane;
 use Catmandu::Util;
 use Moo;
 
-our $VERSION = '0.217';
+our $VERSION = '0.218';
 
 has type           => (is => 'ro' , default => sub { 'USMARC' });
 has _importer      => (is => 'ro' , lazy => 1 , builder => '_build_importer' , handles => ['generator']);

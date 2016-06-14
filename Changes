@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.218  2016-06-14 14:05:32 CEST
   - Fixing marc_map for inline fixes 
 
 0.217  2016-06-14 09:48:59 CEST

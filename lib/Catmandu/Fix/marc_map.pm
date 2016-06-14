@@ -5,7 +5,7 @@ use Carp qw(confess);
 use Moo;
 use Catmandu::Fix::Has;
 
-our $VERSION = '0.217';
+our $VERSION = '0.218';
 
 has marc_path      => (fix_arg => 1);
 has path           => (fix_arg => 1);

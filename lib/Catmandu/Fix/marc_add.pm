@@ -7,7 +7,7 @@ use Catmandu::Fix::Has;
 
 with 'Catmandu::Fix::Inlineable';
 
-our $VERSION = '0.217';
+our $VERSION = '0.218';
 
 has marc_tag    => (fix_arg => 1);
 has subfields   => (fix_arg => 'collect');
