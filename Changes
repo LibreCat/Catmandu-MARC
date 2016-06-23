@@ -1,13 +1,16 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixed importing from MARC as string in a Perl script
+  - Adding more POD
+  - Make all Catmandu::Fix inlineable
+ 
 0.218  2016-06-14 14:05:32 CEST
-  - Fixing marc_map for inline fixes 
+  - Fixing marc_map for inline fixes
 
 0.217  2016-06-14 09:48:59 CEST
   - Fixed dependency on Catmandu 1.0201 for Inlineable
-  
+
 0.216  2016-06-13 16:57:49 CEST
   - Fixed indicator-2 selection bug
   - Fixed marc_map value bug
@@ -20,28 +23,28 @@ Revision history for Catmandu-MARC
   - Fixing MicroLIF importer
   - Making Catmandu::MARC forwards compatible with Catmandu 1.0
   - Adding a pretty option for XML
-  
+
 0.214  2015-11-03 11:46:22 CET
   - Maintenance release skipping buggy Catmandu versions
 
 0.213  2015-09-30 16:00:11 CEST
   - Adding support for setting anf adding JSON paths
-  
+
 0.212  2015-09-29 11:07:13 CEST
   - Fixed marc_each single execution bug
-  
+
 0.211  2015-08-31 16:17:42 CEST
   - Fixed POD spelling
   - Adding marc_each bind
-  
+
 0.210  2015-05-20 11:23:46 CEST
   - Optimizing Aleph sequentials exports
   - Fixed round tripping of Aleph sequential
   - Fixing marc_in_json
   - Adding support for marc_in_json back to catmandu marc mapping
-  
+
 0.209  2015-02-20 13:39:05 CET
-  - Fixed value feature 
+  - Fixed value feature
 
 0.208  2015-02-04 20:16:39 CET
   - Fixing CLI arguments and options bug #12
@@ -53,7 +56,7 @@ Revision history for Catmandu-MARC
 
 0.206  2014-10-21 12:01:35 CEST
   - Adding pluck support
-  
+
 0.205  2014-06-23 21:18:06 CEST
   - Fixed collection bug in the MARC exporter
 
@@ -65,19 +68,19 @@ Revision history for Catmandu-MARC
   - Making marc_map and marc_set indicator aware
   - Supporting deletion of subfields for marc_remove
   - Fixing EOF bug in RAW importer
-  
+
 0.202  2014-05-29 19:46:40 CEST
   - Fixing the catmandu command line fixes bug
-  
+
 0.201  2014-05-29 09:11:24 CEST
   - Adding the MARC::Parser::RAW and updating the pod
-  
+
 0.2  2014-05-28 15:24:03 CEST
   - Refactoring MARC import and export parsers and serializers
   - Add importers for MARCMaker, MARC-in-JSON and MARC::Catmandu
   - Add Lint based validator for USMARC
   - Add exporters for USMARC, MARCMaker and MARC-in-JSON
-  
+
 0.117  2014-05-23 12:06:40 CEST
   - Adding more documentation hints
   - Fixing the marc_match (deleting temporary keys)
@@ -87,7 +90,7 @@ Revision history for Catmandu-MARC
 
 0.115   2014-05-22
   - Fixed broken MANIFEST
-  
+
 0.114   2014-05-20
   - Adding the if marc_match condition
 
@@ -96,16 +99,16 @@ Revision history for Catmandu-MARC
 
 0.112   2014-04-03
   - Adding the inline marc_remove fix
-  
+
 0.111   2014-03-19
   - fixed marc_add test to reflect the correct number of tests
-  
+
 0.110   2014-03-18
   - adding support for marc_add fixes
-  
+
 0.109   2014-03-14
   - in response to popular request adding Aleph sequential export support
-  
+
 0.108   2014-03-11
   - all Catmandu::Exporter::MARC methods should be instance and class methods to make marc_xml work
 
@@ -115,7 +118,7 @@ Revision history for Catmandu-MARC
 
 0.106   2014-03-03
   - allow for non-standard system identifier fields
-  
+
 0.105   2014-02-11
   - handle Aleph FMT tags
 
@@ -211,4 +214,3 @@ Revision history for Catmandu-MARC
 
 0.01    2012-05-04
   - initial release
-
