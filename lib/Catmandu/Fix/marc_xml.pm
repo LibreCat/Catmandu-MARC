@@ -7,6 +7,8 @@ use Catmandu::Exporter::MARC::XML;
 use Catmandu::Util qw(:is :data);
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Inlineable';
+
 our $VERSION = '0.218';
 
 has path  => (fix_arg => 1);
@@ -31,7 +33,7 @@ sub fix {
 Catmandu::Fix::marc_xml - transform a Catmandu MARC record into MARCXML
 
 =head1 SYNOPSIS
-   
+
    # Transforms the 'record' key into an MARCXML string
    marc_xml('record')
 

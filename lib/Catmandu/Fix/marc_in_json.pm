@@ -5,6 +5,8 @@ use Catmandu::Util qw(:is);
 use Moo;
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Inlineable';
+
 our $VERSION = '0.218';
 
 has record  => (fix_opt => 1);
@@ -34,7 +36,7 @@ sub _json_record {
             next unless is_hash_ref($field);
 
             my ($tag) = keys %$field;
-            my $val   = $field->{$tag}; 
+            my $val   = $field->{$tag};
 
             if ($tag eq 'FMT' || substr($tag, 0, 2) eq '00') {
                push @$record , [ $tag, undef, undef, '_', $val ],

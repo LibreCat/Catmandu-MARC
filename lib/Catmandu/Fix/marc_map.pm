@@ -5,6 +5,8 @@ use Carp qw(confess);
 use Moo;
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Base';
+
 our $VERSION = '0.218';
 
 has marc_path      => (fix_arg => 1);
@@ -63,7 +65,7 @@ sub emit {
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var2 = shift;
                 my $i = $fixer->generate_var;
-                return 
+                return
                 "for (my ${i} = 3; ${i} < \@{${var}}; ${i} += 2) {".
                     "if (${var}->[${i}] =~ /${subfield_regex}/) {".
                         "${var2} = ${v}; last;".
@@ -77,7 +79,7 @@ sub emit {
                 if ($self->pluck) {
                     # Treat the subfield_regex as a hash index
                     my $pluck = $fixer->generate_var;
-                    return 
+                    return
                     "my ${pluck}  = {};" .
                     "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
                         "push(\@{ ${pluck}->{ ${var}->[${i}] } }, ${var}->[${i} + 1]);" .
@@ -88,7 +90,7 @@ sub emit {
                 }
                 else {
                     # Treat the subfield_regex as regex that needs to match the subfields
-                    return 
+                    return
                     "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
                         "if (${var}->[${i}] =~ /${subfield_regex}/) {".
                             "push(\@{${v}}, ${var}->[${i} + 1]);".
@@ -122,13 +124,13 @@ sub emit {
                          "  ${v} = undef;".
                          "}";
             }
-        
+
             $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
                 my $var = shift;
                 my $perl = "";
                 $perl .= "if (defined ${v}) {";
                 if ($self->split) {
-                    $perl .= 
+                    $perl .=
                     "${v} = [ ${v} ] unless ref ${v} eq 'ARRAY';" .
                     "if (is_array_ref(${var})) {".
                         "push \@{${var}}, \@{${v}};".
@@ -136,7 +138,7 @@ sub emit {
                         "${var} = [\@{${v}}];".
                     "}";
                 } else {
-                    $perl .= 
+                    $perl .=
                     "if (is_string(${var})) {".
                         "${var} = join(${join_char}, ${var}, ${v});".
                     "} else {".
@@ -146,7 +148,7 @@ sub emit {
                 $perl .= "}";
                 $perl;
             });
-        
+
             $perl .= "}";
         }
         $perl;
@@ -163,8 +165,8 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
 =head1 SYNOPSIS
 
-    # Append all 245 subfields to my.title field the values are joined into one string 
-    marc_map('245','my.title') 
+    # Append all 245 subfields to my.title field the values are joined into one string
+    marc_map('245','my.title')
 
     # Append al 245 subfields to the my.title keeping all subfields as an array
     marc_map('245','my.title', split:1)
@@ -183,7 +185,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # Copy the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
     marc_map('600x','my.subjects.$append.genre.text')
-    
+
     # Copy the 008 characters 35-35 into the my.language hash
     marc_map('008/35-35','my.language')
 

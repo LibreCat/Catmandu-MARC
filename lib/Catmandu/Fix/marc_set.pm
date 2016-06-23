@@ -6,6 +6,8 @@ use Carp qw(confess);
 use Moo;
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Base';
+
 our $VERSION = '0.218';
 
 has marc_path      => (fix_arg => 1);
@@ -92,8 +94,8 @@ sub emit {
                 }
                 else {
                     $perl  .=        "${var}->[${i}+1] = ${value};";
-                } 
-                                
+                }
+
                 $perl .=             "${found} = 1;";
                 $perl .=        "}".
                             "}";
@@ -112,7 +114,7 @@ sub emit {
         $perl .= "} elsif (defined ${var}->[5] && ${var}->[5] eq '_') {";
         $perl .= $set_subfields->(5);
         $perl .= "} else {";
-            
+
         $perl .= $set_subfields->(3);
         $perl .= "}";
 

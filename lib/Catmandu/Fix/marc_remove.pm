@@ -5,6 +5,8 @@ use Carp qw(confess);
 use Moo;
 use Catmandu::Fix::Has;
 
+with 'Catmandu::Fix::Base';
+
 our $VERSION = '0.218';
 
 has marc_path => (fix_arg => 1);
@@ -49,7 +51,7 @@ sub emit {
 
         if (defined $ind2) {
             $perl .= "next if (defined ${var}->[2] && ${var}->[2] eq '${ind2}');";
-        }   
+        }
 
         unless (defined $ind1 || defined $ind2 || defined $subfield_regex) {
             $perl .= "next;";
@@ -58,7 +60,7 @@ sub emit {
         $perl .= "}";
 
         my $i = $fixer->generate_var;
-        
+
         my $new_subf = $fixer->generate_var;
         $perl   .= $fixer->emit_declare_vars($new_subf,'[]');
 
@@ -68,8 +70,8 @@ sub emit {
 ${new_subf} = [];
 for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {
     unless (${var}->[${i}] =~ /${subfield_regex}/) {
-         push \@{${new_subf}} , ${var}->[${i}]; 
-         push \@{${new_subf}} , ${var}->[${i}+1];                       
+         push \@{${new_subf}} , ${var}->[${i}];
+         push \@{${new_subf}} , ${var}->[${i}+1];
     }
 }
 splice \@{${var}} , ${start} , int(\@{${var}}), \@{${new_subf}};
@@ -88,12 +90,12 @@ EOF
                 $perl .= "} elsif (defined ${var}->[5] && ${var}->[5] eq '_') {";
                 $perl .= $del_subfields->(5);
                 $perl .= "} else {";
-                    
+
                 $perl .= $del_subfields->(3);
                 $perl .= "}";
             $perl .= "}";
         }
-        
+
         $perl .= "push \@${new_record} , ${var} ";
 
         $perl;

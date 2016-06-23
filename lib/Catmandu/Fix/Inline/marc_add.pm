@@ -72,9 +72,9 @@ Catmandu::Fix::Inline::marc_add- A marc_add-er for Perl scripts
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix::Inline::marc_set> , 
-L<Catmandu::Fix::Inline::marc_map> , 
-L<Catmandu::Fix::Inline::marc_remove> 
+L<Catmandu::Fix::Inline::marc_set> ,
+L<Catmandu::Fix::Inline::marc_map> ,
+L<Catmandu::Fix::Inline::marc_remove>
 
 =cut
 
