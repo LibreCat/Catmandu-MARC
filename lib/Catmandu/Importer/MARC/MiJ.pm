@@ -55,7 +55,7 @@ use MARC::Record;
 use Catmandu::Importer::MARC::Decoder;
 use MARC::File::MiJ;
 
-our $VERSION = '0.218';
+our $VERSION = '0.219';
 
 with 'Catmandu::Importer';
 

@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+0.219  2016-06-23 16:40:11 CEST
   - Fixed importing from MARC as string in a Perl script
   - Adding more POD
   - Make all Catmandu::Fix inlineable

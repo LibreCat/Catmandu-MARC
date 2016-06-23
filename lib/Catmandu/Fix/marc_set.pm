@@ -8,7 +8,7 @@ use Catmandu::Fix::Has;
 
 with 'Catmandu::Fix::Base';
 
-our $VERSION = '0.218';
+our $VERSION = '0.219';
 
 has marc_path      => (fix_arg => 1);
 has value          => (fix_arg => 1);

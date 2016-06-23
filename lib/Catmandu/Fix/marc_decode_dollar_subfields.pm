@@ -5,7 +5,7 @@ use Data::Dumper;
 
 with 'Catmandu::Fix::Inlineable';
 
-our $VERSION = '0.218';
+our $VERSION = '0.219';
 
 sub fix {
 	my ($self,$data) = @_;
