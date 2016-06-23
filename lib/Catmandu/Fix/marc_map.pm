@@ -218,8 +218,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Copy data from a MARC record to a field.
 
 =head1 SEE ALSO
 

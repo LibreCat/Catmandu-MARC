@@ -123,8 +123,7 @@ Catmandu::Fix::marc_remove - remove marc (sub)fields
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Remove (sub)fields in a MARC record
 
 =head1 SEE ALSO
 

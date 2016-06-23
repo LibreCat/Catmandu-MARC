@@ -34,13 +34,12 @@ Catmandu::Fix::marc_xml - transform a Catmandu MARC record into MARCXML
 
 =head1 SYNOPSIS
 
-   # Transforms the 'record' key into an MARCXML string
+   # Transforms the 'record' key into a MARCXML string
    marc_xml('record')
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Convert MARC data into a MARCXML string
 
 =head1 SEE ALSO
 

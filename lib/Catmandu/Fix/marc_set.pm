@@ -146,8 +146,7 @@ Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Set the value of a MARC subfield to a new value.
 
 =head1 SEE ALSO
 

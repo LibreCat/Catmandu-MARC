@@ -42,17 +42,17 @@ sub emit {
 Catmandu::Fix::Condition::marc_match - Conditionals on MARC fields
 
 =head1 SYNOPSIS
-   
+
    # marc_match(MARC_PATH,REGEX)
-   
+
    if marc_match('245','My funny title')
    	add_field('my.funny.title','true')
    end
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Evaluate the enclosing fixes only if the MARC (sub)field matches a
+regular expression.
 
 =head1 SEE ALSO
 

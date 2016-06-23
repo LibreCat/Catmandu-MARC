@@ -30,31 +30,46 @@ Catmandu::Importer::MARC::Lint - Package that imports USMARC records validated w
 
 All items produced with the Catmandu::Importer::MARC::Lint importer contain three keys:
 
-     '_id'    : the system identifier of the record (usually the 001 field) 
+     '_id'    : the system identifier of the record (usually the 001 field)
      'record' : an ARRAY of ARRAYs containing the record data
      'lint'   : the output of MARC::Lint's check_record on the MARC record
 
+=head1 CONFIGURATION
+
+=over
+
+=item id
+
+The MARC field which contains the system id (default: 001)
+
+=item file
+
+Read input from a local file given by its path. Alternatively a scalar
+reference can be passed to read from a string.
+
+=item fh
+
+Read input from an L<IO::Handle>. If not specified, L<Catmandu::Util::io> is used to
+create the input stream from the C<file> argument or by using STDIN.
+
+=item encoding
+
+Binmode of the input stream C<fh>. Set to C<:utf8> by default.
+
+=item fix
+
+An ARRAY of one or more fixes or file scripts to be applied to imported items.
+
+=back
+
 =head1 METHODS
 
-=head2 new(file => $file , fh => $fh , id => $field)
-
-Parse a file or a filehandle into a L<Catmandu::Iterable>. Optionally provide an
-id attribute specifying the source of the system identifer '_id' field (e.g. '001').
-
-=head1 INHERTED METHODS
-
-=head2 count
-
-=head2 each(&callback)
-
-=head2 ...
-
-Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. 
+Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
 =head1 SEE ALSO
 
-L<MARC::File::USMARC>,
-L<MARC::File::Lint>,
+L<Catmandu::Importer>,
+L<Catmandu::Iterable>
 
 =cut
 package Catmandu::Importer::MARC::Lint;
@@ -71,7 +86,7 @@ with 'Catmandu::Importer';
 has id        => (is => 'ro' , default => sub { '001' });
 has decoder   => (
     is   => 'ro',
-    lazy => 1 , 
+    lazy => 1 ,
     builder => sub {
         Catmandu::Importer::MARC::Decoder->new;
     } );

@@ -120,8 +120,7 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Convert the MARC record into MARC-in-JSON format
 
 =head1 SEE ALSO
 

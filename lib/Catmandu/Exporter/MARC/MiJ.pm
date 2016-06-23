@@ -4,7 +4,7 @@ Catmandu::Exporter::MARC::MiJ - Exporter for MARC records to MARC in JSON
 
 =head1 SYNOPSIS
 
-    # From the command line 
+    # From the command line
     $ catmandu convert MARC --type XML to MARC --type MiJ < /foo/data.mrc
 
     # From Perl
@@ -16,32 +16,36 @@ Catmandu::Exporter::MARC::MiJ - Exporter for MARC records to MARC in JSON
     $exporter->add($importer);
     $exporter->commit;
 
+=head1 CONFIGURATION
+
+=over
+
+=item file
+
+Write output to a local file given by its path or file handle.  Alternatively a
+scalar reference can be passed to write to a string and a code reference can be
+used to write to a callback function.
+
+=item fh
+
+Write the output to an L<IO::Handle>. If not specified,
+L<Catmandu::Util::io|Catmandu::Util/IO-functions> is used to create the output
+handle from the C<file> argument or by using STDOUT.
+
+=item fix
+
+An ARRAY of one or more fixes or file scripts to be applied to exported items.
+
+=item encoding
+
+Binmode of the output stream C<fh>. Set to "C<:utf8>" by default.
+
+=back
+
 =head1 METHODS
 
-=head2 new(file => $file , %opts)
-
-Create a new L<Catmandu::Exporter> to serialize MARC record into MiJ. Provide the path
-of a $file to write exported records to. Optionally the following parameters can be
-specified:
-
-	record : the key containing the marc record (default: 'record')
-	record_format : optionally set to 'MARC-in-JSON' when the input format is in MARC-in-JSON
-
-=head1 INHERTED METHODS
-
-=head2 count
-
-=head2 add($hashref)
-
-=head2 add_many($array)
-
-=head2 add_many($iterator)
-
-=head2 add_many(sub {})
-
-=head2 ...
-
-All the L<Catmandu::Exporter> methods are inherited.
+See L<Catmandu::Exporter>, L<Catmandu::Addable>, L<Catmandu::Fixable>,
+L<Catmandu::Counter>, and L<Catmandu::Logger> for a full list of methods.
 
 =head1 SEE ALSO
 
@@ -66,7 +70,7 @@ has record_format        => (is => 'ro' , default => sub { 'raw'} );
 sub add {
 	my ($self, $data) = @_;
 
-    if ($self->record_format eq 'MARC-in-JSON') { 
+    if ($self->record_format eq 'MARC-in-JSON') {
         $data = $self->_json_to_raw($data);
     }
 

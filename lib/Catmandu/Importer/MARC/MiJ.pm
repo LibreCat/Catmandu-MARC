@@ -4,7 +4,7 @@ Catmandu::Importer::MARC::MiJ - Package that imports MARC-in-JSON records
 
 =head1 SYNOPSIS
 
-    # From the command line 
+    # From the command line
     $ catmandu convert MARC --type MiJ --fix "marc_map('245a','title')" < /foo/data.js
 
     # From perl
@@ -41,7 +41,7 @@ id attribute specifying the source of the system identifer '_id' field (e.g. '00
 
 =head2 ...
 
-Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. 
+Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
 =head1 SEE ALSO
 
@@ -62,7 +62,7 @@ with 'Catmandu::Importer';
 has id        => (is => 'ro' , default => sub { '001' });
 has decoder   => (
     is   => 'ro',
-    lazy => 1 , 
+    lazy => 1 ,
     builder => sub {
         Catmandu::Importer::MARC::Decoder->new;
     } );

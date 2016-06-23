@@ -66,7 +66,7 @@ sub fix {
 
 =head1 NAME
 
-Catmandu::Fix::marc_add - add new fields to marc 
+Catmandu::Fix::marc_add - add new fields to marc
 
 =head1 SYNOPSIS
 
@@ -81,8 +81,7 @@ Catmandu::Fix::marc_add - add new fields to marc
 
 =head1 DESCRIPTION
 
-Read our Wiki pages at L<https://github.com/LibreCat/Catmandu/wiki/Fixes> for a complete
-overview of the Fix language.
+Add a new subfield to MARC record.
 
 =head1 SEE ALSO
 

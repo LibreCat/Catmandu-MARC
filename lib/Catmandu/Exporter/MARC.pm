@@ -16,30 +16,47 @@ Catmandu::Exporter::MARC - Exporter for MARC records
     $exporter->add($importer);
     $exporter->commit;
 
-=head1 METHODS
+=head1 DESCRIPTION
 
-=head2 new(file => $file, type => $type)
+Catmandu::Exporter::MARC is a L<Catmandu::Exporter> to serialize (write) MARC records
+to a file or the standard output.
 
-Create a new L<Catmandu::Exporter> which serializes MARC records into a $file. 
-Type describes the MARC serializer to be used. Currently we support: 
+=head1 CONFIGURATION
 
-=over 2
+=over
 
-=item  USMARC    L<Catmandu::Exporter::MARC::USMARC>
+=item type
 
-=item  ISO       alias for USMARC
+Create a new MARC exporter of the given type. Currently we support:
 
-=item  XML       L<Catmandu::Exporter::MARC::XML>
-    
-=item  MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
-   
-=item  MiJ       L<Catmandu::Exporter::MARC::MiJ>
-    
-=item  ALEPHSEQ  L<Catmandu::Exporter::MARC::ALEPHSEQ>
+    USMARC    L<Catmandu::Exporter::MARC::USMARC>
+    ISO       alias for USMARC
+    XML       L<Catmandu::Exporter::MARC::XML>
+    MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
+    MiJ       L<Catmandu::Exporter::MARC::MiJ> (Marc in Json)
+    ALEPHSEQ  L<Catmandu::Exporter::MARC::ALEPHSEQ>
+
+=item file
+
+Write output to a local file given by its path or file handle.  Alternatively a
+scalar reference can be passed to write to a string and a code reference can be
+used to write to a callback function.
+
+=item fh
+
+Write the output to an L<IO::Handle>. If not specified,
+L<Catmandu::Util::io|Catmandu::Util/IO-functions> is used to create the output
+handle from the C<file> argument or by using STDOUT.
+
+=item fix
+
+An ARRAY of one or more fixes or file scripts to be applied to exported items.
+
+=item encoding
+
+Binmode of the output stream C<fh>. Set to "C<:utf8>" by default.
 
 =back
-
-Read the documentation of the parser modules for extra configuration options.
 
 =head1 SEE ALSO
 
@@ -59,7 +76,7 @@ has _exporter_args => (is => 'rwp', writer => '_set_exporter_args');
 sub _build_exporter {
     my ($self) = @_;
     my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
-    
+
     my $pkg = Catmandu::Util::require_package($type,'Catmandu::Exporter::MARC');
 
     $pkg->new($self->_exporter_args);

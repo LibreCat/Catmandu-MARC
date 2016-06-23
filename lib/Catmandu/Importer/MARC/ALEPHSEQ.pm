@@ -26,21 +26,38 @@ Catmandu::Importer::MARC::ALEPHSEQ - Package that imports Ex Libris' Aleph seque
         printf "title: %s\n" , $item->{title};
     });
 
+=head1 CONFIGURATION
+
+=over
+
+=item file
+
+Read input from a local file given by its path. Alternatively a scalar
+reference can be passed to read from a string.
+
+=item fh
+
+Read input from an L<IO::Handle>. If not specified, L<Catmandu::Util::io> is used to
+create the input stream from the C<file> argument or by using STDIN.
+
+=item encoding
+
+Binmode of the input stream C<fh>. Set to C<:utf8> by default.
+
+=item fix
+
+An ARRAY of one or more fixes or file scripts to be applied to imported items.
+
+=back
+
 =head1 METHODS
 
-=head2 new(file => $file , fh => $fh)
+Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
-Parse a file or a filehandle into a L<Catmandu::Iterable>.
+=head1 SEE ALSO
 
-=head1 INHERTED METHODS
-
-=head2 count
-
-=head2 each(&callback)
-
-=head2 ...
-
-Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited. 
+L<Catmandu::Importer>,
+L<Catmandu::Iterable>
 
 =cut
 package Catmandu::Importer::MARC::ALEPHSEQ;

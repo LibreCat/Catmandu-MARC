@@ -30,10 +30,10 @@ Catmandu::Importer::MARC - Package that imports MARC data
 =head1 DESCRIPTION
 
 Catmandu::Importer::MARC is a L<Catmandu::Iterable> to import MARC records from an
-external source. When given an input file an Catmandu::Iterable is create generating 
+external source. When given an input file an Catmandu::Iterable is create generating
 items as perl HASH-es containing two keys:
 
-     '_id'    : the system identifier of the record (usually the 001 field) 
+     '_id'    : the system identifier of the record (usually the 001 field)
      'record' : an ARRAY of ARRAYs containing the record data
 
 Read more about processing data with Catmandu on the wiki: L<https://github.com/LibreCat/Catmandu/wiki>
@@ -62,53 +62,52 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
   '_id' => 'fol05882032'
  }
 
-=head1 METHODS
+=head1 CONFIGURATION
 
-=head2 new(file => $filename, type => $type)
+=over
 
-Create a new MARC importer for $filename. Use STDIN when no filename is given.
-Type describes the MARC parser to be used. Currently we support: 
+=item type
 
-=over 2
+Create a new MARC importer of the given type. Currently we support:
 
-=item USMARC    L<Catmandu::Importer::MARC::USMARC>
+    USMARC    L<Catmandu::Importer::MARC::USMARC>
+    ISO       alias for USMARC
+    MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
+    MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
+    MiJ       L<Catmandu::Importer::MARC::MiJ>
+    XML       L<Catmandu::Importer::MARC::XML>
+    RAW       L<Catmandu::Importer::MARC::RAW>
+    Lint      L<Catmandu::Importer::MARC::Lint>
+    ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
 
-=item ISO       alias for USMARC
+=item file
 
-=item MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
+Read input from a local file given by its path. Alternatively a scalar
+reference can be passed to read from a string.
 
-=item MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
+=item fh
 
-=item JSON      L<Catmandu::Importer::MARC::MiJ>
+Read input from an L<IO::Handle>. If not specified, L<Catmandu::Util::io> is used to
+create the input stream from the C<file> argument or by using STDIN.
 
-=item XML       L<Catmandu::Importer::MARC::XML>
+=item encoding
 
-=item RAW       L<Catmandu::Importer::MARC::RAW>
+Binmode of the input stream C<fh>. Set to C<:utf8> by default.
 
-=item Lint      L<Catmandu::Importer::MARC::Lint>
+=item fix
 
-=item ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
+An ARRAY of one or more fixes or file scripts to be applied to imported items.
 
 =back
 
-Read the documentation of the parser modules for extra configuration options.
+=head1 METHODS
 
-=head1 INHERTED METHODS
-
-=head2 count
-
-=head2 each(&callback)
-
-=head2 ...
-
-Every L<Catmandu::Importer> is a L<Catmandu::Iterable> all its methods are inherited. 
+Every L<Catmandu::Importer> is a L<Catmandu::Iterable> all its methods are inherited.
 
 =head1 SEE ALSO
 
 L<Catmandu::Importer>,
-L<Catmandu::Iterable>, 
-L<Catmandu::Fix::marc_map> , 
-L<Catmandu::Fix::marc_xml>
+L<Catmandu::Iterable>
 
 =cut
 package Catmandu::Importer::MARC;
@@ -129,7 +128,7 @@ sub _build_importer {
     my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
 
     $type = 'Record' if exists $self->_importer_args->{records};
-    
+
     my $pkg = Catmandu::Util::require_package($type,'Catmandu::Importer::MARC');
 
     $pkg->new($self->_importer_args);
