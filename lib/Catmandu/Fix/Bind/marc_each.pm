@@ -46,7 +46,7 @@ sub bind {
 
 =head1 NAME
 
-Catmandu::Fix::Bind::list - a binder that loops over MARC fields
+Catmandu::Fix::Bind::marc_each - a binder that loops over MARC fields
 
 =head1 SYNOPSIS
 
