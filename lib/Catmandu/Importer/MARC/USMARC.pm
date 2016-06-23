@@ -68,6 +68,7 @@ package Catmandu::Importer::MARC::USMARC;
 use Catmandu::Sane;
 use Moo;
 use MARC::File::USMARC;
+use Catmandu::Importer::MARC::Decoder;
 
 our $VERSION = '0.218';
 
@@ -75,10 +76,19 @@ with 'Catmandu::Importer';
 
 has id        => (is => 'ro' , default => sub { '001' });
 has records   => (is => 'rw');
+has decoder   => (
+    is   => 'ro',
+    lazy => 1 ,
+    builder => sub {
+        Catmandu::Importer::MARC::Decoder->new;
+    } );
 
 sub generator {
     my ($self) = @_;
     my $file = MARC::File::USMARC->in($self->fh);
+
+    # MARC::File doesn't provide support for inline files
+    $file = $self->decoder->fake_marc_file($self->fh,'MARC::File::USMARC') unless $file;
     sub  {
       $self->decode_marc($file->next());
     }

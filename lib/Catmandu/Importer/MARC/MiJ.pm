@@ -70,6 +70,9 @@ has decoder   => (
 sub generator {
     my ($self) = @_;
     my $file = MARC::File::MiJ->in($self->file);
+
+    # MARC::File doesn't provide support for inline files
+    $file = $self->decoder->fake_marc_file($self->fh,'MARC::File::MiJ') unless $file;
     sub  {
       $self->decoder->decode($file->next(),$self->id);
     }

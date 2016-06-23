@@ -95,6 +95,8 @@ sub generator {
     my ($self) = @_;
     my $lint = MARC::Lint->new;
     my $file = MARC::File::USMARC->in($self->fh);
+    # MARC::File doesn't provide support for inline files
+    $file = $self->decoder->fake_marc_file($self->fh,'MARC::File::USMARC') unless $file;
     sub  {
        my $marc = $file->next();
        my $doc  = $self->decoder->decode($marc,$self->id);

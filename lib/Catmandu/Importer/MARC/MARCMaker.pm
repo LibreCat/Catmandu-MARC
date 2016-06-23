@@ -85,6 +85,8 @@ has decoder   => (
 sub generator {
     my ($self) = @_;
     my $file = MARC::File::MARCMaker->in($self->fh);
+    # MARC::File doesn't provide support for inline files
+    $file = $self->decoder->fake_marc_file($self->fh,'MARC::File::MARCMaker') unless $file;
     sub  {
       $self->decoder->decode($file->next(),$self->id);
     }

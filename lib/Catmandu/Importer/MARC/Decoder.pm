@@ -5,6 +5,19 @@ use Moo;
 
 our $VERSION = '0.218';
 
+sub fake_marc_file {
+    my ($self,$fh,$class) = @_;
+
+    my $obj = {
+        filename    => scalar($fh),
+        fh          => $fh,
+        recnum      => 0,
+        warnings    => [],
+    };
+
+    return( bless $obj , $class );
+}
+
 sub decode {
     my ($self, $record, $id) = @_;
     return unless eval { $record->isa('MARC::Record') };
