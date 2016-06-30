@@ -1,7 +1,7 @@
 package Catmandu::Fix::marc_map;
 
 use Catmandu::Sane;
-use Carp qw(confess);
+use Catmandu::MARC;
 use Moo;
 use Catmandu::Fix::Has;
 
@@ -20,140 +20,38 @@ has pluck          => (fix_opt => 1);
 sub emit {
     my ($self,$fixer) = @_;
     my $path        = $fixer->split_path($self->path);
-    my $record_key  = $fixer->emit_string($self->record // 'record');
-    my $join_char   = $fixer->emit_string($self->join // '');
-    my $marc_path   = $self->marc_path;
 
-    my $field_regex;
-    my ($field,$ind1,$ind2,$subfield_regex,$from,$to);
+    my $marc_path   = $fixer->emit_string($self->marc_path);
+    my $record_opt  = $fixer->emit_string($self->record // 'record');
+    my $join_opt    = $fixer->emit_string($self->join // '');
+    my $split_opt   = $fixer->emit_string($self->split // 0);
+    my $pluck_opt   = $fixer->emit_string($self->pluck // 0);
+    my $value_opt   = $self->value ?
+                        $fixer->emit_string($self->value) : 'undef';
+    my $var         = $fixer->var;
+    my $result      = $fixer->generate_var;
 
-    if ($marc_path =~ /(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
-        $field          = $1;
-        $ind1           = $3;
-        $ind2           = $4;
-        $subfield_regex = defined $5 ? "[$5]" : "[a-z0-9_]";
-        $from           = $7;
-        $to             = $9;
-    }
-    else {
-        confess "invalid marc path";
-    }
-
-    $field_regex = $field;
-    $field_regex =~ s/\*/./g;
-
-    my $var  = $fixer->var;
-    my $vals = $fixer->generate_var;
-    my $perl = $fixer->emit_declare_vars($vals, '[]');
-
-    $perl .= $fixer->emit_foreach("${var}->{${record_key}}", sub {
-        my $var  = shift;
-        my $v    = $fixer->generate_var;
-        my $perl = "";
-
-        $perl .= "next if ${var}->[0] !~ /${field_regex}/;";
-
-        if (defined $ind1) {
-            $perl .= "next if (!defined ${var}->[1] || ${var}->[1] ne '${ind1}');";
-        }
-        if (defined $ind2) {
-            $perl .= "next if (!defined ${var}->[2] || ${var}->[2] ne '${ind2}');";
-        }
-
-        if ($self->value) {
-            $perl .= $fixer->emit_declare_vars($v, $fixer->emit_string($self->value));
-            $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
+    my $perl =<<EOF;
+if (my ${result} = Catmandu::MARC::marc_map(
+            ${var},
+            ${marc_path},
+            -split => ${split_opt},
+            -join  => ${join_opt},
+            -pluck => ${pluck_opt},
+            -value => ${value_opt}) ) {
+EOF
+    $perl .= $fixer->emit_create_path(
+            $var,
+            $path,
+            sub {
                 my $var2 = shift;
-                my $i = $fixer->generate_var;
-                return
-                "for (my ${i} = 3; ${i} < \@{${var}}; ${i} += 2) {".
-                    "if (${var}->[${i}] =~ /${subfield_regex}/) {".
-                        "${var2} = ${v}; last;".
-                    "}".
-                "}";
-            });
-        } else {
-            my $i = $fixer->generate_var;
-            my $add_subfields = sub {
-                my $start = shift;
-                if ($self->pluck) {
-                    # Treat the subfield_regex as a hash index
-                    my $pluck = $fixer->generate_var;
-                    return
-                    "my ${pluck}  = {};" .
-                    "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
-                        "push(\@{ ${pluck}->{ ${var}->[${i}] } }, ${var}->[${i} + 1]);" .
-                    "}" .
-                    "for my ${i} (split('','${subfield_regex}')) { " .
-                        "push(\@{${v}}, \@{ ${pluck}->{${i}} }) if exists ${pluck}->{${i}};" .
-                    "}";
-                }
-                else {
-                    # Treat the subfield_regex as regex that needs to match the subfields
-                    return
-                    "for (my ${i} = ${start}; ${i} < \@{${var}}; ${i} += 2) {".
-                        "if (${var}->[${i}] =~ /${subfield_regex}/) {".
-                            "push(\@{${v}}, ${var}->[${i} + 1]);".
-                        "}".
-                    "}";
-                }
-            };
-            $perl .= $fixer->emit_declare_vars($v, "[]");
-            $perl .= "if (${var}->[0] =~ /^LDR|^00/) {";
-            $perl .= $add_subfields->(3);
-            # Old Catmandu::MARC contained a bug/feature to allow
-            # for '_' subfields in non-control elements ..for beackwards
-            # compatibility we ignore them
-            $perl .= "} elsif (defined ${var}->[3] && ${var}->[3] eq '_') {";
-            $perl .= $add_subfields->(5);
-            $perl .= "} else {";
-            $perl .= $add_subfields->(3);
-            $perl .= "}";
-            $perl .= "if (\@{${v}}) {";
-
-            if (!$self->split) {
-                $perl .= "${v} = join(${join_char}, \@{${v}});";
+                "${var2} = ${result}"
             }
+    );
 
-            if (defined(my $off = $from)) {
-                my $len = defined $to ? $to - $off + 1 : 1;
-                $perl .= "${v} = join(${join_char}, \@{${v}}) if (is_array_ref(${v}));";
-                $perl .= "if (length(${v}) > ${off}) {" .
-                         "  ${v} = substr(${v}, ${off}, ${len});" .
-                         "} else {" .
-                         "  ${v} = undef;".
-                         "}";
-            }
-
-            $perl .= $fixer->emit_create_path($fixer->var, $path, sub {
-                my $var = shift;
-                my $perl = "";
-                $perl .= "if (defined ${v}) {";
-                if ($self->split) {
-                    $perl .=
-                    "${v} = [ ${v} ] unless ref ${v} eq 'ARRAY';" .
-                    "if (is_array_ref(${var})) {".
-                        "push \@{${var}}, \@{${v}};".
-                    "} else {".
-                        "${var} = [\@{${v}}];".
-                    "}";
-                } else {
-                    $perl .=
-                    "if (is_string(${var})) {".
-                        "${var} = join(${join_char}, ${var}, ${v});".
-                    "} else {".
-                        "${var} = ${v};".
-                    "}";
-                }
-                $perl .= "}";
-                $perl;
-            });
-
-            $perl .= "}";
-        }
-        $perl;
-    });
-
+    $perl .=<<EOF;
+}
+EOF
     $perl;
 }
 

@@ -1,7 +1,6 @@
 package Catmandu::Fix::Inline::marc_remove;
 
-use Clone qw(clone);
-use Carp;
+use Catmandu::MARC;
 require Exporter;
 
 @ISA = qw(Exporter);
@@ -12,26 +11,12 @@ our $VERSION = '0.219';
 
 sub marc_remove {
     my ($data,$marc_path) = @_;
-    my $ret = defined $data ? clone($data) : { record => [] };
-
-    $ret->{'record'} = [] unless $ret->{'record'};
-    croak "invalid marc path" unless $marc_path =~ /^\w{3}$/;
-
-    my @fields = ();
-    for my $field (@{$ret->{record}}) {
-    	unless ($field->[0] eq $marc_path) {
-    		push @fields , $field;
-    	}
-    }
-
-    $ret->{record} = \@fields;
-
-    return $ret;
+    return Catmandu::MARC::marc_remove($data,$marc_path);
 }
 
 =head1 NAME
 
-Catmandu::Fix::Inline::marc_remove - remove marc fields
+Catmandu::Fix::Inline::marc_remove - remove marc fields (DEPRECATED)
 
 =head1 SYNOPSIS
 
@@ -39,11 +24,13 @@ Catmandu::Fix::Inline::marc_remove - remove marc fields
 
  my $data  = marc_remove($data,'CAT');
 
+=head1 DEPRECATED
+
+This module is deprecated. Use the inline functionality of L<Catmandu::Fix::marc_remove> instead.
+
 =head1 SEE ALSO
 
-L<Catmandu::Fix::Inline::marc_set> , 
-L<Catmandu::Fix::Inline::marc_add> , 
-L<Catmandu::Fix::Inline::marc_map> 
+L<Catmandu::Fix::marc_remove>
 
 =cut
 

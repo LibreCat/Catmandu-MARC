@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-
+use Catmandu::Util;
 use Test::More tests => 18;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
@@ -31,7 +31,7 @@ ok(@$records == 2 , "Found 2 records");
 
 {
 	my @res = marc_map($records->[0],'630');
-	ok(@res == 2 , q|marc_map(630)|);
+	ok(@res == 1 , q|marc_map(630)|);
 }
 
 {

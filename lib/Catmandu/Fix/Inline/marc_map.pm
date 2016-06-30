@@ -1,6 +1,6 @@
 =head1 NAME
 
-Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
+Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts (DEPRECATED)
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,7 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
  # Get the 245-$c$b$a subfields orders as given in the mapping
  $str = marc_map($data,'245cba', -pluck => 1);
 
- # Get the 008 characters 35-35 
+ # Get the 008 characters 35-35
  $str = marc_map($data,'008_/35-35');
 
  # Get all 100 subfields except the digits
@@ -46,16 +46,19 @@ Catmandu::Fix::Inline::marc_map - A marc_map-er for Perl scripts
     ['245' , ' ', ' ' , 'a' , 'Learning Per' , 'c', '/ by Randal L. Schwartz'],
  ]};
 
+=head1 DEPRECATED
+
+This module is deprecated. Use the inline functionality of L<Catmandu::Fix::marc_map> instead.
+
 =head1 SEE ALSO
 
-L<Catmandu::Fix::Inline::marc_set> , 
-L<Catmandu::Fix::Inline::marc_add> , 
-L<Catmandu::Fix::Inline::marc_remove> 
+L<Catmandu::Fix::Inline::marc_map>
 
 =cut
 
 package Catmandu::Fix::Inline::marc_map;
 
+use Catmandu::MARC;
 require Exporter;
 
 @ISA = qw(Exporter);
@@ -67,118 +70,7 @@ our $VERSION = '0.219';
 sub marc_map {
     my ($data,$marc_path,%opts) = @_;
 
-    return unless exists $data->{'record'};
-
-    my $record = $data->{'record'};
-
-    unless (defined $record && ref $record eq 'ARRAY') {
-        return wantarray ? () : undef;
-    }
-
-    my $split     = $opts{'-split'};
-    my $join_char = $opts{'-join'} // '';
-    my $pluck     = $opts{'-pluck'};
-    my $value_set = $opts{'-value'};
-    my $attrs     = {};
-
-    if ($marc_path =~ /(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
-        $attrs->{field}          = $1;
-        $attrs->{ind1}           = $3;
-        $attrs->{ind2}           = $4;
-        $attrs->{subfield_regex} = defined $5 ? "[$5]" : "[a-z0-9_]";
-        $attrs->{from}           = $7;
-        $attrs->{to}             = $9;
-    } else {
-        return wantarray ? () : undef;
-    }
-
-    $attrs->{field_regex} = $attrs->{field};
-    $attrs->{field_regex} =~ s/\*/./g;
-
-    my $add_subfields = sub {
-        my $var   = shift;
-        my $start = shift;
-
-        my @v = ();
-
-        if ($pluck) {
-            # Treat the subfield_regex as a hash index
-            my $_h = {};
-            for (my $i = $start; $i < @$var; $i += 2) {
-                push @{ $_h->{ $var->[$i] } } , $var->[$i + 1];
-            }
-            for my $c (split('',$attrs->{subfield_regex})) {
-                push @v , @{ $_h->{$c} } if exists $_h->{$c};
-            }
-        }
-        else {
-            for (my $i = $start; $i < @$var; $i += 2) {
-                if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
-                    push(@v, $var->[$i + 1]);
-                }
-            }
-        }
-
-        return \@v;
-    };
-
-    my @vals = ();
-
-    for my $var (@$record) {
-    	next if $var->[0] !~ /$attrs->{field_regex}/;
-    	next if defined $attrs->{ind1} && $var->[1] ne $attrs->{ind1};
-    	next if defined $attrs->{ind2} && $var->[2] ne $attrs->{ind2};
-
-    	my $v;
-
-        if ($value_set) {
-            for (my $i = 3; $i < @$var; $i += 2) {
-                if ($var->[$i] =~ /$attrs->{subfield_regex}/) {
-                    $v = $value_set;
-                    last;
-                }
-            }
-        }
-        else {
-        	if ($var->[0] =~ /LDR|00./) {
-        		$v = $add_subfields->($var,3);
-        	}
-        	elsif (defined $var->[3] && $var->[3] eq '_') {
-        		$v = $add_subfields->($var,5);
-        	}
-        	else {
-        		$v = $add_subfields->($var,3);
-        	}
-
-        	if (@$v) {
-        		if (!$split) {
-        			$v = join $join_char, @$v;
-                }
-
-    			if (defined(my $off = $attrs->{from})) {
-                    $v = join $join_char, @$v if (ref $v eq 'ARRAY');
-    				my $len = defined $attrs->{to} ? $attrs->{to} - $off + 1 : 1;
-    				$v = substr($v,$off,$len);
-    			}
-        	}
-        }
-        if (ref $v eq 'ARRAY' && @$v) {
-            push (@vals,@$v);
-        }
-        elsif (ref $v eq '' && length $v ) {
-            push (@vals,$v);
-        }
-    }
-
-    if (wantarray) {
-        return @vals;
-    }
-    elsif (@vals > 0) {
-        return join $join_char , @vals;
-    }
-    else {
-        return undef;
-    }
+    return Catmandu::MARC::marc_map($data,$marc_path,%opts);
 }
 
 1;

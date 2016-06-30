@@ -21,7 +21,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
     $ catmandu convert MARC --fix myfixes.txt < data.mrc
 
     myfixes:
-    
+
     marc_map("245a", title)
     marc_map("5**", note.$append)
     marc_map('710','my.authors.$append')
@@ -60,13 +60,13 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 # DESCRIPTION
 
-With Catmandu, LibreCat tools abstract digital library and research services as data 
-warehouse processes. As stores we reuse MongoDB or ElasticSearch providing us with 
-developer friendly APIs. Catmandu works with international library standards such as 
-MARC, MODS and Dublin Core, protocols such as OAI-PMH, SRU and open repositories such 
+With Catmandu, LibreCat tools abstract digital library and research services as data
+warehouse processes. As stores we reuse MongoDB or ElasticSearch providing us with
+developer friendly APIs. Catmandu works with international library standards such as
+MARC, MODS and Dublin Core, protocols such as OAI-PMH, SRU and open repositories such
 as DSpace and Fedora. And, of course, we speak the evolving Semantic Web.
 
-Follow us on [http://librecat.org](http://librecat.org) and read an introduction into Catmandu data 
+Follow us on [http://librecat.org](http://librecat.org) and read an introduction into Catmandu data
 processing at [https://github.com/LibreCat/Catmandu/wiki](https://github.com/LibreCat/Catmandu/wiki).
 
 # SEE ALSO

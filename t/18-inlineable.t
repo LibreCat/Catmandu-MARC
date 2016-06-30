@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-
+use Catmandu::Util;
 use Test::More tests => 16;
 
 use Catmandu::Fix::marc_map as => 'marc_map';
@@ -33,7 +33,7 @@ ok(@$records == 2 , "Found 2 records");
 
 {
 	my $res = marc_map($records->[0],'630','test.$append')->{test};
-	ok(@$res == 2 , q|marc_map(630)|);
+	ok(Catmandu::Util::is_array_ref($res), q|marc_map(630)|);
 }
 
 {

@@ -1,46 +1,20 @@
 package Catmandu::Fix::marc_decode_dollar_subfields;
 
+use Catmandu::Sane;
+use Catmandu::MARC;
 use Moo;
-use Data::Dumper;
+use Catmandu::Fix::Has;
 
 with 'Catmandu::Fix::Inlineable';
 
 our $VERSION = '0.219';
 
+has record    => (fix_opt => 1);
+
 sub fix {
 	my ($self,$data) = @_;
-
-	my $old_record = $data->{record};
-	my $new_record = [];
-
-	for my $field (@$old_record) {
-		my ($field,$ind1,$ind2,@subfields) = @$field;
-
-		my $fixed_field = [$field,$ind1,$ind2];
-
-		for (my $i = 0 ; $i < @subfields ; $i += 2) {
-			my $code  = $subfields[$i];
-			my $value = $subfields[$i+1];
-
-			# If a subfield contains fields coded like: data$xmore$yevenmore
-			# chunks = (data,x,y,evenmore)
-			my @chunks = split( /\$([a-z])/, $value );
-
-			my $real_value = shift @chunks;
-
-			push @$fixed_field , ( $code, $real_value);
-
-			while (@chunks) {
-				push  @$fixed_field , ( splice @chunks, 0, 2 );
-			}
-		}
-
-		push @$new_record , $fixed_field;
-	}
-
-	$data->{record} = $new_record;
-
-	$data;
+    my $record_key = $self->record // 'record';
+    return Catmandu::MARC::marc_decode_dollar_subfields($data, record => $record_key);
 }
 
 =head1 NAME
