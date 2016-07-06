@@ -25,34 +25,6 @@ sub marc_map {
     my $value_set = $opts{'-value'};
     my $attrs     = {};
 
-    my $add_subfields = sub {
-        my ($field,%context) = @_;
-
-        my @v = ();
-
-        if ($pluck) {
-            # Treat the subfield as a hash index
-            my $_h = {};
-            for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-                push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
-            }
-            my $subfield = $context{subfield};
-            $subfield =~ s{^[a-zA-Z0-9]}{}g;
-            for my $c (split('',$subfield)) {
-                push @v , @{ $_h->{$c} } if exists $_h->{$c};
-            }
-        }
-        else {
-            for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-                if ($field->[$i] =~ /^$context{subfield}$/) {
-                    push(@v, $field->[$i + 1]);
-                }
-            }
-        }
-
-        return @v ? \@v : undef;
-    };
-
     my $vals;
 
     marc_at_field($record, $marc_path, sub {
@@ -68,7 +40,7 @@ sub marc_map {
             }
         }
         else {
-            $v = $add_subfields->($field,%context);
+            $v = _extract_subfields($field,\%context, pluck => $pluck);
 
             if (defined $v && @$v) {
                 if (!$split) {
@@ -118,6 +90,36 @@ sub marc_map {
         return $vals;
     }
 }
+
+sub _extract_subfields {
+    my ($field,$context,%opts) = @_;
+
+    my @v = ();
+
+    if ($opts{pluck}) {
+        # Treat the subfield as a hash index
+        my $_h = {};
+        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+            push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
+        }
+        my $subfield = $context->{subfield};
+        $subfield =~ s{^[a-zA-Z0-9]}{}g;
+        for my $c (split('',$subfield)) {
+            push @v , @{ $_h->{$c} } if exists $_h->{$c};
+        }
+    }
+    else {
+        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+            my $subfield = $context->{subfield};
+            if ($field->[$i] =~ /^$subfield$/) {
+                push(@v, $field->[$i + 1]);
+            }
+        }
+    }
+
+    return @v ? \@v : undef;
+}
+
 
 sub marc_add {
     my ($data,$marc_path,@subfields) = @_;
