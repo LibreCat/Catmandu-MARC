@@ -36,13 +36,15 @@ sub marc_map {
             for (my $i = $context{start}; $i < $context{end}; $i += 2) {
                 push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
             }
-            for my $c (split('',$context{subfield})) {
+            my $subfield = $context{subfield};
+            $subfield =~ s{^[a-zA-Z0-9]}{}g;
+            for my $c (split('',$subfield)) {
                 push @v , @{ $_h->{$c} } if exists $_h->{$c};
             }
         }
         else {
             for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-                if ($field->[$i] =~ /$context{subfield}/) {
+                if ($field->[$i] =~ /^$context{subfield}$/) {
                     push(@v, $field->[$i + 1]);
                 }
             }
@@ -401,8 +403,11 @@ sub marc_at_field {
         $field          = $1;
         $ind1           = $3;
         $ind2           = $4;
-        if (defined $5) {
-            $subfield_regex = "$5";
+        $subfield_regex = $5;
+        if (defined($subfield_regex)) {
+            unless ($subfield_regex =~ /^[a-zA-Z0-9]$/) {
+                $subfield_regex = "[$subfield_regex]";
+            }
         }
         elsif ($opts{subfield_default}) {
             $subfield_regex = $field =~ /^0|LDR/ ? '_' : 'a';

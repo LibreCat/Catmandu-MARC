@@ -47,4 +47,8 @@ is $records->[0]->{has_260c}, 'OK' , 'value subfield';
 
 ok ! $records->[0]->{has_260h}, 'value subfield';
 
+is $records->[0]->{has_500_not_c}, 'OK' , '^c value subfield';
+
+ok ! $records->[0]->{has_500_not_a}, '^a value subfield';
+
 done_testing;
