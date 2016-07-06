@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Catmandu::Util;
-use Test::More tests => 18;
+use Test::More tests => 21;
 
 use Catmandu::Fix::Inline::marc_map qw(marc_map);
 use Catmandu::Fix::Inline::marc_add qw(marc_add);
@@ -81,15 +81,22 @@ ok(@$records == 2 , "Found 2 records");
 
 {
 	my @arr = marc_map($records->[0],'245a/0-3',-split=>1);
-	is $arr[0] , q|Acti|;
+	is $arr[0][0] , q|Acti|;
 }
 
 {
 	my @arr = marc_map($records->[0],'630',-split=>1);
 	ok @arr == 2;
+    is ref($arr[0]) , 'ARRAY' , 'got an array of arrays';
+}
+
+{
+	my @arr = marc_map($records->[0],'630',-split=>1, '-nested_arrays' => 0);
+	ok @arr == 2;
+    is ref($arr[0]) , '' , 'got an array of strings';
 }
 
 {
 	my @arr = marc_map($records->[1],'020a',-split=>1);
-	ok @arr == 3;
+	ok @arr == 2;
 }

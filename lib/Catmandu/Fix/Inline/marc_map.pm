@@ -69,7 +69,7 @@ our $VERSION = '0.219';
 
 sub marc_map {
     my ($data,$marc_path,%opts) = @_;
-
+    $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
     return Catmandu::MARC::marc_map($data,$marc_path,%opts);
 }
 

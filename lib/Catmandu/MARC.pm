@@ -22,11 +22,12 @@ sub marc_map {
         return wantarray ? () : undef;
     }
 
-    my $split     = $opts{'-split'} // 0;
-    my $join_char = $opts{'-join'} // '';
-    my $pluck     = $opts{'-pluck'};
-    my $value_set = $opts{'-value'};
-    my $attrs     = {};
+    my $split          = $opts{'-split'} // 0;
+    my $join_char      = $opts{'-join'} // '';
+    my $pluck          = $opts{'-pluck'};
+    my $value_set      = $opts{'-value'};
+    my $nested_arrays  = $opts{'-nested_arrays'} // 0;
+    my $attrs          = {};
 
     my $vals;
 
@@ -67,10 +68,23 @@ sub marc_map {
             if ($split) {
                 $v = [ $v ] unless Catmandu::Util::is_array_ref($v);
                 if (Catmandu::Util::is_array_ref($vals)) {
-                    push @$vals , @$v;
+                    # With the nested arrays option a split will
+                    # always return an array of array of values.
+                    # This was the old behavior of Inline marc_map functions
+                    if ($nested_arrays == 1) {
+                        push @$vals , $v;
+                    }
+                    else {
+                        push @$vals , @$v;
+                    }
                 }
                 else {
-                    $vals = [ @$v ];
+                    if ($nested_arrays == 1) {
+                        $vals = [$v];
+                    }
+                    else {
+                        $vals = [ @$v ];
+                    }
                 }
             }
             else {
