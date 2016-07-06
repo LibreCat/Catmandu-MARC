@@ -122,4 +122,8 @@ Copy data from a MARC record to a field.
 
 L<Catmandu::Fix>
 
+For a more extensive MARC path language please take a look at Casten Klee's MARCSpec module:
+
+L<Catmandu::Fix::marc_spec>
+
 =cut
