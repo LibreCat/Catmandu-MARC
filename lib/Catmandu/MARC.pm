@@ -3,7 +3,10 @@ package Catmandu::MARC;
 use Catmandu::Sane;
 use Catmandu::Util;
 use Catmandu::Exporter::MARC::XML;
+use Memoize;
 use Carp;
+
+memoize('_compile_marc_path');
 
 our $VERSION = '0.219';
 
@@ -28,28 +31,29 @@ sub marc_map {
     my $vals;
 
     marc_at_field($record, $marc_path, sub {
-        my ($field, %context) = @_;
+        my ($field, $context) = @_;
         my $v;
 
         if ($value_set) {
-            for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-                if ($field->[$i] =~ /$context{subfield}/) {
+            for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+                my $subfield_regex = $context->{subfield_regex};
+                if ($field->[$i] =~ $subfield_regex) {
                     $v = $value_set;
                     last;
                 }
             }
         }
         else {
-            $v = _extract_subfields($field,\%context, pluck => $pluck);
+            $v = _extract_subfields($field,$context, pluck => $pluck);
 
             if (defined $v && @$v) {
                 if (!$split) {
                     $v = join $join_char, @$v;
                 }
 
-                if (defined(my $off = $context{from})) {
+                if (defined(my $off = $context->{from})) {
                     $v = join $join_char, @$v if (ref $v eq 'ARRAY');
-                    my $len = $context{len};
+                    my $len = $context->{len};
                     if (length(${v}) > $off) {
                         $v = substr($v, $off, $len);
                     } else {
@@ -110,8 +114,8 @@ sub _extract_subfields {
     }
     else {
         for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
-            my $subfield = $context->{subfield};
-            if ($field->[$i] =~ /^$subfield$/) {
+            my $subfield_regex = $context->{subfield_regex};
+            if ($field->[$i] =~ $subfield_regex) {
                 push(@v, $field->[$i + 1]);
             }
         }
@@ -195,13 +199,13 @@ sub marc_set {
     }
 
     marc_at_field($record, $marc_path, sub {
-        my ($field,%context) = @_;
+        my ($field,$context) = @_;
 
         my $found = 0;
-        for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-            if ($field->[$i] eq $context{subfield}) {
-                if (defined $context{from}) {
-                    substr($field->[$i + 1], $context{from}, $context{len}) = $value;
+        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+            if ($field->[$i] eq $context->{subfield}) {
+                if (defined $context->{from}) {
+                    substr($field->[$i + 1], $context->{from}, $context->{len}) = $value;
                 }
                 else {
                     $field->[$i + 1] = $value;
@@ -211,7 +215,7 @@ sub marc_set {
         }
 
         if ($found == 0) {
-            push(@$field,$context{subfield},$value);
+            push(@$field,$context->{subfield},$value);
         }
     }, subfield_default => 1);
 
@@ -226,32 +230,36 @@ sub marc_remove {
     my $new_record;
 
     marc_at_field($record, $marc_path, sub {
-        my ($field,%context) = @_;
+        my ($field,$context) = @_;
 
-        if ($field->[0] =~ /$context{field_regex}/) {
-            if (defined $context{ind1}) {
-                return if (defined $field->[1] && $field->[1] eq $context{ind1});
+        if ($field->[0] =~ $context->{field_regex}) {
+            if (defined $context->{ind1}) {
+                return if (defined $field->[1] && $field->[1] eq $context->{ind1});
             }
 
-            if (defined $context{ind2}) {
-                return if (defined $field->[2] && $field->[2] eq $context{ind2});
+            if (defined $context->{ind2}) {
+                return if (defined $field->[2] && $field->[2] eq $context->{ind2});
             }
 
-            unless (defined $context{ind1} || defined $context{ind2} || defined $context{subfield}) {
+            unless (
+                defined $context->{ind1} ||
+                defined $context->{ind2} ||
+                defined $context->{subfield_regex} ) {
                 return;
             }
         }
 
-        if (defined $context{subfield}) {
-            if ( $field->[0] =~ /$context{field_regex}/) {
+        if (defined $context->{subfield_regex}) {
+            my $subfield_regex = $context->{subfield_regex};
+            if ( $field->[0] =~ $context->{field_regex}) {
                 my $new_subf = [];
-                for (my $i = $context{start}; $i < $context{end}; $i += 2) {
-                    unless ($field->[$i] =~ /$context{subfield}/) {
+                for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+                    unless ($field->[$i] =~ $subfield_regex) {
                         push @$new_subf , $field->[$i];
                         push @$new_subf , $field->[$i+1];
                     }
                 }
-                splice @$field , $context{start} , int(@$field), @$new_subf;
+                splice @$field , $context->{start} , int(@$field), @$new_subf;
             }
         }
 
@@ -393,83 +401,106 @@ sub marc_decode_dollar_subfields {
     $data;
 }
 
-sub marc_at_field {
-    my ($record,$marc_path,$callback,%opts) = @_;
+sub _compile_marc_path {
+    my ($marc_path,%opts) = @_;
 
-    croak "need a marc_path and callback" unless defined($marc_path) && defined($callback);
+    my ($field,$field_regex,$ind1,$ind2,
+        $subfield,$subfield_regex,$from,$to,$len,$is_regex_field);
 
-    my $field_regex;
-    my ($field,$ind1,$ind2,$subfield_regex,$from,$to,$len);
-
-    if ($marc_path =~ /(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/) {
+    my $MARC_PATH_REGEX = qr/(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/;
+    if ($marc_path =~ $MARC_PATH_REGEX) {
         $field          = $1;
         $ind1           = $3;
         $ind2           = $4;
-        $subfield_regex = $5;
-        if (defined($subfield_regex)) {
-            unless ($subfield_regex =~ /^[a-zA-Z0-9]$/) {
-                $subfield_regex = "[$subfield_regex]";
+        $subfield       = $5;
+        if (defined($subfield)) {
+            unless ($subfield =~ /^[a-zA-Z0-9]$/) {
+                $subfield = "[$subfield]";
             }
         }
         elsif ($opts{subfield_default}) {
-            $subfield_regex = $field =~ /^0|LDR/ ? '_' : 'a';
+            $subfield = $field =~ /^0|LDR/ ? '_' : 'a';
         }
         elsif ($opts{subfield_wildcard}) {
-            $subfield_regex = '[a-z0-9_]';
+            $subfield = '[a-z0-9_]';
+        }
+        if (defined($subfield)) {
+            $subfield_regex = qr/^${subfield}$/;
         }
         $from           = $7;
         $to             = $9;
         $len = defined $to ? $to - $from + 1 : 1;
     }
     else {
-        confess "invalid marc path";
+        return undef;
     }
 
     $field_regex = $field;
-    $field_regex =~ s/\*/./g;
 
-    for (@$record) {
+    if ($field =~ /\*/) {
+        $field_regex    =~ s/\*/./g;
+        $is_regex_field = 1;
+    }
+
+    $field_regex = qr/^$field_regex$/;
+
+    return {
+        field           => $field ,
+        field_regex     => $field_regex ,
+        is_regex_field  => $is_regex_field ,
+        subfield        => $subfield ,
+        subfield_regex  => $subfield_regex ,
+        ind1            => $ind1 ,
+        ind2            => $ind2 ,
+        from            => $from ,
+        to              => $to ,
+        len             => $len
+    };
+}
+
+sub marc_at_field {
+    my ($record,$marc_path,$callback,%opts) = @_;
+
+    croak "need a marc_path and callback" unless defined($marc_path) && defined($callback);
+
+    my $context = _compile_marc_path($marc_path,%opts);
+
+    confess "invalid marc path" unless $context;
+
+    for my $row (@$record) {
         unless ($opts{nofilter}) {
-            if ($_->[0] !~ /$field_regex/) {
-                next;
+            if ($context->{is_regex_field}) {
+                next unless $row->[0] =~ $context->{field_regex};
+            }
+            else {
+                next unless $row->[0] eq $context->{field};
             }
 
-            if (defined $ind1) {
-                if (!defined $_->[1] || $_->[1] ne $ind1) {
+            if (defined $context->{ind1}) {
+                if (!defined $row->[1] || $row->[1] ne $context->{ind1}) {
                     next;
                 }
             }
-            if (defined $ind2) {
-                if (!defined $_->[2] || $_->[2] ne $ind2) {
+            if (defined $context->{ind2}) {
+                if (!defined $row->[2] || $row->[2] ne $context->{ind2}) {
                     next;
                 }
             }
         }
 
-        my $start;
-
-        if ($_->[0] =~ /^LDR|^00/) {
-            $start = 3;
+        if ($row->[0] =~ /^LDR|^00/) {
+            $context->{start} = 3;
         }
-        elsif (defined $_->[5] && $_->[5] eq '_') {
-            $start = 5;
+        elsif (defined $row->[5] && $row->[5] eq '_') {
+            $context->{start} = 5;
         }
         else {
-            $start = 3;
+            $context->{start} = 3;
         }
 
-        $callback->($_,
-            field        => $field ,
-            field_regex  => $field_regex ,
-            subfield     => $subfield_regex ,
-            start        => $start ,
-            end          => int(@$_) ,
-            ind1         => $ind1 ,
-            ind2         => $ind2 ,
-            from         => $from ,
-            to           => $to ,
-            len          => $len
-        );
+        $context->{end} = int(@$row);
+
+        $callback->($row,$context);
     }
 }
 

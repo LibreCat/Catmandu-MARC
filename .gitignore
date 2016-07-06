@@ -14,3 +14,5 @@ data
 local
 cpanfile.snapshot
 .perl-version
+nytprof.out
+nytprof/
