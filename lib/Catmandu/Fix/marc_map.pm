@@ -79,17 +79,17 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     # Copy the 245-$c$b$a subfields into the my.title hash in the order c,b,a
     marc_map('245cba','my.title', pluck:1)
 
-    # Copy the 100 subfields into the my.authors array
+    # Add the 100 subfields into the my.authors array
     marc_map('100','my.authors.$append')
 
     # Add the 710 subfields into the my.authors array
     marc_map('710','my.authors.$append')
 
-    # Copy the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
+    # Add the 600-$x subfields into the my.subjects array while packing each into a genre.text hash
     marc_map('600x','my.subjects.$append.genre.text')
 
-    # Copy the 008 characters 35-35 into the my.language hash
-    marc_map('008/35-35','my.language')
+    # Copy the 008 characters 35-37 into the my.language hash
+    marc_map('008/35-37','my.language')
 
     # Copy all the 600 fields into a my.stringy hash joining them by '; '
     marc_map('600','my.stringy', join:'; ')
@@ -120,14 +120,100 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
 =head1 DESCRIPTION
 
-Copy data from a MARC record to a field.
+Copy data from a MARC field to JSON path.
+
+This module implements a small subset of the L<MARCspec|http://marcspec.github.io/MARCspec/>
+specification to map MARC fields. For a more extensive MARC path implementation
+please take a look at Casten Klee's MARCSpec module: L<Catmandu::Fix::marc_spec>
+
+=head1 METHODS
+
+=head2 marc_map(MARC_PATH, JSON_PATH, OPT:VAL, OPT2:VAL,...)
+
+Copy the value(s) of the data found at a MARC_PATH to a JSON_PATH.
+
+The MARC_PATH can point to a MARC field. For instance:
+
+    marc_path('245',title)
+    marc_path('020',isbn)
+
+The MARC_PATH can point to one or more MARC subfields. For instamce:
+
+    marc_path('245a',title)
+    marc_path('245ac',title)
+
+Wildcards are allowed in the field names:
+
+    # Map all the 200-fields to a title
+    marc_map('2**'',title)
+
+To filter out specific fields indicators can be used:
+
+    # Only map the MARC fields with indicator-1 is '1' to title
+    marc_map('245[1,]',title)
+
+Also a substring of a field value can be mapped:
+
+    # Map 008 position 35 to 37 to the language field
+    marc_map('008/35-37',language)
+
+By default all matched fields in a MARC_PATH will be joined into one string.
+This behavior can be changed using one more more options (see below).
+
+=head1 OPTIONS
+
+=head2 split: 0|1
+
+When split is set to 1 then all mapped values will be joined into an array
+instead of a string.
+
+    # The subject field will contain an array of strings (one string
+    # for each 500 field found)
+    marc_map('500',subject, split: 1)
+
+    # The subject field will contain a string
+    marc_map('500', subject)
+
+=head2 join: Str
+
+By default all the values are joined into a string without a field separator.
+Use the join function to set the separator.
+
+    # All subfields of the 245 field will be separated with a space " "
+    marc_map('245',title, join: " ")
+
+=head2 pluck: 0|1
+
+Be default, all subfields are added to the mapping in the order they are found
+in the record. Using the pluck option, one can select the required order of
+subfields to map.
+
+    # First write the subfield-c to the title, then the subfield_a
+    marc_map('245ca',title, pluck:1)
+
+=head2 value: Str
+
+Don't write the value of the MARC (sub)field to the JSON_PATH but the specified
+string value.
+
+    # has_024_a will contain the value 'Y' if the MARC field 024 subfield-a
+    # exists
+    marc_map('024a',has_024_a,value:Y)
+
+=head2 nested_arrays: 0|1
+
+When the split option is specified the output of the mapping will always be an
+array of strings (one string for each subfield found). Using the nested_array
+option the output will be an array of array of strings (one array item for
+each matched field, one array of strings for each matched subfield).
+
+=head2 record: STR
+
+Specify the JSON_PATH where the MARC record can be found (default: record)
 
 =head1 SEE ALSO
 
 L<Catmandu::Fix>
-
-For a more extensive MARC path language please take a look at Casten Klee's MARCSpec module:
-
 L<Catmandu::Fix::marc_spec>
 
 =cut
