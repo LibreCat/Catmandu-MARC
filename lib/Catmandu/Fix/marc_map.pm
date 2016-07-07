@@ -16,6 +16,7 @@ has split          => (fix_opt => 1);
 has join           => (fix_opt => 1);
 has value          => (fix_opt => 1);
 has pluck          => (fix_opt => 1);
+has nested_arrays  => (fix_opt => 1);
 
 sub emit {
     my ($self,$fixer) = @_;
@@ -26,6 +27,8 @@ sub emit {
     my $join_opt    = $fixer->emit_string($self->join // '');
     my $split_opt   = $fixer->emit_string($self->split // 0);
     my $pluck_opt   = $fixer->emit_string($self->pluck // 0);
+    my $nested_arrays_opt = $fixer->emit_string($self->nested_arrays // 0);
+
     my $value_opt   = $self->value ?
                         $fixer->emit_string($self->value) : 'undef';
     my $var         = $fixer->var;
@@ -38,6 +41,7 @@ if (my ${result} = Catmandu::MARC::marc_map(
             -split => ${split_opt},
             -join  => ${join_opt},
             -pluck => ${pluck_opt},
+            -nested_arrays => ${nested_arrays_opt} ,
             -value => ${value_opt}) ) {
 EOF
     $perl .= $fixer->emit_create_path(
