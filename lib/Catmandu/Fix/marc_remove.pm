@@ -38,6 +38,28 @@ Catmandu::Fix::marc_remove - remove marc (sub)fields
 
 Remove (sub)fields in a MARC record
 
+=head1 METHODS
+
+=head2 marc_remove( MARC_PATH , [OPT1:VAL, OPT2: VAL])
+
+Delete the (sub)fields from the MARC record as indicated by the MARC_PATH.
+
+=head1 OPTIONS
+
+=head2 record: STR
+
+Specify the JSON_PATH where the MARC record can be found (default: record).
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_remove as => 'marc_remove';
+
+    my $data = { record => [...] };
+
+    $data = marc_remove($data,'600');
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

@@ -36,9 +36,21 @@ then the $h = subsubfield will not be accessible with normal MARC processing too
 Use the 'marc_decode_dollar_subfields()' fix to re-evaluate all the MARC subfields
 for these hidden data.
 
-=head1 USAGE
+=head1 METHODS
 
-  catmandu convert MARC --type RAW --fix 'marc_decode_dollar_subfields()' < data.mrc
+=head2 marc_decode_dollar_subfields()
+
+Decode double encoded dollar subfields into real MARC subfields.
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_decode_dollar_subfields as => 'marc_decode_dollar_subfields';
+
+    my $data = { record => [...] };
+
+    $data = marc_decode_dollar_subfields($data);
 
 =head1 SEE ALSO
 

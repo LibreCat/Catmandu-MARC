@@ -54,6 +54,12 @@ Catmandu::Fix::Condition::marc_match - Conditionals on MARC fields
 Evaluate the enclosing fixes only if the MARC (sub)field matches a
 regular expression.
 
+=head1 METHODS
+
+=head2 marc_match(MARC_PATH, REGEX)
+
+Evaluates to true when the MARC_PATH values matches the REGEX, false otherwise.
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

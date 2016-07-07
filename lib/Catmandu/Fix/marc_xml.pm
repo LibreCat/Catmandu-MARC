@@ -32,6 +32,22 @@ Catmandu::Fix::marc_xml - transform a Catmandu MARC record into MARCXML
 
 Convert MARC data into a MARCXML string
 
+=head1 METHODS
+
+=head2 marc_xml(PATH)
+
+Transform the MARC record found at PATH to MARC XML.
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_xml as => 'marc_xml';
+
+    my $data = { record => [...] };
+
+    $data = marc_xml($data);
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

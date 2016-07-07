@@ -39,6 +39,26 @@ Catmandu::Fix::marc_add - add new fields to marc
 
 Add a new subfield to MARC record.
 
+=head1 METHODS
+
+=head2 marc_add(MARC_FIELD, SUBFIELD, VALUE, [ SUBFIELD, VALUE , ... ])
+
+Add new subfields to a MARC record. The MARC_FIELD should contain a marc field
+name, all other arguments contain the subfields to be added.
+
+By default literal values will be added. To point to an existing value in
+a record use the JSON_PATH syntax with a dollar '$.' added in front.
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_add as => 'marc_add';
+
+    my $data = { record => [...] };
+
+    $data = marc_add($data,'245','a','title');
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

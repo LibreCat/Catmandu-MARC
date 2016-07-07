@@ -45,6 +45,29 @@ Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
 
 Set the value of a MARC subfield to a new value.
 
+=head1 METHODS
+
+=head2 marc_set( MARC_PATH , VALUE , [OPT1:VAL, OPT2: VAL])
+
+Set a MARC subfield to a particular new value. This valeu can be a literal or
+reference an existing field in the record using the dollar JSON_PATH syntax.
+
+=head1 OPTIONS
+
+=head2 record: STR
+
+Specify the JSON_PATH where the MARC record can be found (default: record).
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_set as => 'marc_xmarc_setml';
+
+    my $data = { record => [...] };
+
+    $data = marc_set($data, '245a', 'test');
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

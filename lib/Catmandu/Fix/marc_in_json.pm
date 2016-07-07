@@ -46,6 +46,32 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
 
 Convert the MARC record into MARC-in-JSON format
 
+=head1 METHODS
+
+=head2 marc_in_json( [OPT1:VAL, OPT2: VAL])
+
+Convert a Catmandu MARC record into the MARC-in-JSON format.
+
+=head1 OPTIONS
+
+=head2 reverse: 0|1
+
+Convert a MARC-in-JSON record back into the Catmandu MARC format.
+
+=head2 record: STR
+
+Specify the JSON_PATH where the MARC record can be found (default: record).
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_in_json as => 'marc_in_json';
+
+    my $data = { record => [...] };
+
+    $data = marc_in_json($data);
+
 =head1 SEE ALSO
 
 L<Catmandu::Fix>

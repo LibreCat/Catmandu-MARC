@@ -209,7 +209,19 @@ each matched field, one array of strings for each matched subfield).
 
 =head2 record: STR
 
-Specify the JSON_PATH where the MARC record can be found (default: record)
+Specify the JSON_PATH where the MARC record can be found (default: record).
+
+=head1 INLINE
+
+This Fix can be used inline in a Perl script:
+
+    use Catmandu::Fix::marc_map as => 'marc_map';
+
+    my $data = { record => [...] };
+
+    $data = marc_map($data,'245a','title');
+
+    print $data->{title} , "\n";
 
 =head1 SEE ALSO
 

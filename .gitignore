@@ -10,9 +10,9 @@ Build.PL
 META.*
 MYMETA.*
 Catmandu-MARC-*
-data
 local
 cpanfile.snapshot
 .perl-version
 nytprof.out
 nytprof/
+bench/
