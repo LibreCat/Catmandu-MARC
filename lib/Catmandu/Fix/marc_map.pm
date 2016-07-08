@@ -22,27 +22,24 @@ sub emit {
     my ($self,$fixer) = @_;
     my $path        = $fixer->split_path($self->path);
 
+    my $marc        = $fixer->capture(Catmandu::MARC->new);
     my $marc_path   = $fixer->emit_string($self->marc_path);
-    my $record_opt  = $fixer->emit_string($self->record // 'record');
-    my $join_opt    = $fixer->emit_string($self->join // '');
-    my $split_opt   = $fixer->emit_string($self->split // 0);
-    my $pluck_opt   = $fixer->emit_string($self->pluck // 0);
-    my $nested_arrays_opt = $fixer->emit_string($self->nested_arrays // 0);
-
-    my $value_opt   = $self->value ?
-                        $fixer->emit_string($self->value) : 'undef';
+    my $marc_opt    = $fixer->capture({
+                            '-record' => $self->record // 'record' ,
+                            '-join'   => $self->join   // '' ,
+                            '-split'  => $self->split  // 0 ,
+                            '-pluck'  => $self->pluck  // 0 ,
+                            '-nested_arrays' => $self->nested_arrays // 0 ,
+                            '-value'  => $self->value
+                        });
     my $var         = $fixer->var;
     my $result      = $fixer->generate_var;
 
     my $perl =<<EOF;
-if (my ${result} = Catmandu::MARC->new->marc_map(
+if (my ${result} = ${marc}->marc_map(
             ${var},
             ${marc_path},
-            -split => ${split_opt},
-            -join  => ${join_opt},
-            -pluck => ${pluck_opt},
-            -nested_arrays => ${nested_arrays_opt} ,
-            -value => ${value_opt}) ) {
+            ${marc_opt}) ) {
 EOF
     $perl .= $fixer->emit_create_path(
             $var,

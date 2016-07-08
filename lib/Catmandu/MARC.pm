@@ -7,39 +7,48 @@ use Memoize;
 use Carp;
 use Moo;
 
-#memoize('_compile_marc_path');
+memoize('_compile_marc_path');
 
 our $VERSION = '0.219';
 
-warn 'here';
-
 sub marc_map {
-    my ($self,$data,$marc_path,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
+    my $self      = $_[0];
+    my $data      = $_[1];
+    my $marc_path = $_[2];
+    my $opts      = $_[3];
 
-    return undef unless exists $data->{$record_key};
+    my $record_key = $opts->{'-record'} // 'record';
 
-    my $record = $data->{$record_key};
+    return wantarray ? () : undef
+        unless (defined $data->{$record_key} && ref $data->{$record_key} eq 'ARRAY');
 
-    unless (defined $record && ref $record eq 'ARRAY') {
-        return wantarray ? () : undef;
-    }
+    my $split          = $opts->{'-split'} // 0;
+    my $join_char      = $opts->{'-join'} // '';
+    my $pluck          = $opts->{'-pluck'};
+    my $value_set      = $opts->{'-value'};
+    my $nested_arrays  = $opts->{'-nested_arrays'} // 0;
 
-    my $split          = $opts{'-split'} // 0;
-    my $join_char      = $opts{'-join'} // '';
-    my $pluck          = $opts{'-pluck'};
-    my $value_set      = $opts{'-value'};
-    my $nested_arrays  = $opts{'-nested_arrays'} // 0;
-    my $attrs          = {};
+    my $context = _compile_marc_path($marc_path, subfield_wildcard => 1);
+
+    confess "invalid marc path" unless $context;
 
     my $vals;
 
-    marc_at_field($record, $marc_path, sub {
-        my ($field, $context) = @_;
+    for my $field (@{$data->{$record_key}}) {
+        next if (
+            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
+            ||
+            ($context->{is_regex_field} == 0 && $field->[0] ne $context->{field} )
+            ||
+            (defined $context->{ind1} && (!defined $field->[1] || $field->[1] ne $context->{ind1}))
+            ||
+            (defined $context->{ind2} && (!defined $field->[2] || $field->[2] ne $context->{ind2}))
+        );
+
         my $v;
 
         if ($value_set) {
-            for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+            for (my $i = 3; $field->[$i]; $i += 2) {
                 my $subfield_regex = $context->{subfield_regex};
                 if ($field->[$i] =~ $subfield_regex) {
                     $v = $value_set;
@@ -99,7 +108,7 @@ sub marc_map {
                 }
             }
         }
-    }, subfield_wildcard => 1);
+    }
 
     if (!defined $vals) {
         return undef;
@@ -114,13 +123,14 @@ sub marc_map {
 
 sub _extract_subfields {
     my ($field,$context,%opts) = @_;
+    my $field_size = int(@$field);
 
     my @v = ();
 
     if ($opts{pluck}) {
         # Treat the subfield as a hash index
         my $_h = {};
-        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+        for (my $i = $context->{start}; $i < $field_size; $i += 2) {
             push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
         }
         my $subfield = $context->{subfield};
@@ -130,7 +140,7 @@ sub _extract_subfields {
         }
     }
     else {
-        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+        for (my $i = $context->{start}; $i < $field_size; $i += 2) {
             my $subfield_regex = $context->{subfield_regex};
             if ($field->[$i] =~ $subfield_regex) {
                 push(@v, $field->[$i + 1]);
@@ -140,7 +150,6 @@ sub _extract_subfields {
 
     return @v ? \@v : undef;
 }
-
 
 sub marc_add {
     my ($self,$data,$marc_path,@subfields) = @_;
@@ -215,17 +224,39 @@ sub marc_set {
         $value = $last;
     }
 
-    marc_at_field($record, $marc_path, sub {
-        my ($field,$context) = @_;
+    my $context = _compile_marc_path($marc_path, subfield_default => 1);
+
+    confess "invalid marc path" unless $context;
+
+    for my $field (@$record) {
+        my ($tag, $ind1, $ind2, @subfields) = @$field;
+
+        if ($context->{is_regex_field}) {
+            next unless $tag =~ $context->{field_regex};
+        }
+        else {
+            next unless $tag eq $context->{field};
+        }
+
+        if (defined $context->{ind1}) {
+            if (!defined $ind1 || $ind1 ne $context->{ind1}) {
+                next;
+            }
+        }
+        if (defined $context->{ind2}) {
+            if (!defined $ind2 || $ind2 ne $context->{ind2}) {
+                next;
+            }
+        }
 
         my $found = 0;
-        for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
-            if ($field->[$i] eq $context->{subfield}) {
+        for (my $i = 0; $i < @subfields; $i += 2) {
+            if ($subfields[$i] eq $context->{subfield}) {
                 if (defined $context->{from}) {
-                    substr($field->[$i + 1], $context->{from}, $context->{len}) = $value;
+                    substr($field->[$i + 4], $context->{from}, $context->{len}) = $value;
                 }
                 else {
-                    $field->[$i + 1] = $value;
+                    $field->[$i + 4] = $value;
                 }
                 $found = 1;
             }
@@ -234,7 +265,7 @@ sub marc_set {
         if ($found == 0) {
             push(@$field,$context->{subfield},$value);
         }
-    }, subfield_default => 1);
+    }
 
     $data;
 }
@@ -246,31 +277,37 @@ sub marc_remove {
 
     my $new_record;
 
-    marc_at_field($record, $marc_path, sub {
-        my ($field,$context) = @_;
+    my $context = _compile_marc_path($marc_path);
 
-        if ($field->[0] =~ $context->{field_regex}) {
+    confess "invalid marc path" unless $context;
+
+    for my $field (@$record) {
+        my $field_size = int(@$field);
+
+        if (
+            ($context->{is_regex_field} == 0 && $field->[0] eq $context->{field})
+            ||
+            ($context->{is_regex_field} == 1 && $field->[0] =~ $context->{field_regex})
+            ) {
             if (defined $context->{ind1}) {
-                return if (defined $field->[1] && $field->[1] eq $context->{ind1});
+                next if (defined $field->[1] && $field->[1] eq $context->{ind1});
             }
 
             if (defined $context->{ind2}) {
-                return if (defined $field->[2] && $field->[2] eq $context->{ind2});
+                next if (defined $field->[2] && $field->[2] eq $context->{ind2});
             }
 
             unless (
                 defined $context->{ind1} ||
                 defined $context->{ind2} ||
                 defined $context->{subfield_regex} ) {
-                return;
+                next;
             }
-        }
 
-        if (defined $context->{subfield_regex}) {
-            my $subfield_regex = $context->{subfield_regex};
-            if ( $field->[0] =~ $context->{field_regex}) {
+            if (defined $context->{subfield_regex}) {
+                my $subfield_regex = $context->{subfield_regex};
                 my $new_subf = [];
-                for (my $i = $context->{start}; $i < $context->{end}; $i += 2) {
+                for (my $i = $context->{start}; $i < $field_size; $i += 2) {
                     unless ($field->[$i] =~ $subfield_regex) {
                         push @$new_subf , $field->[$i];
                         push @$new_subf , $field->[$i+1];
@@ -281,8 +318,7 @@ sub marc_remove {
         }
 
         push @$new_record , $field;
-
-    }, nofilter => 1);
+    }
 
     $data->{$record_key} = $new_record;
 
@@ -389,9 +425,9 @@ sub marc_decode_dollar_subfields {
     my $new_record = [];
 
     for my $field (@$old_record) {
-        my ($field,$ind1,$ind2,@subfields) = @$field;
+        my ($tag,$ind1,$ind2,@subfields) = @$field;
 
-        my $fixed_field = [$field,$ind1,$ind2];
+        my $fixed_field = [$tag,$ind1,$ind2];
 
         for (my $i = 0 ; $i < @subfields ; $i += 2) {
             my $code  = $subfields[$i];
@@ -452,14 +488,15 @@ sub _compile_marc_path {
         return undef;
     }
 
-    $field_regex = $field;
-
     if ($field =~ /\*/) {
+        $field_regex    = $field;
         $field_regex    =~ s/\*/./g;
         $is_regex_field = 1;
+        $field_regex    = qr/^$field_regex$/;
     }
-
-    $field_regex = qr/^$field_regex$/;
+    else {
+        $is_regex_field = 0;
+    }
 
     return {
         field           => $field ,
@@ -469,56 +506,11 @@ sub _compile_marc_path {
         subfield_regex  => $subfield_regex ,
         ind1            => $ind1 ,
         ind2            => $ind2 ,
+        start           => 3,
         from            => $from ,
         to              => $to ,
         len             => $len
     };
-}
-
-sub marc_at_field {
-    my ($record,$marc_path,$callback,%opts) = @_;
-
-    croak "need a marc_path and callback" unless defined($marc_path) && defined($callback);
-
-    my $context = _compile_marc_path($marc_path,%opts);
-
-    confess "invalid marc path" unless $context;
-
-    for my $row (@$record) {
-        unless ($opts{nofilter}) {
-            if ($context->{is_regex_field}) {
-                next unless $row->[0] =~ $context->{field_regex};
-            }
-            else {
-                next unless $row->[0] eq $context->{field};
-            }
-
-            if (defined $context->{ind1}) {
-                if (!defined $row->[1] || $row->[1] ne $context->{ind1}) {
-                    next;
-                }
-            }
-            if (defined $context->{ind2}) {
-                if (!defined $row->[2] || $row->[2] ne $context->{ind2}) {
-                    next;
-                }
-            }
-        }
-
-        if ($row->[0] =~ /^LDR|^00/) {
-            $context->{start} = 3;
-        }
-        elsif (defined $row->[5] && $row->[5] eq '_') {
-            $context->{start} = 5;
-        }
-        else {
-            $context->{start} = 3;
-        }
-
-        $context->{end} = int(@$row);
-
-        $callback->($row,$context);
-    }
 }
 
 1;
