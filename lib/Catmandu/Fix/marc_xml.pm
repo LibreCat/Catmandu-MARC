@@ -14,7 +14,7 @@ has path  => (fix_arg => 1);
 # Transform a raw MARC array into MARCXML
 sub fix {
     my ($self, $data) = @_;
-    my $xml = Catmandu::MARC::marc_xml($data);
+    my $xml = Catmandu::MARC->new->marc_xml($data);
     $data->{$self->path} = $xml;
     $data;
 }

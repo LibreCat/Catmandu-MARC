@@ -35,7 +35,7 @@ sub emit {
     my $result      = $fixer->generate_var;
 
     my $perl =<<EOF;
-if (my ${result} = Catmandu::MARC::marc_map(
+if (my ${result} = Catmandu::MARC->new->marc_map(
             ${var},
             ${marc_path},
             -split => ${split_opt},

@@ -17,7 +17,7 @@ sub fix {
     my $marc_path  = $self->marc_path;
     my @subfields  = @{$self->subfields};
 
-    return Catmandu::MARC::marc_add($data,$marc_path,@subfields);
+    return Catmandu::MARC->new->marc_add($data,$marc_path,@subfields);
 }
 
 =head1 NAME

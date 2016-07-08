@@ -20,10 +20,10 @@ sub fix {
     my $record_key = $self->record // 'record';
 
     if ($self->reverse) {
-        return Catmandu::MARC::marc_json_to_record($data, record => $record_key);
+        return Catmandu::MARC->new->marc_json_to_record($data, record => $record_key);
     }
     else {
-        return Catmandu::MARC::marc_record_to_json($data, record => $record_key);
+        return Catmandu::MARC->new->marc_record_to_json($data, record => $record_key);
     }
 }
 

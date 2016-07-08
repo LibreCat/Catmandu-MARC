@@ -69,8 +69,9 @@ our $VERSION = '0.219';
 
 sub marc_map {
     my ($data,$marc_path,%opts) = @_;
+    # Set default to nested_arrays for backwards compatibility
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
-    return Catmandu::MARC::marc_map($data,$marc_path,%opts);
+    return Catmandu::MARC->new->marc_map($data,$marc_path,%opts);
 }
 
 1;

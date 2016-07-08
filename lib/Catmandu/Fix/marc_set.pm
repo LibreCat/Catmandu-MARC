@@ -18,7 +18,7 @@ sub fix {
     my $marc_path   = $self->marc_path;
     my $value       = $self->value;
     my $record_key  = $self->record;
-    return Catmandu::MARC::marc_set($data,$marc_path,$value, record => $record_key);
+    return Catmandu::MARC->new->marc_set($data,$marc_path,$value, record => $record_key);
 }
 
 =head1 NAME

@@ -11,7 +11,7 @@ our $VERSION = '0.219';
 
 sub marc_set {
     my ($data,$marc_path,$value) = @_;
-    return Catmandu::MARC::marc_set($data,$marc_path,$value);
+    return Catmandu::MARC->new->marc_set($data,$marc_path,$value);
 }
 
 =head1 NAME

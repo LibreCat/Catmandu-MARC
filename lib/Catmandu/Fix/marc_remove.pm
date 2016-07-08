@@ -16,7 +16,7 @@ sub fix {
     my ($self,$data) = @_;
     my $marc_path  = $self->marc_path;
     my $record_key = $self->record // 'record';
-    return Catmandu::MARC::marc_remove($data, $marc_path, record => $record_key);
+    return Catmandu::MARC->new->marc_remove($data, $marc_path, record => $record_key);
 }
 
 =head1 NAME

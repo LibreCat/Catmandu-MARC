@@ -5,13 +5,16 @@ use Catmandu::Util;
 use Catmandu::Exporter::MARC::XML;
 use Memoize;
 use Carp;
+use Moo;
 
-memoize('_compile_marc_path');
+#memoize('_compile_marc_path');
 
 our $VERSION = '0.219';
 
+warn 'here';
+
 sub marc_map {
-    my ($data,$marc_path,%opts) = @_;
+    my ($self,$data,$marc_path,%opts) = @_;
     my $record_key = $opts{record} // 'record';
 
     return undef unless exists $data->{$record_key};
@@ -140,7 +143,7 @@ sub _extract_subfields {
 
 
 sub marc_add {
-    my ($data,$marc_path,@subfields) = @_;
+    my ($self,$data,$marc_path,@subfields) = @_;
 
     my %subfields  = @subfields;
     my $record_key = $subfields{'-record'} // 'record';
@@ -190,7 +193,7 @@ sub marc_add {
 }
 
 sub marc_set {
-    my ($data,$marc_path,$value,%opts) = @_;
+    my ($self,$data,$marc_path,$value,%opts) = @_;
     my $record_key = $opts{record} // 'record';
     my $record = $data->{$record_key};
 
@@ -237,7 +240,7 @@ sub marc_set {
 }
 
 sub marc_remove {
-    my ($data, $marc_path,%opts) = @_;
+    my ($self,$data, $marc_path,%opts) = @_;
     my $record_key = $opts{record} // 'record';
     my $record = $data->{$record_key};
 
@@ -287,7 +290,7 @@ sub marc_remove {
 }
 
 sub marc_xml {
-    my ($data) = @_;
+    my ($self,$data) = @_;
 
     my $xml;
     my $exporter = Catmandu::Exporter::MARC::XML->new(file => \$xml , xml_declaration => 0 , collection => 0);
@@ -298,7 +301,7 @@ sub marc_xml {
 }
 
 sub marc_record_to_json {
-    my ($data,%opts) = @_;
+    my ($self,$data,%opts) = @_;
     my $record_key = $opts{record} // 'record';
 
     if (my $marc = delete $data->{$record_key}) {
@@ -331,7 +334,7 @@ sub marc_record_to_json {
 }
 
 sub marc_json_to_record {
-    my ($data,%opts) = @_;
+    my ($self,$data,%opts) = @_;
     my $record_key = $opts{record} // 'record';
 
     my $record = [];
@@ -380,7 +383,7 @@ sub marc_json_to_record {
 }
 
 sub marc_decode_dollar_subfields {
-    my ($data,%opts) = @_;
+    my ($self,$data,%opts) = @_;
     my $record_key = $opts{record} // 'record';
     my $old_record = $data->{$record_key};
     my $new_record = [];
