@@ -24,7 +24,7 @@ sub marc_map {
 
     my $split          = $opts->{'-split'} // 0;
     my $join_char      = $opts->{'-join'} // '';
-    my $pluck          = $opts->{'-pluck'};
+    my $pluck          = $opts->{'-pluck'} // 0;
     my $value_set      = $opts->{'-value'};
     my $nested_arrays  = $opts->{'-nested_arrays'} // 0;
 
@@ -57,7 +57,7 @@ sub marc_map {
             }
         }
         else {
-            $v = _extract_subfields($field,$context, pluck => $pluck);
+            $v = _extract_subfields($field, $context, { pluck => $pluck });
 
             if (defined $v && @$v) {
                 if (!$split) {
@@ -122,15 +122,16 @@ sub marc_map {
 }
 
 sub _extract_subfields {
-    my ($field,$context,%opts) = @_;
-    my $field_size = int(@$field);
+    my $field   = $_[0];
+    my $context = $_[1];
+    my $opts    = $_[2];
 
     my @v = ();
 
-    if ($opts{pluck}) {
+    if ($opts->{pluck}) {
         # Treat the subfield as a hash index
         my $_h = {};
-        for (my $i = $context->{start}; $i < $field_size; $i += 2) {
+        for (my $i = $context->{start}; $field->[$i]; $i += 2) {
             push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
         }
         my $subfield = $context->{subfield};
@@ -140,7 +141,7 @@ sub _extract_subfields {
         }
     }
     else {
-        for (my $i = $context->{start}; $i < $field_size; $i += 2) {
+        for (my $i = $context->{start}; $field->[$i]; $i += 2) {
             my $subfield_regex = $context->{subfield_regex};
             if ($field->[$i] =~ $subfield_regex) {
                 push(@v, $field->[$i + 1]);
