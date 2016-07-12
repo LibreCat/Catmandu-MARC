@@ -11,7 +11,7 @@ our $VERSION = '0.219';
 
 sub marc_add {
     my ($data,$marc_path,@subfields) = @_;
-    return Catmandu::MARC->new->marc_add($data, $marc_path, @subfields);
+    return Catmandu::MARC->instance->marc_add($data, $marc_path, @subfields);
 }
 
 =head1 NAME

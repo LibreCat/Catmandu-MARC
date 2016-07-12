@@ -72,7 +72,7 @@ sub marc_map {
     # Set default to nested_arrays for backwards compatibility
     $opts{'-record'} = 'record' unless exists $opts{'-record'};
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
-    return Catmandu::MARC->new->marc_map(
+    return Catmandu::MARC->instance->marc_map(
                 $data,
                 $marc_path,
                 \%opts);

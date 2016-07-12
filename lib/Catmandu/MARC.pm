@@ -6,6 +6,7 @@ use Catmandu::Exporter::MARC::XML;
 use Memoize;
 use Carp;
 use Moo;
+with 'MooX::Singleton';
 
 memoize('_compile_marc_path');
 

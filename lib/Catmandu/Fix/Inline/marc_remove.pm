@@ -11,7 +11,7 @@ our $VERSION = '0.219';
 
 sub marc_remove {
     my ($data,$marc_path) = @_;
-    return Catmandu::MARC->new->marc_remove($data,$marc_path);
+    return Catmandu::MARC->instance->marc_remove($data,$marc_path);
 }
 
 =head1 NAME

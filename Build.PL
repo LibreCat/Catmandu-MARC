@@ -31,6 +31,7 @@ my %module_build_args = (
     "MARC::Parser::RAW" => 0,
     "MARC::Record" => "v2.0.6",
     "Moo" => "1.0",
+    "MooX::Singleton" => 0,
     "YAML::XS" => "0.34",
     "perl" => "v5.10.1"
   },

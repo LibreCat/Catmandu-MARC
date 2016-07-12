@@ -22,7 +22,7 @@ sub emit {
     my ($self,$fixer) = @_;
     my $path        = $fixer->split_path($self->path);
 
-    my $marc        = $fixer->capture(Catmandu::MARC->new);
+    my $marc        = $fixer->capture(Catmandu::MARC->instance);
     my $marc_path   = $fixer->emit_string($self->marc_path);
     my $marc_opt    = $fixer->capture({
                             '-record' => $self->record // 'record' ,
