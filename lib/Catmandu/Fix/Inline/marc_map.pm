@@ -70,6 +70,9 @@ our $VERSION = '0.219';
 sub marc_map {
     my ($data,$marc_path,%opts) = @_;
     # Set default to nested_arrays for backwards compatibility
+    $opts{'-join'}  = ''        unless exists $opts{'-join'};
+    $opts{'-split'} = 0         unless exists $opts{'-split'};
+    $opts{'-pluck'} = 0         unless exists $opts{'-pluck'};
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
     my $vals = Catmandu::MARC->instance->marc_map(
                 $data,

@@ -14,25 +14,25 @@ our $VERSION = '0.219';
 
 sub marc_map {
     my $self      = $_[0];
-    my $data      = $_[1];
-    my $marc_path = $_[2];
-    my $opts      = $_[3];
 
-    my $context        = ref($marc_path) ?
-                            $marc_path :
-                            $self->compile_marc_path($marc_path, subfield_wildcard => 1);
+    # $_[2] : marc_path
+    my $context        = ref($_[2]) ?
+                            $_[2] :
+                            $self->compile_marc_path($_[2], subfield_wildcard => 1);
 
     confess "invalid marc path" unless $context;
 
-    my $record         = $data->{'record'};
+    # $_[1] : data record
+    my $record         = $_[1]->{'record'};
 
     return wantarray ? () : undef unless (defined $record && ref($record) eq 'ARRAY');
 
-    my $split          = $opts->{'-split'} // 0;
-    my $join_char      = $opts->{'-join'}  // '';
-    my $pluck          = $opts->{'-pluck'} // 0;
-    my $value_set      = $opts->{'-value'};
-    my $nested_arrays  = $opts->{'-nested_arrays'} // 0;
+    # $_[3] : opts
+    my $split          = $_[3]->{'-split'} // 0;
+    my $join_char      = $_[3]->{'-join'}  // '';
+    my $pluck          = $_[3]->{'-pluck'} // 0;
+    my $value_set      = $_[3]->{'-value'} // undef;
+    my $nested_arrays  = $_[3]->{'-nested_arrays'} // 0;
 
     my $vals;
 
