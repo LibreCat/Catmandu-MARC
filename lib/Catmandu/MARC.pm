@@ -58,9 +58,30 @@ sub marc_map {
             }
         }
         else {
-            $v = _extract_subfields($field, $context, { pluck => $pluck });
+            $v = [];
 
-            if (defined $v && @$v) {
+            if ($pluck) {
+                # Treat the subfield as a hash index
+                my $_h = {};
+                for (my $i = $context->{start}; $field->[$i]; $i += 2) {
+                    push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
+                }
+                my $subfield = $context->{subfield};
+                $subfield =~ s{^[a-zA-Z0-9]}{}g;
+                for my $c (split('',$subfield)) {
+                    push @$v , @{ $_h->{$c} } if exists $_h->{$c};
+                }
+            }
+            else {
+                for (my $i = $context->{start}; $field->[$i]; $i += 2) {
+                    my $subfield_regex = $context->{subfield_regex};
+                    if ($field->[$i] =~ $subfield_regex) {
+                        push(@$v, $field->[$i + 1]);
+                    }
+                }
+            }
+
+            if (@$v) {
                 if (!$split) {
                     $v = join $join_char, @$v;
                 }
@@ -75,12 +96,15 @@ sub marc_map {
                     }
                 }
             }
+            else {
+                $v = undef;
+            }
         }
 
         if (defined $v) {
             if ($split) {
-                $v = [ $v ] unless Catmandu::Util::is_array_ref($v);
-                if (Catmandu::Util::is_array_ref($vals)) {
+                $v = [ $v ] unless (defined($v) && ref($v) eq 'ARRAY');
+                if (defined($vals) && ref($vals) eq 'ARRAY') {
                     # With the nested arrays option a split will
                     # always return an array of array of values.
                     # This was the old behavior of Inline marc_map functions
@@ -101,7 +125,7 @@ sub marc_map {
                 }
             }
             else {
-                if (Catmandu::Util::is_string($vals)) {
+                if (defined($vals) && ref($vals) eq '') {
                     $vals = join $join_char , $vals , $v;
                 }
                 else {
@@ -115,42 +139,11 @@ sub marc_map {
         return undef;
     }
     elsif (wantarray) {
-        return Catmandu::Util::is_array_ref($vals) ? @$vals : ($vals);
+        return defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
     }
     else {
         return $vals;
     }
-}
-
-sub _extract_subfields {
-    my $field   = $_[0];
-    my $context = $_[1];
-    my $opts    = $_[2];
-
-    my @v = ();
-
-    if ($opts->{pluck}) {
-        # Treat the subfield as a hash index
-        my $_h = {};
-        for (my $i = $context->{start}; $field->[$i]; $i += 2) {
-            push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
-        }
-        my $subfield = $context->{subfield};
-        $subfield =~ s{^[a-zA-Z0-9]}{}g;
-        for my $c (split('',$subfield)) {
-            push @v , @{ $_h->{$c} } if exists $_h->{$c};
-        }
-    }
-    else {
-        for (my $i = $context->{start}; $field->[$i]; $i += 2) {
-            my $subfield_regex = $context->{subfield_regex};
-            if ($field->[$i] =~ $subfield_regex) {
-                push(@v, $field->[$i + 1]);
-            }
-        }
-    }
-
-    return @v ? \@v : undef;
 }
 
 sub marc_add {
