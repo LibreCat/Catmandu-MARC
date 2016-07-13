@@ -9,12 +9,9 @@ with 'Catmandu::Fix::Inlineable';
 
 our $VERSION = '0.219';
 
-has record    => (fix_opt => 1);
-
 sub fix {
 	my ($self,$data) = @_;
-    my $record_key = $self->record // 'record';
-    return Catmandu::MARC->instance->marc_decode_dollar_subfields($data, record => $record_key);
+    return Catmandu::MARC->instance->marc_decode_dollar_subfields($data);
 }
 
 =head1 NAME

@@ -11,14 +11,12 @@ our $VERSION = '0.219';
 
 has marc_path      => (fix_arg => 1);
 has value          => (fix_arg => 1);
-has record         => (fix_opt => 1);
 
 sub fix {
     my ($self,$data) = @_;
     my $marc_path   = $self->marc_path;
     my $value       = $self->value;
-    my $record_key  = $self->record;
-    return Catmandu::MARC->instance->marc_set($data,$marc_path,$value, record => $record_key);
+    return Catmandu::MARC->instance->marc_set($data,$marc_path,$value);
 }
 
 =head1 NAME
@@ -51,12 +49,6 @@ Set the value of a MARC subfield to a new value.
 
 Set a MARC subfield to a particular new value. This valeu can be a literal or
 reference an existing field in the record using the dollar JSON_PATH syntax.
-
-=head1 OPTIONS
-
-=head2 record: STR
-
-Specify the JSON_PATH where the MARC record can be found (default: record).
 
 =head1 INLINE
 

@@ -11,7 +11,6 @@ our $VERSION = '0.219';
 
 has marc_path      => (fix_arg => 1);
 has path           => (fix_arg => 1);
-has record         => (fix_opt => 1);
 has split          => (fix_opt => 1);
 has join           => (fix_opt => 1);
 has value          => (fix_opt => 1);
@@ -20,20 +19,22 @@ has nested_arrays  => (fix_opt => 1);
 
 sub emit {
     my ($self,$fixer) = @_;
-    my $path        = $fixer->split_path($self->path);
+    my $path         = $fixer->split_path($self->path);
+    my $marc_obj     = Catmandu::MARC->instance;
 
-    my $marc        = $fixer->capture(Catmandu::MARC->instance);
-    my $marc_path   = $fixer->emit_string($self->marc_path);
-    my $marc_opt    = $fixer->capture({
-                            '-record' => $self->record // 'record' ,
+    # Precompile the marc_path to gain some speed
+    my $marc_context = $marc_obj->compile_marc_path($self->marc_path,subfield_wildcard => 1);
+    my $marc         = $fixer->capture($marc_obj);
+    my $marc_path    = $fixer->capture($marc_context);
+    my $marc_opt     = $fixer->capture({
                             '-join'   => $self->join   // '' ,
                             '-split'  => $self->split  // 0 ,
                             '-pluck'  => $self->pluck  // 0 ,
                             '-nested_arrays' => $self->nested_arrays // 0 ,
                             '-value'  => $self->value
                         });
-    my $var         = $fixer->var;
-    my $result      = $fixer->generate_var;
+    my $var          = $fixer->var;
+    my $result       = $fixer->generate_var;
 
     my $perl =<<EOF;
 if (my ${result} = ${marc}->marc_map(
@@ -96,9 +97,6 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
 
     # When 260c field exists create the my.has260c hash with value 'found'
     marc_map('260c','my.has260c', value:found)
-
-    # Do the same examples now with the marc fields in 'record2'
-    marc_map('245','my.title', record:record2)
 
     # Copy all 100 subfields except the digits to the 'author' field
     marc_map('100^0123456789','author')
@@ -203,10 +201,6 @@ When the split option is specified the output of the mapping will always be an
 array of strings (one string for each subfield found). Using the nested_array
 option the output will be an array of array of strings (one array item for
 each matched field, one array of strings for each matched subfield).
-
-=head2 record: STR
-
-Specify the JSON_PATH where the MARC record can be found (default: record).
 
 =head1 INLINE
 

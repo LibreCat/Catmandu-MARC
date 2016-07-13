@@ -10,13 +10,11 @@ with 'Catmandu::Fix::Inlineable';
 our $VERSION = '0.219';
 
 has marc_path => (fix_arg => 1);
-has record    => (fix_opt => 1);
 
 sub fix {
     my ($self,$data) = @_;
     my $marc_path  = $self->marc_path;
-    my $record_key = $self->record // 'record';
-    return Catmandu::MARC->instance->marc_remove($data, $marc_path, record => $record_key);
+    return Catmandu::MARC->instance->marc_remove($data, $marc_path);
 }
 
 =head1 NAME
@@ -31,8 +29,6 @@ Catmandu::Fix::marc_remove - remove marc (sub)fields
     # remove the 245-a subfield
     marc_remove('245a')
 
-    # the same with the marc fields in 'record2'
-    marc_remove('600', record:record2)
 
 =head1 DESCRIPTION
 
@@ -43,12 +39,6 @@ Remove (sub)fields in a MARC record
 =head2 marc_remove( MARC_PATH , [OPT1:VAL, OPT2: VAL])
 
 Delete the (sub)fields from the MARC record as indicated by the MARC_PATH.
-
-=head1 OPTIONS
-
-=head2 record: STR
-
-Specify the JSON_PATH where the MARC record can be found (default: record).
 
 =head1 INLINE
 

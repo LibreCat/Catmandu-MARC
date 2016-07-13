@@ -9,7 +9,6 @@ with 'Catmandu::Fix::Inlineable';
 
 our $VERSION = '0.219';
 
-has record  => (fix_opt => 1);
 has reverse => (fix_opt => 1);
 
 # Transform a raw MARC array into MARC-in-JSON
@@ -17,13 +16,12 @@ has reverse => (fix_opt => 1);
 #  http://dilettantes.code4lib.org/blog/2010/09/a-proposal-to-serialize-marc-in-json/
 sub fix {
     my ($self, $data) = @_;
-    my $record_key = $self->record // 'record';
 
     if ($self->reverse) {
-        return Catmandu::MARC->instance->marc_json_to_record($data, record => $record_key);
+        return Catmandu::MARC->instance->marc_json_to_record($data);
     }
     else {
-        return Catmandu::MARC->instance->marc_record_to_json($data, record => $record_key);
+        return Catmandu::MARC->instance->marc_record_to_json($data);
     }
 }
 
@@ -35,9 +33,6 @@ Catmandu::Fix::marc_in_json - transform a Catmandu MARC record into MARC-in-JSON
 
    # Transform a Catmandu MARC 'record' into a MARC-in-JSON record
    marc_in_json()
-
-   # Optionally provide a pointer to the marc record
-   marc_in_json(record:record)
 
    # Reverse, transform a MARC-in-JSON record into a Catmandu MARC record
    marc_in_json(reverse:1)
@@ -57,10 +52,6 @@ Convert a Catmandu MARC record into the MARC-in-JSON format.
 =head2 reverse: 0|1
 
 Convert a MARC-in-JSON record back into the Catmandu MARC format.
-
-=head2 record: STR
-
-Specify the JSON_PATH where the MARC record can be found (default: record).
 
 =head1 INLINE
 

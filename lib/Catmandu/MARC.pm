@@ -8,7 +8,7 @@ use Carp;
 use Moo;
 with 'MooX::Singleton';
 
-memoize('_compile_marc_path');
+memoize('compile_marc_path');
 
 our $VERSION = '0.219';
 
@@ -18,28 +18,29 @@ sub marc_map {
     my $marc_path = $_[2];
     my $opts      = $_[3];
 
-    my $record_key = $opts->{'-record'} // 'record';
+    my $context        = ref($marc_path) ?
+                            $marc_path :
+                            $self->compile_marc_path($marc_path, subfield_wildcard => 1);
 
-    return wantarray ? () : undef
-        unless (defined $data->{$record_key} && ref $data->{$record_key} eq 'ARRAY');
+    confess "invalid marc path" unless $context;
+
+    my $record         = $data->{'record'};
+
+    return wantarray ? () : undef unless (defined $record && ref($record) eq 'ARRAY');
 
     my $split          = $opts->{'-split'} // 0;
-    my $join_char      = $opts->{'-join'} // '';
+    my $join_char      = $opts->{'-join'}  // '';
     my $pluck          = $opts->{'-pluck'} // 0;
     my $value_set      = $opts->{'-value'};
     my $nested_arrays  = $opts->{'-nested_arrays'} // 0;
 
-    my $context = _compile_marc_path($marc_path, subfield_wildcard => 1);
-
-    confess "invalid marc path" unless $context;
-
     my $vals;
 
-    for my $field (@{$data->{$record_key}}) {
+    for my $field (@$record) {
         next if (
-            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
-            ||
             ($context->{is_regex_field} == 0 && $field->[0] ne $context->{field} )
+            ||
+            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
             ||
             (defined $context->{ind1} && (!defined $field->[1] || $field->[1] ne $context->{ind1}))
             ||
@@ -135,14 +136,11 @@ sub marc_map {
         }
     }
 
-    if (!defined $vals) {
-        return undef;
-    }
-    elsif (wantarray) {
-        return defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
+    if (wantarray) {
+        defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
     }
     else {
-        return $vals;
+        $vals;
     }
 }
 
@@ -150,8 +148,7 @@ sub marc_add {
     my ($self,$data,$marc_path,@subfields) = @_;
 
     my %subfields  = @subfields;
-    my $record_key = $subfields{'-record'} // 'record';
-    my $marc       = $data->{$record_key} // [];
+    my $marc       = $data->{'record'} // [];
 
     if ($marc_path =~ /^\w{3}$/) {
         my @field = ();
@@ -191,15 +188,14 @@ sub marc_add {
         push @{ $marc } , \@field if @field > 3;
     }
 
-    $data->{$record_key} = $marc;
+    $data->{'record'} = $marc;
 
     $data;
 }
 
 sub marc_set {
     my ($self,$data,$marc_path,$value,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
-    my $record = $data->{$record_key};
+    my $record = $data->{'record'};
 
     return $data unless defined $record;
 
@@ -219,7 +215,7 @@ sub marc_set {
         $value = $last;
     }
 
-    my $context = _compile_marc_path($marc_path, subfield_default => 1);
+    my $context = $self->compile_marc_path($marc_path, subfield_default => 1);
 
     confess "invalid marc path" unless $context;
 
@@ -267,12 +263,11 @@ sub marc_set {
 
 sub marc_remove {
     my ($self,$data, $marc_path,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
-    my $record = $data->{$record_key};
+    my $record = $data->{'record'};
 
     my $new_record;
 
-    my $context = _compile_marc_path($marc_path);
+    my $context = $self->compile_marc_path($marc_path);
 
     confess "invalid marc path" unless $context;
 
@@ -315,7 +310,7 @@ sub marc_remove {
         push @$new_record , $field;
     }
 
-    $data->{$record_key} = $new_record;
+    $data->{'record'} = $new_record;
 
     return $data;
 }
@@ -333,9 +328,8 @@ sub marc_xml {
 
 sub marc_record_to_json {
     my ($self,$data,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
 
-    if (my $marc = delete $data->{$record_key}) {
+    if (my $marc = delete $data->{'record'}) {
         for my $field (@$marc) {
             my ($tag, $ind1, $ind2, @subfields) = @$field;
 
@@ -366,7 +360,6 @@ sub marc_record_to_json {
 
 sub marc_json_to_record {
     my ($self,$data,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
 
     my $record = [];
 
@@ -407,7 +400,7 @@ sub marc_json_to_record {
     if (@$record > 0) {
       delete $data->{fields};
       delete $data->{leader};
-      $data->{$record_key} = $record;
+      $data->{'record'} = $record;
     }
 
     $data;
@@ -415,8 +408,7 @@ sub marc_json_to_record {
 
 sub marc_decode_dollar_subfields {
     my ($self,$data,%opts) = @_;
-    my $record_key = $opts{record} // 'record';
-    my $old_record = $data->{$record_key};
+    my $old_record = $data->{'record'};
     my $new_record = [];
 
     for my $field (@$old_record) {
@@ -444,13 +436,13 @@ sub marc_decode_dollar_subfields {
         push @$new_record , $fixed_field;
     }
 
-    $data->{$record_key} = $new_record;
+    $data->{'record'} = $new_record;
 
     $data;
 }
 
-sub _compile_marc_path {
-    my ($marc_path,%opts) = @_;
+sub compile_marc_path {
+    my ($self,$marc_path,%opts) = @_;
 
     my ($field,$field_regex,$ind1,$ind2,
         $subfield,$subfield_regex,$from,$to,$len,$is_regex_field);
