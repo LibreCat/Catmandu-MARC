@@ -71,10 +71,16 @@ sub marc_map {
     my ($data,$marc_path,%opts) = @_;
     # Set default to nested_arrays for backwards compatibility
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
-    return Catmandu::MARC->instance->marc_map(
+    my $vals = Catmandu::MARC->instance->marc_map(
                 $data,
                 $marc_path,
                 \%opts);
+    if (wantarray) {
+        defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
+    }
+    else {
+        $vals;
+    }
 }
 
 1;

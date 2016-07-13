@@ -40,11 +40,11 @@ sub marc_map {
         next if (
             ($context->{is_regex_field} == 0 && $field->[0] ne $context->{field} )
             ||
-            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
-            ||
             (defined $context->{ind1} && (!defined $field->[1] || $field->[1] ne $context->{ind1}))
             ||
             (defined $context->{ind2} && (!defined $field->[2] || $field->[2] ne $context->{ind2}))
+            ||
+            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
         );
 
         my $v;
@@ -136,12 +136,7 @@ sub marc_map {
         }
     }
 
-    if (wantarray) {
-        defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
-    }
-    else {
-        $vals;
-    }
+    $vals;
 }
 
 sub marc_add {
@@ -465,7 +460,7 @@ sub compile_marc_path {
             $subfield = '[a-z0-9_]';
         }
         if (defined($subfield)) {
-            $subfield_regex = qr/^${subfield}$/;
+            $subfield_regex = qr/^(?:${subfield})$/;
         }
         $from           = $7;
         $to             = $9;
@@ -477,7 +472,7 @@ sub compile_marc_path {
 
     if ($field =~ /\*/) {
         $field_regex    = $field;
-        $field_regex    =~ s/\*/./g;
+        $field_regex    =~ s/\*/(?:[A-Z0-9])/g;
         $is_regex_field = 1;
         $field_regex    = qr/^$field_regex$/;
     }
