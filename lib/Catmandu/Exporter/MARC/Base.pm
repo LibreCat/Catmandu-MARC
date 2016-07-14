@@ -3,7 +3,7 @@ use Moo::Role;
 use MARC::Record;
 use MARC::Field;
 
-our $VERSION = '0.219';
+our $VERSION = '1.00_01';
 
 sub _raw_to_marc_record {
     my ($self,$data) = @_;

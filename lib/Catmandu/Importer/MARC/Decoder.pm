@@ -3,7 +3,7 @@ package Catmandu::Importer::MARC::Decoder;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '0.219';
+our $VERSION = '1.00_01';
 
 sub fake_marc_file {
     my ($self,$fh,$class) = @_;

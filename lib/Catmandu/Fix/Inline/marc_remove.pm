@@ -7,7 +7,7 @@ require Exporter;
 @EXPORT_OK = qw(marc_remove);
 %EXPORT_TAGS = (all => [qw(marc_remove)]);
 
-our $VERSION = '0.219';
+our $VERSION = '1.00_01';
 
 sub marc_remove {
     my ($data,$marc_path) = @_;

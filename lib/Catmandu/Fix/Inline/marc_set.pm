@@ -7,7 +7,7 @@ require Exporter;
 @EXPORT_OK = qw(marc_set);
 %EXPORT_TAGS = (all => [qw(marc_set)]);
 
-our $VERSION = '0.219';
+our $VERSION = '1.00_01';
 
 sub marc_set {
     my ($data,$marc_path,$value) = @_;

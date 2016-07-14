@@ -2,11 +2,21 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
 
+1.00_01  2016-07-14 09:33:22 CEST
+  - Refactoring nearly all of the emit code into Catmandu::MARC module
+  - Deprecating Catmandu::Fix::Inline::marc_*
+  - Adding more pod
+  - The -record option isn't available anymore
+  - By default all marc_map will create a single array when using the split:1 option
+  - A 'nested_arrays' option to create a list of list when using split:1
+  - Fixing bug in searching for all subfields except...
+  - Adding references to MARC::Spec
+
 0.219  2016-06-23 16:40:11 CEST
   - Fixed importing from MARC as string in a Perl script
   - Adding more POD
   - Make all Catmandu::Fix inlineable
- 
+
 0.218  2016-06-14 14:05:32 CEST
   - Fixing marc_map for inline fixes
 

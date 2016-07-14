@@ -10,7 +10,7 @@ with 'MooX::Singleton';
 
 memoize('compile_marc_path');
 
-our $VERSION = '0.219';
+our $VERSION = '1.00_01';
 
 sub marc_map {
     my $self      = $_[0];
