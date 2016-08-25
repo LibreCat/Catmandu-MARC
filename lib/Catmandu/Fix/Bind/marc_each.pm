@@ -32,7 +32,7 @@ sub bind {
 
         my $fixed = $fixer->fix($mvar);
 
-        push @new , @{$fixed->{record}} if defined($fixed) && exists $fixed->{record};
+        push @new , @{$fixed->{record}} if defined $fixed && exists $fixed->{record} && defined $fixed->{record};
     }
 
     $mvar->{record} = \@new if exists $mvar->{record};
