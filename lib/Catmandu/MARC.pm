@@ -274,18 +274,24 @@ sub marc_remove {
             ||
             ($context->{is_regex_field} == 1 && $field->[0] =~ $context->{field_regex})
             ) {
-            if (defined $context->{ind1}) {
-                next if (defined $field->[1] && $field->[1] eq $context->{ind1});
+
+            my $ind_match = undef;
+
+            if (defined $context->{ind1} && defined $context->{ind2}) {
+                $ind_match = 1 if (defined $field->[1] && $field->[1] eq $context->{ind1} &&
+                                   defined $field->[2] && $field->[2] eq $context->{ind2});
+            }
+            elsif (defined $context->{ind1}) {
+                $ind_match = 1 if (defined $field->[1] && $field->[1] eq $context->{ind1});
+            }
+            elsif (defined $context->{ind2}) {
+                $ind_match = 1 if (defined $field->[2] && $field->[2] eq $context->{ind2});
+            }
+            else {
+                $ind_match = 1;
             }
 
-            if (defined $context->{ind2}) {
-                next if (defined $field->[2] && $field->[2] eq $context->{ind2});
-            }
-
-            unless (
-                defined $context->{ind1} ||
-                defined $context->{ind2} ||
-                defined $context->{subfield_regex} ) {
+            if ($ind_match && ! defined $context->{subfield_regex}) {
                 next;
             }
 
@@ -298,7 +304,8 @@ sub marc_remove {
                         push @$new_subf , $field->[$i+1];
                     }
                 }
-                splice @$field , $context->{start} , int(@$field), @$new_subf;
+
+                splice @$field , $context->{start} , int(@$field), @$new_subf if $ind_match;
             }
         }
 
