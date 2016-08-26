@@ -25,8 +25,12 @@ my $fixer = Catmandu::Fix->new(fixes => [q|
 		if marc_match("100",'.*')
 			reject()
 		end
+		if marc_match(245a,'.*')
+			marc_remove(245)
+		end
 	end
-	marc_map("100",test)
+	marc_map("100",mainentry)
+	marc_map("245",title)
 |]);
 
 my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
@@ -37,7 +41,8 @@ $fixer->fix($importer)->each(sub {
 
 	ok exists $record->{record}, "created a marc record $id";
 	is $record->{has_perl}, 'true', "created has_dlc tag $id";
-	ok ! exists $record->{test} , "field 300 deleted $id";
+	ok ! exists $record->{mainentry} , "field 100 deleted $id";
+	ok ! exists $record->{title} , "field 245 deleted $id";
 });
 
 done_testing;
