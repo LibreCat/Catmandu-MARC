@@ -1,7 +1,7 @@
-package Catmandu::Fix::Condition::marc_match;
+package Catmandu::Fix::Condition::marc_has;
 use Catmandu::Sane;
 use Catmandu::Fix::marc_map;
-use Catmandu::Fix::Condition::all_match;
+use Catmandu::Fix::Condition::exists;
 use Catmandu::Fix::set_field;
 use Catmandu::Fix::remove_field;
 use Moo;
@@ -12,7 +12,6 @@ our $VERSION = '1.00_01';
 with 'Catmandu::Fix::Condition';
 
 has marc_path  => (fix_arg => 1);
-has value      => (fix_arg => 1);
 
 sub emit {
     my ($self,$fixer,$label) = @_;
@@ -23,7 +22,7 @@ sub emit {
     my $marc_map = Catmandu::Fix::marc_map->new($self->marc_path , "$tmp_var.\$append");
     $perl .= $marc_map->emit($fixer,$label);
 
-    my $all_match = Catmandu::Fix::Condition::all_match->new("$tmp_var.*",$self->value);
+    my $all_match    = Catmandu::Fix::Condition::exists->new("$tmp_var");
     my $remove_field = Catmandu::Fix::remove_field->new($tmp_var);
 
     my $pass_fixes = $self->pass_fixes;
@@ -39,30 +38,29 @@ sub emit {
 
 =head1 NAME
 
-Catmandu::Fix::Condition::marc_match - Test if a MARC (sub)field matches a value
+Catmandu::Fix::Condition::marc_has - Test if a MARC (sub)field exists
 
 =head1 SYNOPSIS
 
-   # marc_match(MARC_PATH,REGEX)
+   # marc_has(MARC_PATH)
 
-   if marc_match('245','My funny title')
-   	add_field('my.funny.title','true')
+   unless marc_has('245')
+   	add_field('error.$append','no 245 value!')
    end
 
 =head1 DESCRIPTION
 
-Evaluate the enclosing fixes only if the MARC (sub)field matches a
-regular expression.
+Evaluate the enclosing fixes only if the MARC (sub)field exists.
 
 =head1 METHODS
 
-=head2 marc_match(MARC_PATH, REGEX)
+=head2 marc_has(MARC_PATH)
 
-Evaluates to true when the MARC_PATH values matches the REGEX, false otherwise.
+Evaluates to true when the MARC_PATH values exists, false otherwise.
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix>
+L<Catmandu::Fix::marc_has_many>
 
 =cut
 
