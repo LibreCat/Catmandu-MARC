@@ -69,7 +69,7 @@ use Moo;
 
 our $VERSION = '1.00_01';
 
-has type           => (is => 'ro' , default => sub { 'XML' });
+has type           => (is => 'ro' , default => sub { 'ISO' });
 has _exporter      => (is => 'ro' , lazy => 1 , builder => '_build_exporter' , handles => 'Catmandu::Exporter');
 has _exporter_args => (is => 'rwp', writer => '_set_exporter_args');
 
