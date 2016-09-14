@@ -1,6 +1,9 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.00_02  2016-09-14 14:20:47 CEST
+  - Making default MARC importer the same as default MARC exporter (ISO)
   - Deprecation notice for USMARC
   - Adding marc_has and marc_has_many fixes
 
