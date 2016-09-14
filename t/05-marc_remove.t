@@ -17,7 +17,7 @@ my $fixer = Catmandu::Fix->new(fixes => [
                 q|marc_remove('082[1,1]a')|,
                 q|marc_remove('050[,0]ab')|,
                 ]);
-my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
+my $importer = Catmandu::Importer::MARC->new( file => 't/camel.mrc', type => "ISO" );
 my $record = $importer->first;
 
 my $title  = marc_map($record,'245');

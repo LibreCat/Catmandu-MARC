@@ -112,7 +112,7 @@ Catmandu::Exporter::MARC::XML - Exporter for MARC records to MARCXML
     # From Perl
     use Catmandu;
 
-    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'USMARC');
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
     my $exporter = Catmandu->exporter('MARC', file => "marc.xml", type => 'XML' );
 
     $exporter->add($importer);

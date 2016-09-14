@@ -11,7 +11,7 @@ my $data = join("",<DATA>);
 
 my $importer = Catmandu::Importer::MARC->new(
     file => \$data,
-    type => "USMARC"
+    type => "ISO"
 );
 my $records = $importer->to_array();
 
