@@ -10,7 +10,7 @@ Catmandu::Exporter::MARC::ALEPHSEQ - Exporter for MARC records to Ex Libris' Ale
     # From Perl
     use Catmandu;
 
-    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'USMARC');
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
     my $exporter = Catmandu->exporter('MARC', file => "marc.txt", type => 'ALEPHSEQ' );
 
     $exporter->add($importer);

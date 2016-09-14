@@ -1,17 +1,17 @@
 =head1 NAME
 
-Catmandu::Importer::MARC::USMARC - Package that imports USMARC records
+Catmandu::Importer::MARC::ISO - Package that imports ISO MARC records
 
 =head1 SYNOPSIS
 
-    # From the command line (USMARC is the default importer for MARC)
-    $ catmandu convert MARC --fix "marc_map('245a','title')" < /foo/data.mrc
+    # From the command line (ISO is the default importer for MARC)
+    $ catmandu convert MARC --fix "marc_map('245a','title')" < /foo/bar.mrc
 
     # From perl
     use Catmandu;
 
     # import records from file
-    my $importer = Catmandu->importer('MARC',file => '/foo/data.mrc');
+    my $importer = Catmandu->importer('MARC',file => '/foo/bar.mrc');
     my $fixer    = Catmandu->fixer("marc_map('245a','title')");
 
     $importer->each(sub {
@@ -64,7 +64,7 @@ L<Catmandu::Importer>,
 L<Catmandu::Iterable>
 
 =cut
-package Catmandu::Importer::MARC::USMARC;
+package Catmandu::Importer::MARC::ISO;
 use Catmandu::Sane;
 use Moo;
 use MARC::File::USMARC;

@@ -4,6 +4,7 @@ on 'test', sub {
   requires 'Test::Simple', '1.001003';
   requires 'Test::More', '1.001003';
   requires 'Test::Deep', '0';
+  requires 'Test::Warnings', '0';
   requires 'XML::XPath', '1.13';
   requires 'Pod::Simple::HTML', '>=3.23';
   requires 'Test::Pod' , '0';

@@ -16,7 +16,7 @@ ok(defined($records->[1]->{title}), "1 has title");
 is($records->[0]->{title},'ActivePerl with ASP and ADO /',"0 has correct title");
 is($records->[1]->{title},'ActivePerl with ASP and ADO /',"1 has correct title");
 
-$importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
+$importer = Catmandu::Importer::MARC->new( file => 't/camel.mrc', type => "ISO" );
 $records = $fixer->fix($importer)->to_array;
 
 ok(defined($records->[0]->{title}), "1 has title");

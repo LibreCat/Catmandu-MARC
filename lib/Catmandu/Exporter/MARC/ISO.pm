@@ -1,17 +1,17 @@
 =head1 NAME
 
-Catmandu::Exporter::MARC::USMARC - Exporter for MARC records to USMARC
+Catmandu::Exporter::MARC::ISO - Exporter for MARC records to ISO
 
 =head1 SYNOPSIS
 
     # From the command line
-    $ catmandu convert MARC --type XML to MARC --type USMARC < /foo/data.mrc
+    $ catmandu convert MARC --type ISO to MARC --type XML < /foo/bar.mrc
 
     # From Perl
     use Catmandu;
 
-    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'XML');
-    my $exporter = Catmandu->exporter('MARC', file => "marc.xml", type => 'USMARC' );
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
+    my $exporter = Catmandu->exporter('MARC', file => "/foo/bar.xml", type => 'XML' );
 
     $exporter->add($importer);
     $exporter->commit;
@@ -52,7 +52,7 @@ L<Catmandu::Counter>, and L<Catmandu::Logger> for a full list of methods.
 L<Catmandu::Exporter>
 
 =cut
-package Catmandu::Exporter::MARC::USMARC;
+package Catmandu::Exporter::MARC::ISO;
 use Catmandu::Sane;
 use Catmandu::Util qw(xml_escape is_different :array :is);
 use Moo;

@@ -70,8 +70,8 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
 
 Create a new MARC importer of the given type. Currently we support:
 
-    USMARC    L<Catmandu::Importer::MARC::USMARC>
-    ISO       alias for USMARC
+    USMARC    alias for ISO, B<deprecated, will be removed in future version>
+    ISO       L<Catmandu::Importer::MARC::ISO>
     MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
     MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
     MiJ       L<Catmandu::Importer::MARC::MiJ>
@@ -117,7 +117,7 @@ use Moo;
 
 our $VERSION = '1.00_01';
 
-has type           => (is => 'ro' , default => sub { 'USMARC' });
+has type           => (is => 'ro' , default => sub { 'ISO' });
 has _importer      => (is => 'ro' , lazy => 1 , builder => '_build_importer' , handles => ['generator']);
 has _importer_args => (is => 'rwp', writer => '_set_importer_args');
 
@@ -125,7 +125,8 @@ with 'Catmandu::Importer';
 
 sub _build_importer {
     my ($self) = @_;
-    my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
+
+    my $type = $self->type;
 
     $type = 'Record' if exists $self->_importer_args->{records};
 
@@ -137,6 +138,13 @@ sub _build_importer {
 sub BUILD {
     my ($self,$args) = @_;
     $self->_set_importer_args($args);
+
+    # keep USMARC temporary as alias for ISO, remove in future version
+    # print deprecation warning
+    if ($self->{type} eq 'USMARC') {
+        $self->{type} = 'ISO';
+        warn( "deprecated", "Oops! Importer \"USMARC\" is deprecated. Use \"ISO\" instead." );
+    }
 }
 
 

@@ -5,12 +5,12 @@ Catmandu::Exporter::MARC - Exporter for MARC records
 =head1 SYNOPSIS
 
     # From the command line
-    $ catmandu convert MARC --type USMARC to MARC --type XML < /foo/bar.mrc
+    $ catmandu convert MARC --type ISO to MARC --type XML < /foo/bar.mrc
 
     # From Perl
     use Catmandu;
 
-    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'USMARC');
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
     my $exporter = Catmandu->exporter('MARC', file => "marc.xml", type => "XML" );
 
     $exporter->add($importer);
@@ -29,8 +29,8 @@ to a file or the standard output.
 
 Create a new MARC exporter of the given type. Currently we support:
 
-    USMARC    L<Catmandu::Exporter::MARC::USMARC>
-    ISO       alias for USMARC
+    USMARC    alias for ISO, B<deprecated, will be removed in future version>
+    ISO       L<Catmandu::Importer::MARC::ISO>
     XML       L<Catmandu::Exporter::MARC::XML>
     MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
     MiJ       L<Catmandu::Exporter::MARC::MiJ> (Marc in Json)
@@ -75,7 +75,8 @@ has _exporter_args => (is => 'rwp', writer => '_set_exporter_args');
 
 sub _build_exporter {
     my ($self) = @_;
-    my $type = $self->type eq 'ISO' ? 'USMARC' : $self->type;
+
+    my $type = $self->type;
 
     my $pkg = Catmandu::Util::require_package($type,'Catmandu::Exporter::MARC');
 
@@ -85,6 +86,13 @@ sub _build_exporter {
 sub BUILD {
     my ($self,$args) = @_;
     $self->_set_exporter_args($args);
+
+    # keep USMARC temporary as alias for ISO, remove in future version
+    # print deprecation warning
+    if ($self->{type} eq 'USMARC') {
+        $self->{type} = 'ISO';
+        warn( "deprecated", "Oops! Exporter \"USMARC\" is deprecated. Use \"ISO\" instead." );
+    }
 }
 
 1;

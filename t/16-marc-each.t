@@ -33,7 +33,7 @@ my $fixer = Catmandu::Fix->new(fixes => [q|
 	marc_map("245",title)
 |]);
 
-my $importer = Catmandu::Importer::MARC->new( file => 't/camel.usmarc', type => "USMARC" );
+my $importer = Catmandu::Importer::MARC->new( file => 't/camel.mrc', type => "ISO" );
 
 $fixer->fix($importer)->each(sub {
 	my $record = $_[0];
