@@ -70,15 +70,27 @@ Read more about processing data with Catmandu on the wiki: L<https://github.com/
 
 Create a new MARC importer of the given type. Currently we support:
 
-    USMARC    alias for ISO, B<deprecated, will be removed in future version>
-    ISO       L<Catmandu::Importer::MARC::ISO>
-    MicroLIF  L<Catmandu::Importer::MARC::MicroLIF>
-    MARCMaker L<Catmandu::Importer::MARC::MARCMaker>
-    MiJ       L<Catmandu::Importer::MARC::MiJ>
-    XML       L<Catmandu::Importer::MARC::XML>
-    RAW       L<Catmandu::Importer::MARC::RAW>
-    Lint      L<Catmandu::Importer::MARC::Lint>
-    ALEPHSEQ  L<Catmandu::Importer::MARC::ALEPHSEQ>
+=over
+
+=item * USMARC: alias for ISO, B<deprecated, will be removed in future version>
+
+=item * ISO: L<Catmandu::Importer::MARC::ISO>
+
+=item * MicroLIF: L<Catmandu::Importer::MARC::MicroLIF>
+
+=item * MARCMaker: L<Catmandu::Importer::MARC::MARCMaker>
+
+=item * MiJ: L<Catmandu::Importer::MARC::MiJ>
+
+=item * XML: L<Catmandu::Importer::MARC::XML>
+
+=item * RAW: L<Catmandu::Importer::MARC::RAW>
+
+=item * Lint: L<Catmandu::Importer::MARC::Lint>
+
+=item * ALEPHSEQ: L<Catmandu::Importer::MARC::ALEPHSEQ>
+
+=back
 
 =item file
 

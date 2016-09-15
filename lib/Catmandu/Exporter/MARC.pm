@@ -29,12 +29,21 @@ to a file or the standard output.
 
 Create a new MARC exporter of the given type. Currently we support:
 
-    USMARC    alias for ISO, B<deprecated, will be removed in future version>
-    ISO       L<Catmandu::Importer::MARC::ISO>
-    XML       L<Catmandu::Exporter::MARC::XML>
-    MARCMaker L<Catmandu::Exporter::MARC::MARCMaker>
-    MiJ       L<Catmandu::Exporter::MARC::MiJ> (Marc in Json)
-    ALEPHSEQ  L<Catmandu::Exporter::MARC::ALEPHSEQ>
+=over
+
+=item * USMARC: alias for ISO, B<deprecated, will be removed in future version>
+
+=item * ISO: L<Catmandu::Importer::MARC::ISO>
+
+=item * XML: L<Catmandu::Exporter::MARC::XML>
+
+=item * MARCMaker: L<Catmandu::Exporter::MARC::MARCMaker>
+
+=item * MiJ: L<Catmandu::Exporter::MARC::MiJ> (Marc in Json)
+
+=item * ALEPHSEQ: L<Catmandu::Exporter::MARC::ALEPHSEQ>
+
+=back
 
 =item file
 
