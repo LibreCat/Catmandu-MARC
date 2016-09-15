@@ -5,7 +5,6 @@ use warnings;
 
 use Catmandu::Importer::MARC;
 use Test::Simple tests => 3;
-use Data::Dumper;
 
 my $importer = Catmandu::Importer::MARC->new( file => 't/rug01.aleph', type => "ALEPHSEQ" );
 

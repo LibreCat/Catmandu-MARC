@@ -5,7 +5,6 @@ use warnings;
 
 use Catmandu::Importer::MARC;
 use Test::Simple tests => 2;
-use Data::Dumper;
 
 my $importer = Catmandu::Importer::MARC->new( file => 't/sample1.lif', type => "MicroLIF" );
 
