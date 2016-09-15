@@ -573,11 +573,17 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Fix::marc_in_json>
 
+=item * L<Catmandu::Fix::marc_decode_dollar_subfields>
+
 =item * L<Catmandu::Fix::marc_set>
 
 =item * L<Catmandu::Fix::Bind::marc_each>
 
 =item * L<Catmandu::Fix::Condition::marc_match>
+
+=item * L<Catmandu::Fix::Condition::marc_has>
+
+=item * L<Catmandu::Fix::Condition::marc_has_many>
 
 =item * L<Catmandu::Fix::Inline::marc_map>
 
