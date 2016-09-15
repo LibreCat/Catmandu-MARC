@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.00_03  2016-09-15 11:26:03 CEST
   - Fixing dependency problems
   - Deleting unused modules
   - Fixing zero-padded tags treated as numbers bug
