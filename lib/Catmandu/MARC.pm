@@ -449,12 +449,13 @@ sub compile_marc_path {
     my ($field,$field_regex,$ind1,$ind2,
         $subfield,$subfield_regex,$from,$to,$len,$is_regex_field);
 
-    my $MARC_PATH_REGEX = qr/(\S{3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/;
+    my $MARC_PATH_REGEX = qr/(\S{1,3})(\[([^,])?,?([^,])?\])?([_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/;
     if ($marc_path =~ $MARC_PATH_REGEX) {
         $field          = $1;
         $ind1           = $3;
         $ind2           = $4;
         $subfield       = $5;
+        $field = "0" x (3 - length($field)) . $field; # fixing 020 treated as 20 bug
         if (defined($subfield)) {
             unless ($subfield =~ /^[a-zA-Z0-9]$/) {
                 $subfield = "[$subfield]";

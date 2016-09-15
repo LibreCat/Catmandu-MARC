@@ -4,7 +4,7 @@ Catmandu::Importer::MARC - Package that imports MARC data
 
 =head1 SYNOPSIS
 
-    # From the command line
+    # From the command line convert MARC to JSON mapping 245a to a title
     $ catmandu convert MARC --fix "marc_map('245a','title')" < /foo/bar.mrc
 
     # From Perl
