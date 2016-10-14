@@ -51,4 +51,29 @@ is $records->[0]->{has_500_not_c}, 'OK' , '^c value subfield';
 
 ok ! $records->[0]->{has_500_not_a}, '^a value subfield';
 
+# gh#46: Test for subfield codes 0
+{
+    my $mrc
+    = '00093nam a2200037 c 45001000055000001 aPoe, Curtis0(DE-601)7303424090(DE-588)1028093195';
+
+my $fixer = Catmandu::Fix->new(
+    fixes => [
+        'marc_map(100,subf_all,join => "~")',
+        'marc_map(1000,subf_zero,join => "~")',
+        'marc_map(1000a,subf_zero_pluck,join => "~",pluck => 1)',
+    ]
+);
+my $importer = Catmandu::Importer::MARC->new( file => \$mrc, type => 'ISO' );
+my $record = $fixer->fix($importer)->first;
+
+is( $record->{subf_all},
+    'Poe, Curtis~(DE-601)730342409~(DE-588)1028093195',
+    'all subfields'
+);
+is( $record->{subf_zero}, '(DE-601)730342409~(DE-588)1028093195',
+    'subfields 0' );
+is( $record->{subf_zero_pluck}, '(DE-601)730342409~(DE-588)1028093195~Poe, Curtis',
+    'subfields 0 pluck' );
+}
+
 done_testing;
