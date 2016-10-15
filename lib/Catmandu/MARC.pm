@@ -50,7 +50,7 @@ sub marc_map {
         my $v;
 
         if ($value_set) {
-            for (my $i = 3; $field->[$i]; $i += 2) {
+            for (my $i = 3; $i < @{$field}; $i += 2) {
                 my $subfield_regex = $context->{subfield_regex};
                 if ($field->[$i] =~ $subfield_regex) {
                     $v = $value_set;
@@ -64,7 +64,7 @@ sub marc_map {
             if ($pluck) {
                 # Treat the subfield as a hash index
                 my $_h = {};
-                for (my $i = $context->{start}; $field->[$i]; $i += 2) {
+                for (my $i = $context->{start}; $i < @{$field}; $i += 2) {
                     push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
                 }
                 my $subfield = $context->{subfield};
@@ -74,7 +74,7 @@ sub marc_map {
                 }
             }
             else {
-                for (my $i = $context->{start}; $field->[$i]; $i += 2) {
+                for (my $i = $context->{start}; $i < @{$field}; $i += 2) {
                     my $subfield_regex = $context->{subfield_regex};
                     if ($field->[$i] =~ $subfield_regex) {
                         push(@$v, $field->[$i + 1]);
