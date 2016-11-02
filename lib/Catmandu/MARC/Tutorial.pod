@@ -157,6 +157,46 @@ And now run the command:
 
     $ catmandu convert MARC to CSV --fix myfix.fix < data.mrc
 
+=head1 Create a CSV file of all ISSN numbers found at any MARC field
+
+To process this information we need to create a Fix script like the
+one below (line numbers are added here to explain the working of this script):
+
+    01: marc_map('***',text.$append)
+    02:
+    03: filter(text,'(\b\d{4}-?\d{3}[\dxX]\b)')
+    04: replace_all(text.*,'.*(\b\d{4}-?\d{3}[\dxX]\b).*',$1)
+    05:
+    06: do list(path:text)
+    07:   unless is_valid_issn(.)
+    08:     reject()
+    09:   end
+    10: end
+    11:
+    12: vacuum()
+    13:
+    14: select exists(text)
+    15:
+    16: join_field(text,' ; ')
+    17:
+    18: retain(_id,text)
+
+On line 01 all the text in the MARC record is mapped into a C<text> array.
+On line 03 we filter out this array all the lines that contain an ISSN string
+using a regular expression.
+On line 04 the C<replace_all> is used to delete everything in the C<text>
+array that isn't an ISSN number.
+On line 06-10 we go over every ISSN string and check if it has a valid checksum
+and erase it when not.
+On line 12 we use the C<vacuum> function to remove any remaining empty fields
+On line 14 we select only the records that contain a valid ISSN number
+On line 16 the ISSN get joined by a semicolon ';' into a long string
+On line 18 we keep only the record id and the ISSNs in for the report.
+
+Run this Fix script (without the line number) using this command
+
+    $ catmandu convert MARC to CSV --fix myfix.fix < data.mrc
+
 =head1 WRITING
 
 =head2 Convert a MARC record into a MARC record (do nothing)
