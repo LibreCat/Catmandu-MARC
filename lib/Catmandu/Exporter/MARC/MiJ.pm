@@ -5,13 +5,13 @@ Catmandu::Exporter::MARC::MiJ - Exporter for MARC records to MARC in JSON
 =head1 SYNOPSIS
 
     # From the command line
-    $ catmandu convert MARC --type XML to MARC --type MiJ < /foo/data.mrc
+    $ catmandu convert MARC --type XML to MARC --type MiJ < /foo/bar.xml
 
     # From Perl
     use Catmandu;
 
-    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'XML');
-    my $exporter = Catmandu->exporter('MARC', file => "marc.xml", type => 'MiJ' );
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.xml" , type => 'XML');
+    my $exporter = Catmandu->exporter('MARC', file => "bar.json", type => 'MiJ' );
 
     $exporter->add($importer);
     $exporter->commit;

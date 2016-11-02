@@ -5,13 +5,13 @@ Catmandu::Importer::MARC::MiJ - Package that imports MARC-in-JSON records
 =head1 SYNOPSIS
 
     # From the command line
-    $ catmandu convert MARC --type MiJ --fix "marc_map('245a','title')" < /foo/data.js
+    $ catmandu convert MARC --type MiJ --fix "marc_map('245a','title')" < /foo/bar.json
 
     # From perl
     use Catmandu;
 
     # import records from file
-    my $importer = Catmandu->importer('MARC',file => '/foo/data.js', type => 'MiJ');
+    my $importer = Catmandu->importer('MARC',file => '/foo/bar.json', type => 'MiJ');
     my $fixer    = Catmandu->fixer("marc_map('245a','title')");
 
     $importer->each(sub {
