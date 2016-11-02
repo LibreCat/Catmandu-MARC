@@ -124,6 +124,39 @@ And run the command:
 
     $ catmandu convert MARC to Null --fix myfix.fix < data.mrc
 
+=head2 Show which MARC record don't contain a 900a field matching some list of values
+
+First we need to create a list of keys that need to be matched against our MARC records.
+In the example below we create a CSV file with a C<key> , C<value>
+header and all the keys that are OK:
+
+    $ cat mylist.txt
+    key,value
+    book,OK
+    article,OK
+    journal,OK
+
+Next we create a Fix script that maps the MARC 900a field to a field called
+C<type>. This C<type> field we lookup in the C<mylist.txt> file. If a match
+is found, then the C<type> field will contain the value in the list (OK). When
+no match is found then the C<type> will contain the original value. We reject
+all records that have OK as C<type> and keep only the ones that weren't matched
+in the file.
+
+Open a text editor and create the C<myfix.fix> file with content:
+
+    marc_map(900a,type)
+
+    lookup(type,'/tmp/mylist.txt')
+
+    reject all_match(type,OK)
+
+    retain(_id,type)
+
+And now run the command:
+
+    $ catmandu convert MARC to CSV --fix myfix.fix < data.mrc
+
 =head1 WRITING
 
 =head2 Convert a MARC record into a MARC record (do nothing)
