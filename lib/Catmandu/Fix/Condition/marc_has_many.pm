@@ -19,10 +19,19 @@ sub emit {
     my $perl;
 
     my $tmp_var  = '_tmp_' . int(rand(9999));
-    my $marc_map = Catmandu::Fix::marc_map->new($self->marc_path , "$tmp_var.\$append", -split=>1);
+    my $marc_map = Catmandu::Fix::marc_map->new(
+                        $self->marc_path ,
+                        "$tmp_var" ,
+                        -split=>1 ,
+                        -nested_arrays=>1
+                    );
     $perl .= $marc_map->emit($fixer,$label);
 
-    my $all_match    = Catmandu::Fix::Condition::exists->new("$tmp_var.0.1");
+    my $all_match    =
+        $self->marc_path =~ m{^...(\/\d+-\d+)?$} ?
+            Catmandu::Fix::Condition::exists->new("$tmp_var.1") :
+            Catmandu::Fix::Condition::exists->new("$tmp_var.0.1");
+
     my $remove_field = Catmandu::Fix::remove_field->new($tmp_var);
 
     my $pass_fixes = $self->pass_fixes;

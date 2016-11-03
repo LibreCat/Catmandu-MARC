@@ -16,6 +16,10 @@ if marc_has(245)
   add_field(test.\$append,'has 245')
 end
 
+if marc_has_many(245)
+  add_field(test.\$append,'has many 245')
+end
+
 if marc_has_many(CAT)
   add_field(test.\$append,'has many CAT')
 end

@@ -1,10 +1,12 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Adding a Catmandu::MARC::Tutorial
+  - Fixing a bug in the marc_has_many
 
 1.02  2016-10-15 11:18:48 CEST
   - Fixing bug when accessing subfields 0 in MARC
-  
+
 1.01  2016-09-27 16:35:19 CEST
   - Bug version
 
