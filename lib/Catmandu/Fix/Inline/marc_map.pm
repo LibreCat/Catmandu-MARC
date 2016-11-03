@@ -65,7 +65,7 @@ require Exporter;
 @EXPORT_OK = qw(marc_map);
 %EXPORT_TAGS = (all => [qw(marc_map)]);
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 sub marc_map {
     my ($data,$marc_path,%opts) = @_;
