@@ -5,7 +5,7 @@ use Moo;
 
 our $VERSION = '1.03';
 
-with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
+with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base', 'Catmandu::Buffer';
 
 has record               => (is => 'ro' , default => sub { 'record'});
 has record_format        => (is => 'ro' , default => sub { 'raw'} );
@@ -15,14 +15,13 @@ has xml_declaration      => (is => 'ro' , default => sub { 1 });
 has pretty               => (is => 'rw' , default => sub { 0 });
 has _n                   => (is => 'rw' , default => sub { 0 });
 
-sub _print {
+sub _line {
     my ($self, $indent, $line) = @_;
     if ($self->pretty) {
-        $self->fh->print("   " x $indent);
-        $self->fh->print($line);
-        $self->fh->print("\n");
+        my $pre = "   " x $indent;
+        $self->buffer_add( $pre.$line."\n" );
     } else {
-        $self->fh->print($line);
+        $self->buffer_add( $line );
     }
 }
 
@@ -31,34 +30,34 @@ sub add {
 
  	if ($self->_n == 0) {
     	if ($self->xml_declaration) {
-    		$self->fh->print(Catmandu::Util::xml_declaration);
+            $self->buffer_add( Catmandu::Util::xml_declaration );
     	}
 
     	if ($self->collection) {
-    		$self->_print(0,'<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">');
+            $self->_line(0,'<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">');
     	}
 
     	$self->_n(1);
     }
- 
+
     my $indent = $self->collection ? 1 : 0;
 
-    if ($self->record_format eq 'MARC-in-JSON') { 
+    if ($self->record_format eq 'MARC-in-JSON') {
         $data = $self->_json_to_raw($data);
     }
 
     if ($self->collection) {
-    	$self->_print($indent,'<marc:record>');
+        $self->_line($indent,'<marc:record>');
     }
     else {
-    	$self->_print($indent,'<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">');
+        $self->_line($indent,'<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">');
     }
 
-    my $record = $data->{$self->record};  
+    my $record = $data->{$self->record};
 
     for my $field (@$record) {
         my ($tag, $ind1, $ind2, @data) = @$field;
-        
+
         $ind1 = ' ' unless defined $ind1;
         $ind2 = ' ' unless defined $ind2;
 
@@ -68,30 +67,33 @@ sub add {
         next if @data == 0;
 
         if ($tag eq 'LDR') {
-            $self->_print($indent+1,'<marc:leader>' . xml_escape($data[1]) . '</marc:leader>');
+            $self->_line($indent+1,'<marc:leader>' . xml_escape($data[1]) . '</marc:leader>');
         }
         elsif ($tag =~ /^00/) {
-            $self->_print($indent+1,'<marc:controlfield tag="' . xml_escape($tag) . '">' . xml_escape($data[1]) . '</marc:controlfield>');
+            $self->_line($indent+1,'<marc:controlfield tag="' . xml_escape($tag) . '">' . xml_escape($data[1]) . '</marc:controlfield>');
         }
         else {
-            $self->_print($indent+1,'<marc:datafield tag="' . xml_escape($tag) . '" ind1="' . $ind1 . '" ind2="' . $ind2 . '">');
+            $self->_line($indent+1,'<marc:datafield tag="' . xml_escape($tag) . '" ind1="' . $ind1 . '" ind2="' . $ind2 . '">');
             while (@data) {
                 my ($code, $val) = splice(@data, 0, 2);
                 next unless $code =~ /[A-Za-z0-9]/;
-                $self->_print($indent+2,'<marc:subfield code="' . $code . '">' . xml_escape($val) . '</marc:subfield>');
+                $self->_line($indent+2,'<marc:subfield code="' . $code . '">' . xml_escape($val) . '</marc:subfield>');
             }
-            $self->_print($indent+1,'</marc:datafield>');
+            $self->_line($indent+1,'</marc:datafield>');
         }
     }
 
-    $self->_print($indent,'</marc:record>');
+    $self->_line($indent,'</marc:record>');
+
+    $self->fh->print( join('', @{ $self->buffer } ) );
+    $self->clear_buffer;
 }
 
 sub commit {
     my ($self) = @_;
 
     if($self->collection){
-        $self->_print(0,'</marc:collection>');
+        $self->fh->print('</marc:collection>');
     }
 
     $self->fh->flush;
@@ -106,7 +108,7 @@ Catmandu::Exporter::MARC::XML - Exporter for MARC records to MARCXML
 
 =head1 SYNOPSIS
 
-    # From the command line 
+    # From the command line
     $ catmandu convert MARC to MARC --type XML < /foo/data.mrc
 
     # From Perl
@@ -137,9 +139,9 @@ used to write to a callback function.
 Write the output to an L<IO::Handle>. If not specified,
 L<Catmandu::Util::io|Catmandu::Util/IO-functions> is used to create the output
 handle from the C<file> argument or by using STDOUT.
- 
+
 =item fix
- 
+
 An ARRAY of one or more fixes or file scripts to be applied to exported items.
 
 =item record
@@ -150,7 +152,7 @@ the key containing the marc record (default: 'record')
 
 Optionally set to 'MARC-in-JSON' when the input format is in MARC-in-JSON
 
-=item collection 
+=item collection
 
 add a marc:collection header when true (default: true)
 
