@@ -1,10 +1,12 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Adding Carsten Klee's MARC::Spec contribution
+  - Adding Carsten as contributor
 
 1.04  2017-01-18 09:23:26 CET
   - Skipping new lines in ALEPHSEQ exports
-  
+
 1.03  2016-11-03 08:48:19 CET
   - Adding a Catmandu::MARC::Tutorial
   - Fixing a bug in the marc_has_many

@@ -565,6 +565,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Fix::marc_map>
 
+=item * L<Catmandu::Fix::marc_spec>
+
 =item * L<Catmandu::Fix::marc_add>
 
 =item * L<Catmandu::Fix::marc_remove>
@@ -609,7 +611,8 @@ processing at L<https://github.com/LibreCat/Catmandu/wiki>.
 L<Catmandu>,
 L<Catmandu::Importer>,
 L<Catmandu::Fix>,
-L<Catmandu::Store>
+L<Catmandu::Store>,
+L<MARC::Spec>
 
 =head1 AUTHOR
 
@@ -628,6 +631,8 @@ Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
 =item * Chris Cormack
 
 =item * Robin Sheat
+
+=item * Carsten Klee, C<< klee at cpan.org >>
 
 =back
 
