@@ -58,7 +58,7 @@ use Catmandu::Util qw(xml_escape is_different :array :is);
 use List::Util;
 use Moo;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
@@ -103,6 +103,7 @@ sub add {
                  my ($code,$val) = splice(@data, 0, 2);
                  next unless $code =~ /[A-Za-z0-9]/o;
                  next unless is_string($val);
+                 $val =~ s{[[:cntrl:]]}{}g;
                  push @line , '$$' , $code , $val;
              }
              push @lines , join('', @line);

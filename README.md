@@ -47,6 +47,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 - [Catmandu::Importer::MARC](https://metacpan.org/pod/Catmandu::Importer::MARC)
 - [Catmandu::Exporter::MARC](https://metacpan.org/pod/Catmandu::Exporter::MARC)
 - [Catmandu::Fix::marc\_map](https://metacpan.org/pod/Catmandu::Fix::marc_map)
+- [Catmandu::Fix::marc\_spec](https://metacpan.org/pod/Catmandu::Fix::marc_spec)
 - [Catmandu::Fix::marc\_add](https://metacpan.org/pod/Catmandu::Fix::marc_add)
 - [Catmandu::Fix::marc\_remove](https://metacpan.org/pod/Catmandu::Fix::marc_remove)
 - [Catmandu::Fix::marc\_xml](https://metacpan.org/pod/Catmandu::Fix::marc_xml)
@@ -77,7 +78,8 @@ processing at [https://github.com/LibreCat/Catmandu/wiki](https://github.com/Lib
 [Catmandu](https://metacpan.org/pod/Catmandu),
 [Catmandu::Importer](https://metacpan.org/pod/Catmandu::Importer),
 [Catmandu::Fix](https://metacpan.org/pod/Catmandu::Fix),
-[Catmandu::Store](https://metacpan.org/pod/Catmandu::Store)
+[Catmandu::Store](https://metacpan.org/pod/Catmandu::Store),
+[MARC::Spec](https://metacpan.org/pod/MARC::Spec)
 
 # AUTHOR
 
@@ -90,6 +92,7 @@ Patrick Hochstenbach, `<patrick.hochstenbach at ugent.be>`
 - Johann Rolschewski, `jorol at cpan.org`
 - Chris Cormack
 - Robin Sheat
+- Carsten Klee, `klee at cpan.org`
 
 # LICENSE AND COPYRIGHT
 

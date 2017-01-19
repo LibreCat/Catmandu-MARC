@@ -5,7 +5,7 @@ use warnings;
 
 use Catmandu::Exporter::MARC;
 use XML::XPath;
-use Test::Simple tests => 24;
+use Test::Simple tests => 25;
 
 my $xml = undef;
 
@@ -90,8 +90,8 @@ ok($xml !~ /000000001 500/, 'test skip empty subfields');
 
 $xml = '';
 $exporter = Catmandu::Exporter::MARC->new(
-                  file => \$xml, 
-                  type=> 'ALEPHSEQ', 
+                  file => \$xml,
+                  type=> 'ALEPHSEQ',
                   record_format => 'MARC-in-JSON',
                   skip_empty_subfields => 1
 );
@@ -108,9 +108,11 @@ $exporter->add({
     { '501' => { 'ind1' => ' ', 'ind2' => ' ' }} ,
     { '502' => { 'subfields' => [ { 'a' => undef} , { 'b' , 'ok' } ] , 'ind1' => ' ', 'ind2' => ' ' } } ,
     { '503' => { 'subfields' => [ { 'a' => '' }] , 'ind1' => ' ', 'ind2' => ' '}} ,
+    { '540' => { 'subfields' => [ { 'a' => "\nabcd\n" }] , 'ind1' => ' ', 'ind2' => ' '}}
   ]
 });
 
 ok($xml =~ /^000000001/, 'test id');
 ok($xml =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
 ok($xml !~ /000000001 500/, 'test skip empty subfields');
+ok($xml =~ /000000001 540   L \$\$aabcd/, 'test skip newlines');
