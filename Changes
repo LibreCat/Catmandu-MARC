@@ -3,6 +3,7 @@ Revision history for Catmandu-MARC
 {{$NEXT}}
   - Adding Carsten Klee's MARC::Spec contribution
   - Adding Carsten as contributor
+  - Buffering record in XML exporter for better serialization speed
 
 1.04  2017-01-18 09:23:26 CET
   - Skipping new lines in ALEPHSEQ exports
