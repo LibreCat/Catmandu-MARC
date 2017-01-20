@@ -7,7 +7,7 @@ use Catmandu::Fix::Has;
 use MARC::Spec;
 use Const::Fast;
 
-our $VERSION = '0.0.1';
+our $VERSION = '1.05';
 
 has spec   => ( fix_arg => 1 );
 has path   => ( fix_arg => 1 );
