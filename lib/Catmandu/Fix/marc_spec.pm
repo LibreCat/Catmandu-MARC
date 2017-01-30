@@ -58,6 +58,7 @@ EOF
 }
 
 1;
+
 __END__
 
 =encoding utf-8
@@ -327,15 +328,15 @@ last pattern for every subfield. E.g.
    marc_spec('020$a[0]/#-1' my.other.subfields, invert:1)
 
 =head1 INLINE
- 
+
 This Fix can be used inline in a Perl script:
- 
+
     use Catmandu::Fix::marc_spec as => 'marc_spec';
- 
+
     my $data = { record => [...] };
- 
+
     $data = marc_spec($data,'245$a','title');
- 
+
     print $data->{title} , "\n";
 
 =head1 BUGS AND LIMITATIONS
