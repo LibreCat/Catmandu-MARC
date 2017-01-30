@@ -62,7 +62,7 @@ Catmandu::Importer::MARC - Package that imports MARC data
         printf "title: %s\n" , $record->{title};
     });
 
-Convert MARC to JSON mapping 245a to a title with the L<catmandu> command line client:
+    # Convert MARC to JSON mapping 245a to a title with the L<catmandu> command line client:
 
     catmandu convert MARC --fix "marc_map('245a','title')" < /foo/bar.mrc
 
@@ -83,7 +83,7 @@ an ARRAY of ARRAYs containing the record data
 
 =back
 
-=head2 EXAMPLE ITEM
+=head1 EXAMPLE ITEM
 
  {
     record => [
@@ -117,34 +117,49 @@ L<Catmandu::Iterable>.
 In addition to the configuration provided by L<Catmandu::Importer> (C<file>,
 C<fh>, etc.) the importer can be configured with the following parameters:
 
-=over
 
-=item type
-
-Describes the MARC syntax variant. Supported values include:
+The 'type' parameter describes the MARC syntax variant. Supported values include:
 
 =over
 
-=item * ISO: L<Catmandu::Importer::MARC::ISO> (default)
+=item
 
-=item * MicroLIF: L<Catmandu::Importer::MARC::MicroLIF>
+ISO: L<Catmandu::Importer::MARC::ISO> (default)
 
-=item * MARCMaker: L<Catmandu::Importer::MARC::MARCMaker>
+=item
 
-=item * MiJ: L<Catmandu::Importer::MARC::MiJ> (MARC in JSON)
+MicroLIF: L<Catmandu::Importer::MARC::MicroLIF>
 
-=item * XML: L<Catmandu::Importer::MARC::XML>
+=item
 
-=item * RAW: L<Catmandu::Importer::MARC::RAW>
+MARCMaker: L<Catmandu::Importer::MARC::MARCMaker>
 
-=item * Lint: L<Catmandu::Importer::MARC::Lint>
+=item
 
-=item * ALEPHSEQ: L<Catmandu::Importer::MARC::ALEPHSEQ>
+MiJ: L<Catmandu::Importer::MARC::MiJ> (MARC in JSON)
+
+=item
+
+XML: L<Catmandu::Importer::MARC::XML>
+
+=item
+
+RAW: L<Catmandu::Importer::MARC::RAW>
+
+=item
+
+Lint: L<Catmandu::Importer::MARC::Lint>
+
+=item
+
+ALEPHSEQ: L<Catmandu::Importer::MARC::ALEPHSEQ>
 
 =back
+
+    E.g.
+
+    catmandu convert MARC --type XML to MARC --type ISO < marc.xml > marc.iso
 
 =head1 SEE ALSO
 
 L<Catmandu::Exporter::MARC>
-
-=cut

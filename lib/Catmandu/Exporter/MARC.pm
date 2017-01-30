@@ -43,7 +43,7 @@ Catmandu::Exporter::MARC - Exporter for MARC records
     $ catmandu convert MARC --type ISO to MARC --type XML < /foo/bar.mrc
 
     # From Perl
-    use Catmandui -all;
+    use Catmandu 'all';
 
     my $importer = importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
     my $exporter = exporter('MARC', file => "marc.xml", type => "XML" );
@@ -61,26 +61,36 @@ to a file or the standard output.
 In addition to the configuration provided by L<Catmandu::Exporter> (C<file>,
 C<fh>, etc.) the exporter can be configured with the following parameters:
 
-=over
-
-=item type
-
-Describes the MARC syntax variant. Supported values include:
+The 'type' parameter describes the MARC syntax variant. Supported values include:
 
 =over
 
-=item * ISO: L<Catmandu::Exporter::MARC::ISO> (default)
+=item
 
-=item * XML: L<Catmandu::Exporter::MARC::XML>
+ISO: L<Catmandu::Exporter::MARC::ISO> (default)
 
-=item * MARCMaker: L<Catmandu::Exporter::MARC::MARCMaker>
+=item
 
-=item * MiJ: L<Catmandu::Exporter::MARC::MiJ> (MARC in JSON)
+XML: L<Catmandu::Exporter::MARC::XML>
 
-=item * ALEPHSEQ: L<Catmandu::Exporter::MARC::ALEPHSEQ>
+=item
 
+MARCMaker: L<Catmandu::Exporter::MARC::MARCMaker>
+
+=item
+
+MiJ: L<Catmandu::Exporter::MARC::MiJ> (MARC in JSON)
+
+=item
+
+ALEPHSEQ: L<Catmandu::Exporter::MARC::ALEPHSEQ>
+
+=back
+
+    E.g.
+
+    catmandu convert MARC --type XML to MARC --type ISO < marc.xml > marc.iso
+    
 =head1 SEE ALSO
 
 L<Catmandu::Importer::MARC>
-
-=back
