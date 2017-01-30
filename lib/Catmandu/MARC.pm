@@ -3,12 +3,15 @@ package Catmandu::MARC;
 use Catmandu::Sane;
 use Catmandu::Util;
 use Catmandu::Exporter::MARC::XML;
+use MARC::Spec;
 use Memoize;
 use Carp;
 use Moo;
 with 'MooX::Singleton';
 
 memoize('compile_marc_path');
+memoize('parse_marc_spec');
+memoize('get_index_range');
 
 our $VERSION = '1.05';
 
@@ -315,6 +318,267 @@ sub marc_remove {
     $data->{'record'} = $new_record;
 
     return $data;
+}
+
+sub marc_spec {
+    my $self            = $_[0];
+    # $_[1] : data record
+    my $data            = $_[1]->{'record'};
+
+    # $_[2] : spec
+    my $ms              = ref($_[2]) ?
+                            $_[2] :
+                            $self->parse_marc_spec( $self->spec );
+
+    # $_[3] : opts
+    my $split          = $_[3]->{'-split'} // 0;
+    my $join_char      = $_[3]->{'-join'}  // '';
+    my $pluck          = $_[3]->{'-pluck'} // 0;
+    my $value_set      = $_[3]->{'-value'} // undef;
+    my $invert         = $_[3]->{'-invert'} // 0;
+
+    my $vals;
+
+    # filter by tag
+    my @fields     = ();
+    my $field_spec = $ms->field;
+    my $tag        = $field_spec->tag;
+    $tag           = qr/$tag/;
+    unless ( @fields =
+        grep { $_->[0] =~ /$tag/ } @{ $data } )
+    {
+        return $vals;
+    }
+
+    if (defined $field_spec->indicator1) {
+        my $indicator1 = $field_spec->indicator1;
+        $indicator1    = qr/$indicator1/;
+        unless( @fields =
+            grep { defined $_->[1] && $_->[1] =~ /$indicator1/ } @fields)
+        {
+            return $vals;
+        }
+    }
+    if (defined $field_spec->indicator2) {
+        my $indicator2 = $field_spec->indicator2;
+        $indicator2    = qr/$indicator2/;
+        unless( @fields =
+            grep { defined $_->[2] && $_->[2] =~ /$indicator2/ } @fields)
+        {
+            return $vals;
+        }
+    }
+
+    # filter by index
+    if ( -1 != $field_spec->index_length ) {    # index is requested
+        my $index_range = $self->get_index_range( $field_spec, scalar @fields );
+        my $prevTag     = q{};
+        my $index       = 0;
+        my $tag;
+        my @filtered = ();
+        for my $pos ( 0 .. $#fields ) {
+            $tag = $fields[$pos][0];
+            $index = ( $prevTag eq $tag or q{} eq $prevTag ) ? $index : 0;
+            if ( Catmandu::Util::array_includes( $index_range, $index ) ) {
+                push @filtered, $fields[$pos];
+            }
+            $index++;
+            $prevTag = $tag;
+        }
+        unless (@filtered) { return $vals }
+        @fields = @filtered;
+    }
+
+    # return $value_set ASAP
+    if ( $value_set && !defined $ms->subfields ) {
+        return $value_set;
+    }
+
+    if ( defined $ms->subfields ) {    # now we dealing with subfields
+        # set the order of subfields
+        my @sf_spec = map { $_ } @{ $ms->subfields };
+        unless ( $pluck ) {
+            @sf_spec = sort { $a->code cmp $b->code } @sf_spec;
+        }
+
+        # set invert level default
+        my $invert_level = 4;
+        my $codes;
+        if ( $invert ) {
+            $codes = '[^';
+            $codes .= join '', map { $_->code } @sf_spec;
+            $codes .= ']';
+        }
+
+        my ( @subfields, @subfield );
+        my $invert_chars = sub {
+            my ( $str, $start, $length ) = @_;
+            for ( substr $str, $start, $length ) {
+                $_ = '';
+            }
+            return $str;
+        };
+
+        for my $field (@fields) {
+            my $start = 3;
+            for my $sf (@sf_spec) {
+                # set invert level
+                if ( $invert ) {
+                    if ( -1 == $sf->index_length
+                        && !defined $sf->char_start )
+                    {    # todo add subspec check
+                        next
+                          if ( $invert_level == 3 )
+                          ;    # skip subfield spec it's already covered
+                        $invert_level = 3;
+                    }
+                    elsif ( !defined $sf->char_start )
+                    {          # todo add subspec check
+                        $invert_level = 2;
+                    }
+                    else {     # todo add subspec check
+                        $invert_level = 1;
+                    }
+                }
+
+                @subfield = ();
+                my $code  =
+                  ( $invert_level == 3 ) ? $codes : $sf->code;
+                $code     = qr/$code/;
+                for ( my $i = $start ; $i < @$field ; $i += 2 ) {
+                    if ( $field->[$i] =~ /$code/ ) {
+                        push( @subfield, $field->[ $i + 1 ] );
+                    }
+                }
+
+                if ( $invert_level == 3 ) {
+                    if (@subfield) { push @subfields, @subfield }
+
+                    # return $value_set ASAP
+                    if ( @subfields && $value_set ) {
+                        return $value_set;
+                    }
+                    next;
+                }
+                next unless (@subfield);
+
+                # filter by index
+                if ( -1 != $sf->index_length ) {
+                    my $sf_range = $self->get_index_range( $sf, scalar @subfield );
+                    if ( $invert_level == 2 ) {    # inverted
+                        @subfield = map {
+                            Catmandu::Util::array_includes( $sf_range, $_ )
+                              ? ()
+                              : $subfield[$_]
+                        } 0 .. $#subfield;
+                    }
+                    else {    # without invert
+                        @subfield =
+                          map { defined $subfield[$_] ? $subfield[$_] : () }
+                          @$sf_range;
+                    }
+                    next unless (@subfield);
+                }
+
+                # return $value_set ASAP
+                if ( $value_set ) { return $value_set }
+
+                # get substring
+                my $char_start = $sf->char_start;
+                if ( defined $char_start ) {
+                    my $char_start =
+                      ( '#' eq $char_start )
+                      ? $sf->char_length * -1
+                      : $char_start;
+                    if ( $invert_level == 1 ) {    # inverted
+                        @subfield = map {
+                            $invert_chars->( $_, $char_start, $sf->char_length )
+                        } @subfield;
+                    }
+                    else {
+                        @subfield =
+                          map { substr $_, $char_start, $sf->char_length }
+                          @subfield;
+                    }
+                }
+                push @subfields, @subfield if (@subfield);
+            }
+        }
+
+        unless (@subfields) { return $vals }
+
+        $vals = ($split)
+          ? [@subfields]
+          : join( $join_char, @subfields );
+    }
+    else {    # no particular subfields requested
+        my $char_start = $field_spec->char_start;
+        if ( defined $char_start ) {
+            $char_start =
+              ( '#' eq $char_start )
+              ? $field_spec->char_length * -1
+              : $char_start;
+        }
+        my @mapped = ();
+        for my $field (@fields) {
+            my $start = 4;
+
+            my @subfields = ();
+            for ( my $i = $start ; $i < @$field ; $i += 2 ) {
+                    push( @subfields, $field->[$i] );
+            }
+            next unless (@subfields);
+
+            # get substring
+            if ( defined $char_start ) {
+                @subfields =
+                  map { substr $_, $char_start, $field_spec->char_length }
+                    @subfields;
+            }
+            push @mapped, @subfields;
+        }
+        unless (@mapped) { return $vals }
+
+        $vals = ($split)
+          ? [@mapped]
+          : join $join_char, @mapped;
+    }
+    return $vals;
+}
+
+sub parse_marc_spec {
+    my ( $self, $marc_spec ) = @_;
+    my $ms = MARC::Spec->parse( $marc_spec );
+}
+
+sub get_index_range {
+        my ( $self, $spec, $total ) = @_;
+
+        my $last_index  = $total - 1;
+        my $index_start = $spec->index_start;
+        my $index_end   = $spec->index_end;
+
+        if ( '#' eq $index_start ) {
+            if ( '#' eq $index_end or 0 eq $index_end ) { return [$last_index] }
+            $index_start = $last_index;
+            $index_end   = $last_index - $index_end;
+            if ( 0 > $index_end ) { $index_end = 0 }
+        }
+        else {
+            if ( $last_index < $index_start ) {
+                return [$index_start];
+            }    # this will result to no hits
+        }
+
+        if ( '#' eq $index_end or $index_end > $last_index ) {
+            $index_end = $last_index;
+        }
+
+        my $range =
+            ( $index_start <= $index_end )
+          ? [ $index_start .. $index_end ]
+          : [ $index_end .. $index_start ];
+        return $range;
 }
 
 sub marc_xml {
