@@ -43,10 +43,10 @@ Catmandu::Exporter::MARC - Exporter for MARC records
     $ catmandu convert MARC --type ISO to MARC --type XML < /foo/bar.mrc
 
     # From Perl
-    use Catmandu 'all';
+    use Catmandu;
 
-    my $importer = importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
-    my $exporter = exporter('MARC', file => "marc.xml", type => "XML" );
+    my $importer = Catmandu->importer('MARC', file => "/foo/bar.mrc" , type => 'ISO');
+    my $exporter = Catmandu->exporter('MARC', file => "marc.xml", type => "XML" );
 
     $exporter->add($importer);
     $exporter->commit;
@@ -90,7 +90,7 @@ ALEPHSEQ: L<Catmandu::Exporter::MARC::ALEPHSEQ>
     E.g.
 
     catmandu convert MARC --type XML to MARC --type ISO < marc.xml > marc.iso
-    
+
 =head1 SEE ALSO
 
 L<Catmandu::Importer::MARC>

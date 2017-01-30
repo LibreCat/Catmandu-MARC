@@ -44,7 +44,7 @@ Catmandu::Importer::MARC - Package that imports MARC data
 
 =head1 SYNOPSIS
 
-    use Catmandu -all;
+    use Catmandu;
 
     # import records from file
     my $importer = Catmandu->importer('MARC',file => '/foo/bar.mrc');
