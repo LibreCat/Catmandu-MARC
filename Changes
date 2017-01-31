@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.06  2017-01-31 14:57:19 CET
   - Adding support for inline marc_spec
   - Updated POD
 
