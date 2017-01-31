@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Adding support for inline marc_spec
+  - Updated POD
 
 1.05  2017-01-19 16:05:10 CET
   - Adding Carsten Klee's MARC::Spec contribution

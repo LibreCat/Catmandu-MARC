@@ -8,15 +8,23 @@ Catmandu::MARC::Tutorial - A documentation-only module for new users of Catmandu
 
 =head1 READING
 
-=head2 Convert MARC records into JSON
+=head2 Convert MARC21 records into JSON
 
 The command below converts file data.mrc into JSON:
 
    $ catmandu convert MARC to JSON < data.mrc
 
-=head2 Convert MARC records into YAML
+=head2 Convert MARC21 records into MARC-XML
 
-   $ catmandu convert MARC to YAML < data.mrc
+   $ catmandu convert MARC to MARC --type XML < data.mrc
+
+=head2 Convert UNIMARC records into JSON, XML, ...
+
+To read UNIMARC records use the RAW parser to get the correct character
+encoding.
+
+   $ catmandu convert MARC --type RAW to JSON < data.mrc
+   $ catmandu convert MARC --type RAW to MARC --type XML < data.mrc
 
 =head2 Create a CSV file containing all the titles
 
