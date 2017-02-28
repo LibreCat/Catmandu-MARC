@@ -71,9 +71,10 @@ sub marc_map {
                     push @{ $_h->{ $field->[$i] } } , $field->[$i + 1];
                 }
                 my $subfield = $context->{subfield};
-                $subfield =~ s{^[a-zA-Z0-9]}{}g;
+                $subfield =~ s{[^a-zA-Z0-9]}{}g;
                 for my $c (split('',$subfield)) {
-                    push @$v , @{ $_h->{$c} } if exists $_h->{$c};
+                    my $val = $_h->{$c} // [undef];
+                    push @$v , @{ $val } ;
                 }
             }
             else {
