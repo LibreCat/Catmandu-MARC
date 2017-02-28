@@ -88,11 +88,15 @@ sub marc_map {
 
             if (@$v) {
                 if (!$split) {
-                    $v = join $join_char, @$v;
+                    my @defined_values = grep {defined($_)} @$v;
+                    $v = join $join_char, @defined_values;
                 }
 
                 if (defined(my $off = $context->{from})) {
-                    $v = join $join_char, @$v if (ref $v eq 'ARRAY');
+                    if (ref $v eq 'ARRAY') {
+                        my @defined_values = grep {defined($_)} @$v;
+                        $v = join $join_char, @defined_values;
+                    }
                     my $len = $context->{len};
                     if (length(${v}) > $off) {
                         $v = substr($v, $off, $len);
