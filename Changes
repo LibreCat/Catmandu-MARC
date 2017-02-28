@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - A marc_map(...,...,pluck:1,split:1) will return *all* the subfields specified in the path (undef when they don't exist in the MARC)
 
 1.06  2017-01-31 14:57:19 CET
   - Adding support for inline marc_spec
