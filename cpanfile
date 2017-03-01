@@ -22,7 +22,7 @@ requires 'MARC::Record', '2.0.6';
 requires 'MARC::Lint', '0';
 requires 'MARC::Parser::RAW', '0';
 requires 'Const::Fast', '0.014';
-requires 'MARC::Spec', '0.1.0';
+requires 'MARC::Spec', '0.1.1';
 requires 'Memoize', '0';
 requires 'Moo', '1.0';
 requires 'MooX::Singleton', '0';
