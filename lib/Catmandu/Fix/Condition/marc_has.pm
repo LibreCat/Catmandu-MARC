@@ -7,7 +7,7 @@ use Catmandu::Fix::remove_field;
 use Moo;
 use Catmandu::Fix::Has;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 with 'Catmandu::Fix::Condition';
 

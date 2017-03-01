@@ -64,7 +64,7 @@ package Catmandu::Importer::MARC::ALEPHSEQ;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 with 'Catmandu::Importer';
 

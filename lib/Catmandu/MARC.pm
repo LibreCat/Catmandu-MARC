@@ -13,7 +13,7 @@ memoize('compile_marc_path');
 memoize('parse_marc_spec');
 memoize('get_index_range');
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 sub marc_map {
     my $self      = $_[0];
