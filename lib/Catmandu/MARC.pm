@@ -36,6 +36,7 @@ sub marc_map {
     my $pluck          = $_[3]->{'-pluck'} // 0;
     my $value_set      = $_[3]->{'-value'} // undef;
     my $nested_arrays  = $_[3]->{'-nested_arrays'} // 0;
+    my $append         = $_[3]->{'-append'} // undef;
 
     my $vals;
 
@@ -134,14 +135,22 @@ sub marc_map {
                 }
             }
             else {
-                if (defined($vals) && ref($vals) eq '') {
-                    $vals = join $join_char , $vals , $v;
-                }
-                else {
-                    $vals = $v;
-                }
+                push @$vals , $v;
             }
         }
+    }
+
+    if ($split) {
+        $vals = [ $vals ];
+    }
+    elsif ($append) {
+        # we got a $append
+    }
+    elsif (defined $vals) {
+        $vals = join $join_char , @$vals;
+    }
+    else {
+        # no result
     }
 
     $vals;
