@@ -27,7 +27,11 @@ is  $records->[9]->{my}{subjects}{joined}, 'Perl (Computer program language)###W
 
 is_deeply
     $records->[9]->{my}{append}{subjects},
-    ['Perl (Computer program language)Web servers.Cross-platform software development.'],
+    [
+        'Perl (Computer program language)',
+        'Web servers.',
+        'Cross-platform software development.'
+    ],
     q|fix: marc_spec('650', my.append.subjects.$append);|;
 
 is_deeply

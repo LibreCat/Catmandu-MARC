@@ -564,10 +564,10 @@ sub marc_spec {
         unless (@mapped) { return $vals }
 
         if ($split) {
-            $vals = [[@mapped]]
+            $vals = [[@mapped]];
         }
         elsif ($append) {
-            $vals = [@mapped]
+            $vals = [@mapped];
         }
         elsif (@mapped) {
             $vals = join $join_char, @mapped;
