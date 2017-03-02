@@ -52,7 +52,7 @@ is_deeply
 
 is_deeply
     $records->[9]->{my}{fields}{indicators10},
-    ['Cross-platform Perl /Eric F. Johnson.'],
+    ['Cross-platform Perl /','Eric F. Johnson.'],
     q|fix: marc_spec('..._10', my.fields.indicators10.$append);|;
 
 is  scalar @{$records->[9]->{my}{fields}{indicators_0}}, 9,  q|fix: marc_spec('...__0', my.fields.indicators_0, split:1);|;

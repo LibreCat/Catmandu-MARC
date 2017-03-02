@@ -536,6 +536,7 @@ sub marc_spec {
         }
     }
     else {    # no particular subfields requested
+
         my $char_start = $field_spec->char_start;
         if ( defined $char_start ) {
             $char_start =
@@ -543,6 +544,7 @@ sub marc_spec {
               ? $field_spec->char_length * -1
               : $char_start;
         }
+
         my @mapped = ();
         for my $field (@fields) {
             my $start = 4;
@@ -561,13 +563,16 @@ sub marc_spec {
             }
             push @mapped, @subfields;
         }
-        unless (@mapped) { return $vals }
+
+        unless (@mapped) {
+            return $vals
+        }
 
         if ($split) {
             $vals = [[@mapped]];
         }
         elsif ($append) {
-            $vals = [@mapped];
+            $vals = [ @mapped ];
         }
         elsif (@mapped) {
             $vals = join $join_char, @mapped;
