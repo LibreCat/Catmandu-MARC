@@ -101,4 +101,27 @@ ok(@$records == 2 , "Found 2 records");
 	ok @arr == 2;
 }
 
+{
+	my @arr = marc_map($records->[1],'300bxa', -split=>1 , -pluck=>1);
+
+    is_deeply \@arr , [[
+         'ill. ;' ,
+         undef ,
+         'xxi, 289 p. :',
+    ]] , 'marc_map(300bxa, split:1 , pluck: 1)';
+}
+
+{
+	my @arr = marc_map($records->[1],'630xa', -split=>1 , -pluck=>1);
+
+    is_deeply \@arr , [
+         [ undef ,
+           'Active server pages.',
+         ] ,
+         [ undef,
+           'ActiveX.'
+         ] ,
+    ] , 'marc_map(630xa, split:1 , pluck:1)';
+}
+
 done_testing;
