@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use Test::More;
 use Catmandu;
-use DDP;
 
 my $mrc = <<'MRC';
 <?xml version="1.0" encoding="UTF-8"?>
@@ -47,8 +46,7 @@ note 'marc_map(245,title)     title: "Title / Name"';
         fix  => 'marc_map(245,title); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, 'Title / Name', 'marc_map(245,title)';
-    p $record;
+    is_deeply $record->{title}, 'Title / Name', 'marc_map(245,title)';
 }
 
 note 'marc_map(245a,title)    title: "Title / "';
@@ -60,8 +58,7 @@ note 'marc_map(245a,title)    title: "Title / "';
         fix  => 'marc_map(245a,title); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, 'Title / ', 'marc_map(245a,title)';
-    p $record;
+    is_deeply $record->{title}, 'Title / ', 'marc_map(245a,title)';
 }
 
 note 'marc_map(245,title.$append)     title: [ "Title / Name" ]';
@@ -70,11 +67,10 @@ note 'marc_map(245,title.$append)     title: [ "Title / Name" ]';
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(245.$append,title); retain_field(title)'
+        fix  => 'marc_map(245,title.$append); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, ['Title / Name'], 'marc_map(245.$append,title)';
-    p $record;
+    is_deeply $record->{title}, ['Title / Name'], 'marc_map(245.$append,title)';
 }
 
 note 'marc_map(245a,title.$append)    title: [ "Title / " ]';
@@ -83,11 +79,10 @@ note 'marc_map(245a,title.$append)    title: [ "Title / " ]';
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(245a.$append,title); retain_field(title)'
+        fix  => 'marc_map(245a,title.$append); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, ['Title / '], 'marc_map(245a.$append,title)';
-    p $record;
+    is_deeply $record->{title}, ['Title / '], 'marc_map(245a.$append,title)';
 }
 
 note 'marc_map(245,title, split:1)    title: [ "Title / ", "Name" ]';
@@ -99,9 +94,8 @@ note 'marc_map(245,title, split:1)    title: [ "Title / ", "Name" ]';
         fix  => 'marc_map(245,title, split:1); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, [ 'Title / ', 'Name' ],
+    is_deeply $record->{title}, [ 'Title / ', 'Name' ],
         'marc_map(245,title, split:1)';
-    p $record;
 }
 
 note
@@ -115,9 +109,8 @@ note
             'marc_map(245, title, split:1, nested_arrays:1); retain_field(title)'
     );
     my $record = $importer->first;
-    is $record->{title}, [ [ 'Title / ', 'Name' ] ],
+    is_deeply $record->{title}, [ [ 'Title / ', 'Name' ] ],
         'marc_map(245, title, split:1, nested_arrays:1)';
-    p $record;
 }
 
 note 'marc_map(500,note)  note: "ABCD"';
@@ -129,8 +122,7 @@ note 'marc_map(500,note)  note: "ABCD"';
         fix  => 'marc_map(500,note); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, 'ABCD', 'marc_map(500,note)';
-    p $record;
+    is_deeply $record->{note}, 'ABCD', 'marc_map(500,note)';
 }
 
 note 'marc_map(500a,note)     note: "ABC"';
@@ -142,8 +134,7 @@ note 'marc_map(500a,note)     note: "ABC"';
         fix  => 'marc_map(500a,note); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, 'ABC', 'marc_map(500a,note)';
-    p $record;
+    is_deeply $record->{note}, 'ABC', 'marc_map(500a,note)';
 }
 
 note 'marc_map(500,note.$append)  note: [ "ABCD" ]';
@@ -155,8 +146,7 @@ note 'marc_map(500,note.$append)  note: [ "ABCD" ]';
         fix  => ' marc_map(500,note.$append); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, ['ABCD'], ' marc_map(500,note.$append)';
-    p $record;
+    is_deeply $record->{note}, ['ABCD'], ' marc_map(500,note.$append)';
 }
 
 note 'marc_map(500a,note.$append)     note: [ "ABC" ]';
@@ -168,8 +158,7 @@ note 'marc_map(500a,note.$append)     note: [ "ABC" ]';
         fix  => ' marc_map(500a,note.$append); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, ['ABC'], ' marc_map(500a,note.$append)';
-    p $record;
+    is_deeply $record->{note}, ['ABC'], ' marc_map(500a,note.$append)';
 }
 
 note 'marc_map(500,note, split:1)     note: [ "A" , "B" , "C" , "D" ]';
@@ -181,8 +170,7 @@ note 'marc_map(500,note, split:1)     note: [ "A" , "B" , "C" , "D" ]';
         fix  => 'marc_map(500,note, split:1); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, [ 'A', 'B', 'C', 'D' ], 'marc_map(500,note, split:1)';
-    p $record;
+    is_deeply $record->{note}, [ 'A', 'B', 'C', 'D' ], 'marc_map(500,note, split:1)';
 }
 
 note 'marc_map(500a,note, split:1)    note: [ "A" , "B" , "C" ]';
@@ -194,8 +182,7 @@ note 'marc_map(500a,note, split:1)    note: [ "A" , "B" , "C" ]';
         fix  => 'marc_map(500a,note, split:1); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, [ 'A', 'B', 'C' ], 'marc_map(500a,note, split:1)';
-    p $record;
+    is_deeply $record->{note}, [ 'A', 'B', 'C' ], 'marc_map(500a,note, split:1)';
 }
 
 note
@@ -209,9 +196,8 @@ note
             'marc_map(500,note, split:1, nested_arrays:1); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, [ [ 'A', 'B', 'C', 'D' ] ],
+    is_deeply $record->{note}, [ [ 'A', 'B', 'C', 'D' ] ],
         'marc_map(500,note, split:1, nested_arrays:1)';
-    p $record;
 }
 
 note 'marc_map(500a,note.$append, split:1)    note : [[ "A" , "B" , "C" ]]';
@@ -223,9 +209,8 @@ note 'marc_map(500a,note.$append, split:1)    note : [[ "A" , "B" , "C" ]]';
         fix  => 'marc_map(500a,note.$append, split:1); retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, [ [ 'A', 'B', 'C' ] ],
+    is_deeply $record->{note}, [ [ 'A', 'B', 'C' ] ],
         'marc_map(500a,note.$append, split:1)';
-    p $record;
 }
 
 note
@@ -239,9 +224,8 @@ note
             'marc_map(500a,note.$append, split:1, nested_arrays: 1) ; retain_field(note)'
     );
     my $record = $importer->first;
-    is $record->{note}, [ [ [ 'A', 'B', 'C' ] ] ],
+    is_deeply $record->{note}, [ [ [ 'A', 'B', 'C' ] ] ],
         'marc_map(500a,note.$append, split:1, nested_arrays: 1)';
-    p $record;
 }
 
 note 'marc_map(650,subject)   subject: "AlphaBetaGamma"';
@@ -250,11 +234,10 @@ note 'marc_map(650,subject)   subject: "AlphaBetaGamma"';
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(650,subject); retain_field(title)'
+        fix  => 'marc_map(650,subject); retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, 'AlphaBetaGamma', 'marc_map(650,subject)';
-    p $record;
+    is_deeply $record->{subject}, 'AlphaBetaGamma', 'marc_map(650,subject)';
 }
 
 note 'marc_map(650a,subject)  subject: "AlphaBetaGamma"';
@@ -266,8 +249,7 @@ note 'marc_map(650a,subject)  subject: "AlphaBetaGamma"';
         fix  => 'marc_map(650a,subject) ; retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, 'AlphaBetaGamma', 'marc_map(650a,subject)';
-    p $record;
+    is_deeply $record->{subject}, 'AlphaBetaGamma', 'marc_map(650a,subject)';
 }
 
 note 'marc_map(650a,subject.$append)  subject: [ "Alpha", "Beta" , "Gamma" ]';
@@ -279,9 +261,8 @@ note 'marc_map(650a,subject.$append)  subject: [ "Alpha", "Beta" , "Gamma" ]';
         fix  => 'marc_map(650a,subject.$append); retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
+    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
         'marc_map(650a,subject.$append)';
-    p $record;
 }
 
 note
@@ -294,9 +275,8 @@ note
         fix  => 'marc_map(650a,subject, split:1); retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
+    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
         'marc_map(650a,subject, split:1)';
-    p $record;
 }
 
 note
@@ -310,9 +290,8 @@ note
             'marc_map(650a,subject.$append, split:1) ; retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, [ [ 'Alpha', 'Beta', 'Gamma' ] ],
+    is_deeply $record->{subject}, [ [ 'Alpha', 'Beta', 'Gamma' ] ],
         'marc_map(650a,subject.$append, split:1) ';
-    p $record;
 }
 
 note
@@ -326,9 +305,8 @@ note
             'marc_map(650a,subject, split:1, nested_arrays:1); retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, [ ['Alpha'], ['Beta'], ['Gamma'] ],
+    is_deeply $record->{subject}, [ ['Alpha'], ['Beta'], ['Gamma'] ],
         'marc_map(650a,subject, split:1, nested_arrays:1)';
-    p $record;
 }
 
 note
@@ -342,9 +320,8 @@ note
             'marc_map(650a,subject.$append, split:1, nested_arrays:1); retain_field(subject)'
     );
     my $record = $importer->first;
-    is $record->{subject}, [ [ ['Alpha'], ['Beta'], ['Gamma'] ] ],
+    is_deeply $record->{subject}, [ [ ['Alpha'], ['Beta'], ['Gamma'] ] ],
         'marc_map(650a,subject.$append, split:1, nested_arrays:1)';
-    p $record;
 }
 
 note 'marc_map(999,local)     local: "XYZ"';
@@ -356,8 +333,7 @@ note 'marc_map(999,local)     local: "XYZ"';
         fix  => 'marc_map(999,local); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, 'XYZ', 'marc_map(999,local)';
-    p $record;
+    is_deeply $record->{local}, 'XYZ', 'marc_map(999,local)';
 }
 
 note 'marc_map(999a,local)    local: "XYZ"';
@@ -369,8 +345,7 @@ note 'marc_map(999a,local)    local: "XYZ"';
         fix  => 'marc_map(999a,local); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, 'XYZ', 'marc_map(999a,local)';
-    p $record;
+    is_deeply $record->{local}, 'XYZ', 'marc_map(999a,local)';
 }
 
 note 'marc_map(999a,local.$append)    local: [ "XY", "Z" ]';
@@ -382,8 +357,7 @@ note 'marc_map(999a,local.$append)    local: [ "XY", "Z" ]';
         fix  => 'marc_map(999a,local.$append); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, [ 'XY', 'Z' ], 'marc_map(999a,local.$append)';
-    p $record;
+    is_deeply $record->{local}, [ 'XY', 'Z' ], 'marc_map(999a,local.$append)';
 }
 
 note 'marc_map(999a,local, split:1)   local: [ "X" , "Y", "Z" ]';
@@ -395,8 +369,7 @@ note 'marc_map(999a,local, split:1)   local: [ "X" , "Y", "Z" ]';
         fix  => 'marc_map(999a,local, split:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, [ 'X', 'Y', 'Z' ], 'marc_map(999a,local, split:1)';
-    p $record;
+    is_deeply $record->{local}, [ 'X', 'Y', 'Z' ], 'marc_map(999a,local, split:1)';
 }
 
 note 'marc_map(999a,local.$append, split:1)   local: [[ "X" , "Y", "Z" ]]';
@@ -408,9 +381,8 @@ note 'marc_map(999a,local.$append, split:1)   local: [[ "X" , "Y", "Z" ]]';
         fix  => 'marc_map(999a,local.$append, split:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, [ [ 'X', 'Y', 'Z' ] ],
+    is_deeply $record->{local}, [ [ 'X', 'Y', 'Z' ] ],
         'marc_map(999a,local.$append, split:1)';
-    p $record;
 }
 
 note
@@ -424,9 +396,8 @@ note
             'marc_map(999a,local, split:1, nested_arrays:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, [ [ 'X', 'Y' ], ['Z'] ],
+    is_deeply $record->{local}, [ [ 'X', 'Y' ], ['Z'] ],
         'marc_map(999a,local, split:1, nested_arrays:1) ';
-    p $record;
 }
 
 note
@@ -440,9 +411,8 @@ note
             'marc_map(650a,local.$append, split:1, nested_arrays:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is $record->{local}, [ [ ['Alpha'], ['Beta'], ['Gamma'] ] ],
+    is_deeply $record->{local}, [ [ ['Alpha'], ['Beta'], ['Gamma'] ] ],
         'marc_map(650a,local.$append, split:1, nested_arrays:1)';
-    p $record;
 }
 
 note 'marc_map(***,all)   all: "Title / NameABCDAlphaBetaGammaXYZ"';
@@ -452,12 +422,12 @@ note 'marc_map(***,all)   all: "Title / NameABCDAlphaBetaGammaXYZ"';
         file => \$mrc,
         type => 'XML',
         fix =>
-            'marc_map(***,all); retain_field(all)'
+            'marc_remove(LDR); marc_map(***,all); retain_field(all)'
     );
     my $record = $importer->first;
-    is $record->{all}, 'Title / NameABCDAlphaBetaGammaXYZ',
+
+    is_deeply $record->{all}, 'Title / NameABCDAlphaBetaGammaXYZ',
         'marc_map(***,all)';
-    p $record;
 }
 
 note 'marc_map(***a,all)  all: "Title / ABCAlphaBetaGammaXYZ"';
@@ -466,11 +436,10 @@ note 'marc_map(***a,all)  all: "Title / ABCAlphaBetaGammaXYZ"';
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(***a,all); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(***a,all); retain_field(all)'
     );
     my $record = $importer->first;
-    is $record->{all}, 'Title / ABCAlphaBetaGammaXYZ', 'marc_map(***a,all)';
-    p $record;
+    is_deeply $record->{all}, 'Title / ABCAlphaBetaGammaXYZ', 'marc_map(***a,all)';
 }
 
 note
@@ -480,13 +449,12 @@ note
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(***a,all.$append); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(***a,all.$append); retain_field(all)'
     );
     my $record = $importer->first;
-    is $record->{all},
-        ['Title / ABCAlphaBetaGammaXYZ'],
+    is_deeply $record->{all},
+        [ "Title / " , "ABC", "Alpha" , "Beta" , "Gamma" , "XY", "Z" ],
         'marc_map(***a,all.$append)';
-    p $record;
 }
 
 note
@@ -496,13 +464,12 @@ note
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_map(***a,all, split:1); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(***a,all, split:1); retain_field(all)'
     );
     my $record = $importer->first;
-    is $record->{all},
+    is_deeply $record->{all},
         [ 'Title / ', 'A', 'B', 'C', 'Alpha', 'Beta', 'Gamma', 'X', 'Y',
         'Z' ], 'marc_map(***a,all, split:1)';
-    p $record;
 }
 
 note
@@ -513,16 +480,15 @@ note
         file => \$mrc,
         type => 'XML',
         fix =>
-            'marc_map(***a,all, split:1, nested_arrays:1); retain_field(all)'
+            'marc_remove(LDR); marc_map(***a,all, split:1, nested_arrays:1); retain_field(all)'
     );
     my $record = $importer->first;
-    is $record->{all},
+    is_deeply $record->{all},
         [
         ['Title / '], [ 'A', 'B', 'C' ], ['Alpha'], ['Beta'],
         ['Gamma'], [ 'X', 'Y' ], ['Z']
         ],
         'marc_map(***a,all, split:1, nested_arrays:1)';
-    p $record;
 }
 
 done_testing;
