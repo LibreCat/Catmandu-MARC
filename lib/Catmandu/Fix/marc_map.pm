@@ -165,6 +165,9 @@ Also a substring of a field value can be mapped:
 By default all matched fields in a MARC_PATH will be joined into one string.
 This behavior can be changed using one more more options (see below).
 
+Visit our Wiki L<https://github.com/LibreCat/Catmandu-MARC/wiki/Mapping-rules>
+for a complete overview of all allowed mappings.
+
 =head1 OPTIONS
 
 =head2 split: 0|1
