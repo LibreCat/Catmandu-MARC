@@ -436,6 +436,9 @@ sub marc_spec {
 
         for my $field (@fields) {
             my $start = 3;
+
+            my @sf_results;
+
             for my $sf (@sf_spec) {
                 # set invert level
                 if ( $invert ) {
@@ -516,7 +519,15 @@ sub marc_spec {
                           @subfield;
                     }
                 }
-                push @subfields, @subfield if (@subfield);
+
+                push @sf_results, @subfield;
+            }
+
+            if ($split) {
+                push @subfields, @sf_results;
+            }
+            else {
+                push @subfields, join($join_char,@sf_results);
             }
         }
 
@@ -561,7 +572,13 @@ sub marc_spec {
                   map { substr $_, $char_start, $field_spec->char_length }
                     @subfields;
             }
-            push @mapped, @subfields;
+
+            if ($split) {
+                push @mapped, @subfields;
+            }
+            else {
+                push @mapped, join($join_char,@subfields);
+            }
         }
 
         unless (@mapped) {
