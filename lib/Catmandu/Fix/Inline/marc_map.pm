@@ -79,6 +79,9 @@ sub marc_map {
                 $data,
                 $marc_path,
                 \%opts);
+
+    $vals = $vals->[0] if $opts{'-split'};
+
     if (wantarray) {
         defined($vals) && ref($vals) eq 'ARRAY' ? @$vals : ($vals);
     }
