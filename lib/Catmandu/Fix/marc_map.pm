@@ -50,6 +50,7 @@ if (my ${result} = ${marc}->marc_map(
     ${result} = ref(${result}) ? ${result} : [${result}];
     for ${current_value} (\@{${result}}) {
 EOF
+
     $perl .= $fixer->emit_create_path(
             $var,
             $path,

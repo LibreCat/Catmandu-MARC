@@ -350,6 +350,7 @@ sub marc_spec {
     my $pluck          = $_[3]->{'-pluck'} // 0;
     my $value_set      = $_[3]->{'-value'} // undef;
     my $invert         = $_[3]->{'-invert'} // 0;
+    my $append         = $_[3]->{'-append'} // undef;
 
     my $vals;
 
@@ -521,9 +522,18 @@ sub marc_spec {
 
         unless (@subfields) { return $vals }
 
-        $vals = ($split)
-          ? [@subfields]
-          : join( $join_char, @subfields );
+        if ($split) {
+            $vals = [[@subfields]];
+        }
+        elsif ($append) {
+            $vals = [@subfields];
+        }
+        elsif (@subfields) {
+            $vals = join( $join_char, @subfields );
+        }
+        else {
+            $vals = undef;
+        }
     }
     else {    # no particular subfields requested
         my $char_start = $field_spec->char_start;
@@ -553,10 +563,20 @@ sub marc_spec {
         }
         unless (@mapped) { return $vals }
 
-        $vals = ($split)
-          ? [@mapped]
-          : join $join_char, @mapped;
+        if ($split) {
+            $vals = [[@mapped]]
+        }
+        elsif ($append) {
+            $vals = [@mapped]
+        }
+        elsif (@mapped) {
+            $vals = join $join_char, @mapped;
+        }
+        else {
+            $vals = undef;
+        }
     }
+
     return $vals;
 }
 

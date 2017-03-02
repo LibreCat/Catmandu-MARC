@@ -20,6 +20,7 @@ has invert => ( fix_opt => 1 );
 sub emit {
     my ( $self, $fixer ) = @_;
     my $path         = $fixer->split_path( $self->path );
+    my $key          = $path->[-1];
     my $marc_obj     = Catmandu::MARC->instance;
 
     # Precompile the marc_path to gain some speed
@@ -31,27 +32,35 @@ sub emit {
                             '-split'  => $self->split  // 0 ,
                             '-pluck'  => $self->pluck  // 0 ,
                             '-invert' => $self->invert // 0 ,
-                            '-value'  => $self->value
+                            '-value'  => $self->value ,
+                            '-append' => $key eq '$append'
                         });
     my $var          = $fixer->var;
     my $result       = $fixer->generate_var;
+    my $current_value = $fixer->generate_var;
 
-    my $perl =<<EOF;
+    my $perl = "";
+    $perl .= $fixer->emit_declare_vars($current_value, "[]");
+    $perl .=<<EOF;
 if (my ${result} = ${marc}->marc_spec(
             ${var},
             ${marc_spec},
             ${marc_opt}) ) {
+    ${result} = ref(${result}) ? ${result} : [${result}];
+    for ${current_value} (\@{${result}}) {
 EOF
+
     $perl .= $fixer->emit_create_path(
             $var,
             $path,
             sub {
                 my $var2 = shift;
-                "${var2} = ${result}"
+                "${var2} = ${current_value}"
             }
     );
 
     $perl .=<<EOF;
+    }
 }
 EOF
     $perl;
