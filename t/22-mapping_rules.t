@@ -85,6 +85,18 @@ note 'marc_map(245ac,title)    title: "Title / Name"';
     is_deeply $record->{title}, 'Title / Name', 'marc_map(245ac,title)';
 }
 
+note 'marc_map(245$a$c,title)    title: "Title / Name"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245$a$c,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'Title / Name', 'marc_map(245$a$c,title)';
+}
+
 note 'marc_map(245ca,title)    title: "Title / Name"';
 {
     my $importer = Catmandu->importer(

@@ -147,6 +147,10 @@ The MARC_PATH can point to one or more MARC subfields. For instamce:
     marc_path('245a',title)
     marc_path('245ac',title)
 
+You can also use dollar signs to indicate subfields
+
+    marc_path('245$a$c',title)
+
 Wildcards are allowed in the field names:
 
     # Map all the 200-fields to a title
