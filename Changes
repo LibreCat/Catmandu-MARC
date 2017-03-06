@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.08  2017-03-06 09:55:53 CET
   - Fixed broken $append mapping and added many more tests
   - Adding a Wiki page with all mapping rules for marc_map and marc_spec
   - Support dollar ($) to indicate subfields in marc_map
