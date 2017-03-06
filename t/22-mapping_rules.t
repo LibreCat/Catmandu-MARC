@@ -61,6 +61,66 @@ note 'marc_map(245a,title)    title: "Title / "';
     is_deeply $record->{title}, 'Title / ', 'marc_map(245a,title)';
 }
 
+note 'marc_map(245$a,title)    title: "Title / "';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245$a,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'Title / ', 'marc_map(245$a,title)';
+}
+
+note 'marc_map(245ac,title)    title: "Title / Name"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245ac,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'Title / Name', 'marc_map(245ac,title)';
+}
+
+note 'marc_map(245ca,title)    title: "Title / Name"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245ca,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'Title / Name', 'marc_map(245ca,title)';
+}
+
+note 'marc_map(245ca,title,pluck:1)    title: "NameTitle / "';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245ca,title,pluck:1); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'NameTitle / ', 'marc_map(245ca,title,pluck:1)';
+}
+
+note 'marc_map(245ca,title,pluck:1,join:" ")    title: "NameTitle / "';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_map(245ca,title,pluck:1,join:" "); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, 'Name Title / ', 'marc_map(245ca,title,pluck:1,join:" ")';
+}
+
 note 'marc_map(245,title.$append)     title: [ "Title / Name" ]';
 {
     my $importer = Catmandu->importer(
@@ -415,72 +475,72 @@ note
         'marc_map(650a,local.$append, split:1, nested_arrays:1)';
 }
 
-note 'marc_map(***,all)   all: "Title / NameABCDAlphaBetaGammaXYZ"';
+note 'marc_map(...,all)   all: "Title / NameABCDAlphaBetaGammaXYZ"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
         fix =>
-            'marc_remove(LDR); marc_map(***,all); retain_field(all)'
+            'marc_remove(LDR); marc_map(...,all); retain_field(all)'
     );
     my $record = $importer->first;
 
     is_deeply $record->{all}, 'Title / NameABCDAlphaBetaGammaXYZ',
-        'marc_map(***,all)';
+        'marc_map(...,all)';
 }
 
-note 'marc_map(***a,all)  all: "Title / ABCAlphaBetaGammaXYZ"';
+note 'marc_map(...a,all)  all: "Title / ABCAlphaBetaGammaXYZ"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_remove(LDR); marc_map(***a,all); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(...a,all); retain_field(all)'
     );
     my $record = $importer->first;
-    is_deeply $record->{all}, 'Title / ABCAlphaBetaGammaXYZ', 'marc_map(***a,all)';
+    is_deeply $record->{all}, 'Title / ABCAlphaBetaGammaXYZ', 'marc_map(...a,all)';
 }
 
 note
-    'marc_map(***a,all.$append)  all: [ "Title / " , "ABC", "Alpha" , "Beta" , "Gamma" , "XY", "Z" ]';
+    'marc_map(...a,all.$append)  all: [ "Title / " , "ABC", "Alpha" , "Beta" , "Gamma" , "XY", "Z" ]';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_remove(LDR); marc_map(***a,all.$append); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(...a,all.$append); retain_field(all)'
     );
     my $record = $importer->first;
     is_deeply $record->{all},
         [ "Title / " , "ABC", "Alpha" , "Beta" , "Gamma" , "XY", "Z" ],
-        'marc_map(***a,all.$append)';
+        'marc_map(...a,all.$append)';
 }
 
 note
-    'marc_map(***a,all, split:1)     all: [ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ]';
+    'marc_map(...a,all, split:1)     all: [ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ]';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_remove(LDR); marc_map(***a,all, split:1); retain_field(all)'
+        fix  => 'marc_remove(LDR); marc_map(...a,all, split:1); retain_field(all)'
     );
     my $record = $importer->first;
     is_deeply $record->{all},
         [ 'Title / ', 'A', 'B', 'C', 'Alpha', 'Beta', 'Gamma', 'X', 'Y',
-        'Z' ], 'marc_map(***a,all, split:1)';
+        'Z' ], 'marc_map(...a,all, split:1)';
 }
 
 note
-    'marc_map(***a,all, split:1, nested_arrays:1)    all: [ ["Title / "] , ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"] ]';
+    'marc_map(...a,all, split:1, nested_arrays:1)    all: [ ["Title / "] , ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"] ]';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
         fix =>
-            'marc_remove(LDR); marc_map(***a,all, split:1, nested_arrays:1); retain_field(all)'
+            'marc_remove(LDR); marc_map(...a,all, split:1, nested_arrays:1); retain_field(all)'
     );
     my $record = $importer->first;
     is_deeply $record->{all},
@@ -488,7 +548,7 @@ note
         ['Title / '], [ 'A', 'B', 'C' ], ['Alpha'], ['Beta'],
         ['Gamma'], [ 'X', 'Y' ], ['Z']
         ],
-        'marc_map(***a,all, split:1, nested_arrays:1)';
+        'marc_map(...a,all, split:1, nested_arrays:1)';
 }
 
 done_testing;

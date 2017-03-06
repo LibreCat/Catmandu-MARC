@@ -112,7 +112,7 @@ Catmandu::Fix::marc_map - copy marc values of one field to a new field
     marc_map('100^0123456789','author')
 
     # Map all the 500 - 599 fields to my.notes
-    marc_map('5**','my.motes')
+    marc_map('5..','my.motes')
 
     # Map the 100-a field where indicator-1 is 3
     marc_map('100[3]a','name.family')
@@ -150,7 +150,7 @@ The MARC_PATH can point to one or more MARC subfields. For instamce:
 Wildcards are allowed in the field names:
 
     # Map all the 200-fields to a title
-    marc_map('2**'',title)
+    marc_map('2..'',title)
 
 To filter out specific fields indicators can be used:
 
