@@ -128,6 +128,18 @@ note 'marc_spec(500$a,note)     note: "ABC"';
     is_deeply $record->{note}, 'ABC', 'marc_spec(500$a,note)';
 }
 
+note 'marc_spec(500$a,note, invert:1)     note: "D"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$a,note,invert:1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, 'D', 'marc_spec(500$a,note,invert:1)';
+}
+
 note 'marc_spec(500,note.$append)  note: [ "ABCD" ]';
 {
     my $importer = Catmandu->importer(
@@ -152,6 +164,18 @@ note 'marc_spec(500$a,note.$append)     note: [ "ABC" ]';
     is_deeply $record->{note}, ['ABC'], ' marc_spec(500$a,note.$append)';
 }
 
+note 'marc_spec(500$a,note.$append, invert:1)     note: [ "D" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$a,note.$append,invert:1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, ['D'], 'marc_spec(500$a,note.$append,invert:1)';
+}
+
 note 'marc_spec(500,note, split:1)     note: [ "A" , "B" , "C" , "D" ]';
 {
     my $importer = Catmandu->importer(
@@ -162,6 +186,18 @@ note 'marc_spec(500,note, split:1)     note: [ "A" , "B" , "C" , "D" ]';
     );
     my $record = $importer->first;
     is_deeply $record->{note}, [ 'A', 'B', 'C', 'D' ], 'marc_spec(500,note, split:1)';
+}
+
+note 'marc_spec(500$x,note, split:1, invert:1)     note: [ "A" , "B" , "C"]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$x,note, split:1, invert:1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, [ 'A', 'B', 'C' ], 'marc_spec(500$x,note, split:1, invert:1)';
 }
 
 note 'marc_spec(500$a,note, split:1)    note: [ "A" , "B" , "C" ]';
@@ -195,6 +231,19 @@ note 'marc_spec(500$a,note.$append, split:1)    note : [[ "A" , "B" , "C" ]]';
         'marc_spec(500$a,note.$append, split:1)';
 }
 
+note 'marc_spec(500$x,note.$append, split:1, invert:1)    note : [[ "A" , "B" , "C" ]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$x,note.$append, split:1, invert:1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, [ [ 'A', 'B', 'C' ] ],
+        'marc_spec(500$x,note.$append, split:1, invert:1)';
+}
+
 note
     'marc_map(500a,note.$append, split:1, nested_arrays: 1)  note : [[[ "A" , "B" , "C" ]]]';
 {
@@ -223,6 +272,42 @@ note 'marc_spec(650$a,subject)  subject: "AlphaBetaGamma"';
     );
     my $record = $importer->first;
     is_deeply $record->{subject}, 'AlphaBetaGamma', 'marc_spec(650$a,subject)';
+}
+
+note 'marc_spec(650[0]$a,subject)  subject: "Alpha"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(650[0]$a,subject) ; retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, 'Alpha', 'marc_spec(650[0]$a,subject)';
+}
+
+note 'marc_spec(650$a/0,subject)  subject: "ABG"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(650$a/0,subject) ; retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, 'ABG', 'marc_spec(650$a/0,subject)';
+}
+
+note 'marc_spec(650$a/#,subject,invert:1)  subject: "AlphBetGamm"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(650$a/#,subject,invert:1) ; retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, 'AlphBetGamm', 'marc_spec(650$a/#,subject,invert:1)';
 }
 
 note 'marc_spec(650$a,subject.$append)  subject: [ "Alpha", "Beta" , "Gamma" ]';
@@ -303,6 +388,42 @@ note 'marc_spec(999$a,local)    local: "XYZ"';
     is_deeply $record->{local}, 'XYZ', 'marc_spec(999$a,local)';
 }
 
+note 'marc_spec(999$a[0],local)    local: "XZ"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[0],local); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, 'XZ', 'marc_spec(999$a[0],local)';
+}
+
+note 'marc_spec(999$a[#],local)    local: "YZ"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[#],local); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, 'YZ', 'marc_spec(999$a[#],local)';
+}
+
+note 'marc_spec(999$a[#],local,invert:1)    local: "X"';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[#],local,invert:1); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, 'X', 'marc_spec(999$a[#],local,invert:1)';
+}
+
 note 'marc_spec(999$a,local.$append)    local: [ "XY", "Z" ]';
 {
     my $importer = Catmandu->importer(
@@ -313,6 +434,18 @@ note 'marc_spec(999$a,local.$append)    local: [ "XY", "Z" ]';
     );
     my $record = $importer->first;
     is_deeply $record->{local}, [ 'XY', 'Z' ], 'marc_spec(999$a,local.$append)';
+}
+
+note 'marc_spec(999$a[0],local.$append)    local: [ "X", "Z" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[0],local.$append); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, [ 'X', 'Z' ], 'marc_spec(999$a[0],local.$append)';
 }
 
 note 'marc_spec(999$a,local, split:1)   local: [ "X" , "Y", "Z" ]';
@@ -327,6 +460,30 @@ note 'marc_spec(999$a,local, split:1)   local: [ "X" , "Y", "Z" ]';
     is_deeply $record->{local}, [ 'X', 'Y', 'Z' ], 'marc_spec(999$a,local, split:1)';
 }
 
+note 'marc_spec(999$a[0],local, split:1)   local: [ "X" , "Z" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[0],local, split:1); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, [ 'X', 'Z' ], 'marc_spec(999$a[0],local, split:1)';
+}
+
+note 'marc_spec(999$a[0],local, split:1, invert:1)   local: [ "Y" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[0],local, split:1, invert:1); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, [ 'Y' ], 'marc_spec(999$a[0],local, split:1, invert:1)';
+}
+
 note 'marc_spec(999$a,local.$append, split:1)   local: [[ "X" , "Y", "Z" ]]';
 {
     my $importer = Catmandu->importer(
@@ -338,6 +495,19 @@ note 'marc_spec(999$a,local.$append, split:1)   local: [[ "X" , "Y", "Z" ]]';
     my $record = $importer->first;
     is_deeply $record->{local}, [ [ 'X', 'Y', 'Z' ] ],
         'marc_spec(999$a,local.$append, split:1)';
+}
+
+note 'marc_spec(999$a[0],local.$append, split:1)   local: [[ "X" , "Z" ]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(999$a[0],local.$append, split:1); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, [ [ 'X', 'Z' ] ],
+        'marc_spec(999$a[0],local.$append, split:1)';
 }
 
 note

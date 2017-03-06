@@ -470,10 +470,10 @@ sub marc_spec {
                 }
 
                 if ( $invert_level == 3 ) {
-                    if (@subfield) { push @subfields, @subfield }
+                    if (@subfield) { push @sf_results, @subfield }
 
                     # return $value_set ASAP
-                    if ( @subfields && $value_set ) {
+                    if ( @sf_results && $value_set ) {
                         return $value_set;
                     }
                     next;
