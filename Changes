@@ -2,6 +2,10 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
   - Fixed broken $append mapping and added many more tests
+  - Adding a Wiki page with all mapping rules for marc_map and marc_spec
+  - Support dollar ($) to indicate subfields in marc_map
+  - Support period (.) to indicate a field wildard in marc_map
+  - Adding more tests
 
 1.07  2017-03-01 09:03:25 CET
   - A marc_map(...,...,pluck:1,split:1) will return *all* the subfields specified in the path (undef when they don't exist in the MARC)
