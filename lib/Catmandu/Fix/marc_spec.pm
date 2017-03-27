@@ -28,13 +28,14 @@ sub emit {
     my $marc         = $fixer->capture($marc_obj);
     my $marc_spec    = $fixer->capture($spec);
     my $marc_opt     = $fixer->capture({
-                            '-join'   => $self->join   // '' ,
-                            '-split'  => $self->split  // 0 ,
-                            '-pluck'  => $self->pluck  // 0 ,
-                            '-invert' => $self->invert // 0 ,
-                            '-value'  => $self->value ,
-                            '-append' => $key eq '$append'
+                            '-join'        => $self->join   // '' ,
+                            '-split'       => $self->split  // 0 ,
+                            '-pluck'       => $self->pluck  // 0 ,
+                            '-invert'      => $self->invert // 0 ,
+                            '-value'       => $self->value ,
+                            '-force_array' => ($key =~ /^(\$.*|\d+)$/) ? 1 : 0
                         });
+
     my $var          = $fixer->var;
     my $result       = $fixer->generate_var;
     my $current_value = $fixer->generate_var;

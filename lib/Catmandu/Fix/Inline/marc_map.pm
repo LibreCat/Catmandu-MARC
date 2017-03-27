@@ -75,6 +75,8 @@ sub marc_map {
     $opts{'-pluck'} = 0         unless exists $opts{'-pluck'};
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
 
+    $opts{'-force_array'} = 1 if (wantarray);
+
     my $vals = Catmandu::MARC->instance->marc_map(
                 $data,
                 $marc_path,

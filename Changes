@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Supporting forced arrays for $prepend, $append, $first, $last and any digits in the path
 
 1.08  2017-03-06 09:55:53 CET
   - Fixed broken $append mapping and added many more tests

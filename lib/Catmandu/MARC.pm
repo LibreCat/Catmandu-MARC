@@ -36,7 +36,7 @@ sub marc_map {
     my $pluck          = $_[3]->{'-pluck'} // 0;
     my $value_set      = $_[3]->{'-value'} // undef;
     my $nested_arrays  = $_[3]->{'-nested_arrays'} // 0;
-    my $append         = $_[3]->{'-append'} // undef;
+    my $append         = $_[3]->{'-force_array'} // undef;
 
     my $vals;
 
@@ -350,7 +350,7 @@ sub marc_spec {
     my $pluck          = $_[3]->{'-pluck'} // 0;
     my $value_set      = $_[3]->{'-value'} // undef;
     my $invert         = $_[3]->{'-invert'} // 0;
-    my $append         = $_[3]->{'-append'} // undef;
+    my $append         = $_[3]->{'-force_array'} // undef;
 
     my $vals;
 

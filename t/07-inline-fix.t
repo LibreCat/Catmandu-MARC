@@ -31,7 +31,13 @@ ok(@$records == 2 , "Found 2 records");
 
 {
 	my @res = marc_map($records->[0],'630');
-	ok(@res == 1 , q|marc_map(630)|);
+	is_deeply \@res , [ 'Active server pages.' , 'ActiveX.' ] , q|marc_map(630) as array|;
+
+    my $res = marc_map($records->[0],'630');
+    is $res , 'Active server pages.ActiveX.' , q|marc_map(630) as string|;
+
+    my $res2 = marc_map($records->[0],'630', -join => "; ");
+    is $res2 , 'Active server pages.; ActiveX.' , q|marc_map(630) as string joined|;
 }
 
 {
