@@ -55,7 +55,7 @@ use Catmandu::Sane;
 use Catmandu::Importer::MARC::Decoder;
 use Moo;
 
-our $VERSION = '1.08';
+our $VERSION = '1.09';
 
 with 'Catmandu::Importer';
 
