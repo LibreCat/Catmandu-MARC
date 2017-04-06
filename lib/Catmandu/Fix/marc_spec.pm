@@ -9,13 +9,14 @@ with 'Catmandu::Fix::Base';
 
 our $VERSION = '1.09';
 
-has spec   => ( fix_arg => 1 );
-has path   => ( fix_arg => 1 );
-has split  => ( fix_opt => 1 );
-has join   => ( fix_opt => 1 );
-has value  => ( fix_opt => 1 );
-has pluck  => ( fix_opt => 1 );
-has invert => ( fix_opt => 1 );
+has spec          => ( fix_arg=> 1 );
+has path          => ( fix_arg=> 1 );
+has split         => ( fix_opt=> 1 );
+has join          => ( fix_opt=> 1 );
+has value         => ( fix_opt=> 1 );
+has pluck         => ( fix_opt=> 1 );
+has invert        => ( fix_opt=> 1 );
+has nested_arrays => (fix_opt => 1);
 
 sub emit {
     my ( $self, $fixer ) = @_;
@@ -31,6 +32,7 @@ sub emit {
                             '-join'        => $self->join   // '' ,
                             '-split'       => $self->split  // 0 ,
                             '-pluck'       => $self->pluck  // 0 ,
+                            '-nested_arrays' => $self->nested_arrays // 0 ,
                             '-invert'      => $self->invert // 0 ,
                             '-value'       => $self->value ,
                             '-force_array' => ($key =~ /^(\$.*|\d+)$/) ? 1 : 0
