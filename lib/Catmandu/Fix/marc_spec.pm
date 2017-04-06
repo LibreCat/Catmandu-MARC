@@ -161,6 +161,10 @@ In a fix file e.g. 'my.fix':
     # Assign values of of all other subfields than a of field 020
     # to my.isbn.other.subfields
     marc_spec('020$a' my.isbn.other.subfields, invert:1)
+    
+    # Assign value of subfield a of field 245 only, if subfield a of field 246
+    # with value 1 for indicator1 exists
+    marc_spec('245$a{246_1$a}', my.var.title)
 
 And then on command line:
 
@@ -184,7 +188,7 @@ for documentation on the path syntax.
 
 =head1 METHODS
 
-=head2 marc_spec(Str, Str, Str, ...)
+=head2 marc_spec(MARCspec, JSON_PATH, OPT:VAL, OPT2:VAL,...)
 
 First parameter must be a string, following the syntax of
 L<MARCspec - A common MARC record path language|http://marcspec.github.io/MARCspec/>.
@@ -196,7 +200,8 @@ to assign referenced values to
 
 You may use one of $first, $last, $prepend or $append to add
 referenced data values to a specific position of an array
-(see L<Catmandu Wildcards|http://librecat.org/Catmandu/#wildcards>).
+(see L<Catmandu Wildcards|http://librecat.org/Catmandu/#wildcards> and 
+mapping rules at L<https://github.com/LibreCat/Catmandu-MARC/wiki/Mapping-rules>).
 
     # INPUT
     [245,1,0,"a","Cross-platform Perl /","c","Eric F. Johnson."]
@@ -242,6 +247,37 @@ an array element.
       }
     }
 
+See split mapping rules at L<https://github.com/LibreCat/Catmandu-MARC/wiki/Mapping-rules>.
+
+
+=head2 nested_arrays: 0|1
+
+Using the nested_array
+option the output will be an array of array of strings (one array item for
+each matched field, one array of strings for each matched subfield).
+
+    # INPUT
+    [650," ",0,"a","Perl (Computer program language)"],
+    [650," ",0,"a","Web servers."]
+
+    # CALL
+    marc_spec('650', my.subjects, nested_arrays:1)
+
+    # OUTPUT
+    {
+      my {
+        subjects [
+            [0] [
+                [0] "Perl (Computer program language)"
+            ]
+            [1] [
+                [0] "Web servers."
+            ]
+        ]
+      }
+    }
+
+See nested_array mapping rules at L<https://github.com/LibreCat/Catmandu-MARC/wiki/Mapping-rules>.
 
 =head2 join: Str
 
@@ -339,6 +375,8 @@ last pattern for every subfield. E.g.
    # references all but not the last two characters of first subfield a
    marc_spec('020$a[0]/#-1' my.other.subfields, invert:1)
 
+Invert will not work with subspecs.
+
 =head1 INLINE
 
 This Fix can be used inline in a Perl script:
@@ -351,12 +389,10 @@ This Fix can be used inline in a Perl script:
 
     print $data->{title} , "\n";
 
-=head1 BUGS AND LIMITATIONS
+=head1 SEE ALSO
 
-This version of is agnostic of Subspecs as described in  L<MARCspec - A common MARC record path language|http://marcspec.github.io/MARCspec/>.
-Later versions will include this feature.
-
-Please report any bugs to L<https://github.com/cKlee/Catmandu-Fix-marc_spec/issues>.
+L<Catmandu::Fix>
+L<Catmandu::Fix::marc_map>
 
 =head1 AUTHOR
 
