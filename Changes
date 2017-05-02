@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.10  2017-05-02 11:48:37 CEST
   - Adding support for nested_arrays and subspecs in marc_spec
   
 1.09  2017-03-27 11:29:28 CEST
