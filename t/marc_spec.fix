@@ -4,6 +4,9 @@ marc_spec('000', my.no.field, value:'nofield')
 
 marc_spec('666', my.references.$append)
 
+add_field(my.references2.$first, 'first')
+marc_map('003', my.references2.$append);
+
 marc_spec('245', my.title.all)
 
 marc_spec('245', my.title.default, value:'the title')

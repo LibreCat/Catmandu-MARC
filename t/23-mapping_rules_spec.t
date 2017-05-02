@@ -70,7 +70,19 @@ note 'marc_spec(245,title.$append)     title: [ "Title / Name" ]';
         fix  => 'marc_spec(245,title.$append); retain_field(title)'
     );
     my $record = $importer->first;
-    is_deeply $record->{title}, ['Title / Name'], 'marc_spec(245.$append,title)';
+    is_deeply $record->{title}, ['Title / Name'], 'marc_spec(245,title.$append)';
+}
+
+note 'add_field(title.$first, "first"); marc_spec(245,title.$append)     title: ["first", "Title / Name" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'add_field(title.$first, "first"); marc_spec(245,title.$append); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, ['first', 'Title / Name'], 'marc_spec(245,title.$append)';
 }
 
 note 'marc_spec(245$a,title.$append)    title: [ "Title / " ]';
@@ -98,10 +110,40 @@ note 'marc_spec(245,title, split:1)    title: [ "Title / ", "Name" ]';
         'marc_spec(245,title, split:1)';
 }
 
-note
-    'marc_spec(245, title, split:1, nested_arrays:1)  title: [[ "Title / ", "Name" ]]';
+note 'marc_spec(245,title.$append, split:1)    title: [ [ "Title / ", "Name" ] ]';
 {
-    note "nested_arrays not yet supported";
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(245,title.$append, split:1); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, [[ 'Title / ', 'Name' ]], 'marc_spec(245a,title.$append,split:1)';
+}
+
+note 'marc_spec(245,title, split:1, nested_arrays:1)    title: [ [ "Title / ", "Name" ] ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(245,title, split:1, nested_arrays:1); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, [[ 'Title / ', 'Name' ]], 'marc_spec(245, title, split:1, nested_arrays:1)';
+}
+
+note 'marc_spec(245,title.$append, split:1, nested_arrays:1)    title: [[ [ "Title / ", "Name" ] ]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(245,title.$append, split:1, nested_arrays:1); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title}, [[[ 'Title / ', 'Name' ]]], 'marc_spec(245a,title.$append,split:1, nested_arrays:1)';
 }
 
 note 'marc_spec(500,note)  note: "ABCD"';
@@ -150,6 +192,18 @@ note 'marc_spec(500,note.$append)  note: [ "ABCD" ]';
     );
     my $record = $importer->first;
     is_deeply $record->{note}, ['ABCD'], ' marc_spec(500,note.$append)';
+}
+
+note 'marc_spec(500,note.$append, join:"#")  note: [ "A#B#C#D" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500,note.$append, join:"#"); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, ['A#B#C#D'], ' marc_spec(500,note.$append, join:"#")';                                           
 }
 
 note 'marc_spec(500$a,note.$append)     note: [ "ABC" ]';
@@ -215,7 +269,14 @@ note 'marc_spec(500$a,note, split:1)    note: [ "A" , "B" , "C" ]';
 note
     'marc_spec(500$a,note, split:1, nested_arrays:1)   note: [[ "A" , "B" , "C" ]]';
 {
-    note("nested arrays not yet supported");
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$a,note, split:1, nested_arrays:1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, [[ "A" , "B" , "C" ]], 'marc_spec(500a,note, split:1)';
 }
 
 note 'marc_spec(500$a,note.$append, split:1)    note : [[ "A" , "B" , "C" ]]';
@@ -227,8 +288,7 @@ note 'marc_spec(500$a,note.$append, split:1)    note : [[ "A" , "B" , "C" ]]';
         fix  => 'marc_spec(500$a,note.$append, split:1); retain_field(note)'
     );
     my $record = $importer->first;
-    is_deeply $record->{note}, [ [ 'A', 'B', 'C' ] ],
-        'marc_spec(500$a,note.$append, split:1)';
+    is_deeply $record->{note}, [ [ 'A', 'B', 'C' ] ], 'marc_spec(500$a,note.$append, split:1)';
 }
 
 note 'marc_spec(500$x,note.$append, split:1, invert:1)    note : [[ "A" , "B" , "C" ]]';
@@ -245,9 +305,16 @@ note 'marc_spec(500$x,note.$append, split:1, invert:1)    note : [[ "A" , "B" , 
 }
 
 note
-    'marc_map(500a,note.$append, split:1, nested_arrays: 1)  note : [[[ "A" , "B" , "C" ]]]';
+    'marc_spec(500$a,note.$append, split:1, nested_arrays: 1)  note : [[[ "A" , "B" , "C" ]]]';
 {
-    note("nested arrays not yet supported");
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(500$a,note.$append, split:1, nested_arrays: 1); retain_field(note)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{note}, [[[ "A" , "B" , "C" ]]], 'marc_spec(500$a,note.$append, split:1, nested_arrays: 1)';
 }
 
 note 'marc_spec(650,subject)   subject: "AlphaBetaGamma"';
@@ -319,8 +386,7 @@ note 'marc_spec(650$a,subject.$append)  subject: [ "Alpha", "Beta" , "Gamma" ]';
         fix  => 'marc_spec(650$a,subject.$append); retain_field(subject)'
     );
     my $record = $importer->first;
-    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
-        'marc_spec(650$a,subject.$append)';
+    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ], 'marc_spec(650$a,subject.$append)';
 }
 
 note
@@ -333,8 +399,7 @@ note
         fix  => 'marc_spec(650$a,subject, split:1); retain_field(subject)'
     );
     my $record = $importer->first;
-    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ],
-        'marc_spec(650$a,subject, split:1)';
+    is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ], 'marc_spec(650$a,subject, split:1)';
 }
 
 note
@@ -348,20 +413,35 @@ note
             'marc_spec(650$a,subject.$append, split:1) ; retain_field(subject)'
     );
     my $record = $importer->first;
-    is_deeply $record->{subject}, [ [ 'Alpha', 'Beta', 'Gamma' ] ],
-        'marc_spec(650$a,subject.$append, split:1) ';
+    is_deeply $record->{subject}, [ [ 'Alpha', 'Beta', 'Gamma' ] ], 'marc_spec(650$a,subject.$append, split:1) ';
+}
+
+note
+    'marc_spec(650,subject, nested_arrays:1)    subject: [["Alpha"], ["Beta"] , ["Gamma"]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix =>
+            'marc_spec(650,subject, split:1, nested_arrays:1); retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, [ ['Alpha'], ['Beta'], ['Gamma'] ], 'marc_spec(650,subject, nested_arrays:1)';
 }
 
 note
     'marc_spec(650$a,subject, split:1, nested_arrays:1)    subject: [["Alpha"], ["Beta"] , ["Gamma"]]';
 {
-    note("nested_arrays not yet supported");
-}
-
-note
-    'marc_spec(650$a,subject.$append, split:1, nested_arrays:1)    subject: [[["Alpha"], ["Beta"] , ["Gamma"]]]';
-{
-    note("nested_arrays not yet supported");
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix =>
+            'marc_spec(650$a,subject, split:1, nested_arrays:1); retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, [ ['Alpha'], ['Beta'], ['Gamma'] ], 'marc_spec(650$a,subject, split:1, nested_arrays:1)';
 }
 
 note 'marc_spec(999,local)     local: "XYZ"';
@@ -460,6 +540,7 @@ note 'marc_spec(999$a,local, split:1)   local: [ "X" , "Y", "Z" ]';
     is_deeply $record->{local}, [ 'X', 'Y', 'Z' ], 'marc_spec(999$a,local, split:1)';
 }
 
+
 note 'marc_spec(999$a[0],local, split:1)   local: [ "X" , "Z" ]';
 {
     my $importer = Catmandu->importer(
@@ -493,8 +574,7 @@ note 'marc_spec(999$a,local.$append, split:1)   local: [[ "X" , "Y", "Z" ]]';
         fix  => 'marc_spec(999$a,local.$append, split:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is_deeply $record->{local}, [ [ 'X', 'Y', 'Z' ] ],
-        'marc_spec(999$a,local.$append, split:1)';
+    is_deeply $record->{local}, [ [ 'X', 'Y', 'Z' ] ], 'marc_spec(999$a,local.$append, split:1)';
 }
 
 note 'marc_spec(999$a[0],local.$append, split:1)   local: [[ "X" , "Z" ]]';
@@ -506,21 +586,108 @@ note 'marc_spec(999$a[0],local.$append, split:1)   local: [[ "X" , "Z" ]]';
         fix  => 'marc_spec(999$a[0],local.$append, split:1); retain_field(local)'
     );
     my $record = $importer->first;
-    is_deeply $record->{local}, [ [ 'X', 'Z' ] ],
-        'marc_spec(999$a[0],local.$append, split:1)';
+    is_deeply $record->{local}, [ [ 'X', 'Z' ] ], 'marc_spec(999$a[0],local.$append, split:1)';
 }
 
-note
-    'marc_spec(999$a,local, split:1, nested_arrays:1)  local: [ ["X" , "Y"] , ["Z"] ]';
+
+note 'marc_spec(999$a,local, nested_arrays:1)  local: [ ["X" , "Y"] , ["Z"] ]';
 {
-    note("nested_arrays not yet supported");
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix => 'marc_spec(999$a,local, nested_arrays:1); retain_field(local)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{local}, [ [ 'X', 'Y' ], ['Z'] ], 'marc_spec(999$a,local, nested_arrays:1) ';
 }
 
-note
-    'marc_map(999a,local.$append, split:1, nested_arrays:1)  local: [[ ["X" , "Y"] , ["Z"] ]]';
+
+
+note 'marc_spec(...$a, all.$append)    all: [ "Title / ", "ABC", "Alpha", "Beta", "Gamma", "XY", "Z" ]';
 {
-    note("nested_arrays not yet supported");
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(...$a, all.$append); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [ "Title / ", "ABC", "Alpha", "Beta", "Gamma", "XY", "Z" ], 'marc_spec(...$a, all.$append)';
 }
 
+note 'marc_spec(..., all.$append)    all: [ "Title / Name", "ABCD", "Alpha", "Beta", "Gamma", "XY", "Z" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(..., all.$append); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [ "                        ", "Title / Name", "ABCD", "Alpha", "Beta", "Gamma", "XY", "Z" ], 'marc_spec(..., all.$append)';
+}
+
+note 'marc_spec(...$a, all, split:1)    all: [ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(...$a, all, split:1); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ], 'marc_spec(...$a, all, split:1)';
+}
+
+note 'marc_spec(...$a, all.$append, split:1)    all: [[ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(...$a, all.$append, split:1); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [[ "Title / " , "A" , "B" , "C", "Alpha" , "Beta" , "Gamma" , "X" , "Y", "Z" ]], 'marc_spec(...$a, all.$append, split:1)';
+}
+
+    
+note 'marc_spec(...$a, all, split:1, nested_arrays:1)    all: [["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(...$a, all, split:1, nested_arrays:1); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [ ["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]], 'marc_spec(...$a, all, split:1, nested_arrays:1)';
+}
+
+note 'marc_spec(...$a, all.$append, split:1, nested_arrays:1)    all: [[ ["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_spec(...$a, all.$append, split:1, nested_arrays:1); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, [[ ["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]]], 'marc_spec(...$a, all.$append, split:1, nested_arrays:1)';
+                                                           
+}
+
+note 'add_field(all.$first,"first"); marc_spec(...$a, all.$append, split:1, nested_arrays:1)    all: ["first",[ ["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'add_field(all.$first,"first");  marc_spec(...$a, all.$append, split:1, nested_arrays:1); retain_field(all)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{all}, ["first",[ ["Title / "], ["A" , "B" , "C"], ["Alpha"] , ["Beta"] , ["Gamma"] , ["X" , "Y"], ["Z"]]], 'marc_spec(...$a, all.$append, split:1, nested_arrays:1)';
+}
 
 done_testing;
