@@ -143,7 +143,7 @@ sub marc_map {
         }
     }
 
-    if ($split) {
+    if ($split and defined $vals) {
         $vals = [ $vals ];
     }
     elsif ($append) {
