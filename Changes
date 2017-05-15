@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.11  2017-05-15 09:11:38 CEST
   - Upgrading to MARC::Spec 1.0.0
   - Fixing MARCspec Parser exception
   - Fixing undef values when using $append and split
