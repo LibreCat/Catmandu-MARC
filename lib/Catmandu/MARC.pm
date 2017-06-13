@@ -13,7 +13,6 @@ with 'MooX::Singleton';
 
 memoize('compile_marc_path');
 memoize('parse_marc_spec');
-memoize('_it_subspecs');
 memoize('_get_index_range');
 
 our $VERSION = '1.10';
@@ -688,13 +687,13 @@ sub _validate_subspec {
 
     if($subspec->operator eq '~') {
         foreach my $v ( @{$left_subterm->[0]} ) {
-            return 1 if List::Util::any {$v =~ m?$_?} @{$right_subterm}
+            return 1 if List::Util::any {$v =~ /$_/} @{$right_subterm}
         }
     }
 
     if($subspec->operator eq '!~') {
         foreach my $v ( @{$left_subterm->[0]} ) {
-            return 0 if List::Util::any {$v =~ m?$_?} @{$right_subterm}
+            return 0 if List::Util::any {$v =~ /$_/} @{$right_subterm}
         }
         return 1
     }
