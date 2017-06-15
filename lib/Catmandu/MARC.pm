@@ -444,7 +444,7 @@ sub marc_spec {
         } elsif($split) {
             push @{$referred}, @values
         } else {
-            push @{$referred}, join $join_char, @values
+            push @{$referred}, join $join_char, @values;
         }
     };
 
@@ -482,7 +482,9 @@ sub marc_spec {
             my $valid = $self->_it_subspecs( $data, $field_spec->tag, $field_spec->subspecs, $tag_index );
             next unless $valid
         }
-
+        
+        my @subfields = ();
+        
         if ( $ms->has_subfields ) {    # now we dealing with subfields
             for my $sf (@sf_spec) {
                 # set invert level
@@ -510,7 +512,7 @@ sub marc_spec {
 
                 if ( $invert_level == 3 ) { # no index or charpos
                     if (@subfield) {
-                        $to_referred->(@subfield)
+                        push @subfields, @subfield;
                     }
 
                     if ( $referred && $value_set ) { # return $value_set ASAP
@@ -569,8 +571,9 @@ sub marc_spec {
                     }
                 }
                 next unless @subfield;
-                $to_referred->(@subfield)
+                push @subfields, @subfield;
             } # end of subfield iteration
+            $to_referred->(@subfields) if @subfields;
         } # end of subfield handling
         else { # no particular subfields requested
             my @contents = ();
