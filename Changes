@@ -8,6 +8,11 @@ Revision history for Catmandu-MARC
   - Upgrading to latest MARC::File::XML
   - Providing documenation on the MARC-in-JSON format
 
+1.12  2017-05-29 10:23:23 CEST
+  - Fixing missing space to caret translation in 008 fields for ALEPHSEQ exports
+  - Upgrading to latest MARC::File::XML
+  - Providing documenation on the MARC-in-JSON format
+
 1.11  2017-05-15 09:11:38 CEST
   - Upgrading to MARC::Spec 1.0.0
   - Fixing MARCspec Parser exception

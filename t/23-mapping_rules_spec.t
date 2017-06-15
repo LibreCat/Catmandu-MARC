@@ -19,12 +19,15 @@ my $mrc = <<'MRC';
         </marc:datafield>
         <marc:datafield ind1=" " ind2=" " tag="650">
             <marc:subfield code="a">Alpha</marc:subfield>
+            <marc:subfield code="b">a</marc:subfield>
         </marc:datafield>
         <marc:datafield ind1=" " ind2=" " tag="650">
             <marc:subfield code="a">Beta</marc:subfield>
+            <marc:subfield code="b">b</marc:subfield>
         </marc:datafield>
         <marc:datafield ind1=" " ind2=" " tag="650">
             <marc:subfield code="a">Gamma</marc:subfield>
+            <marc:subfield code="b">c</marc:subfield>
         </marc:datafield>
         <marc:datafield ind1=" " ind2=" " tag="999">
             <marc:subfield code="a">X</marc:subfield>
@@ -376,7 +379,7 @@ note
 
 note "
 ---
-".'marc_spec(650,subject)   subject: "AlphaBetaGamma"';
+".'marc_spec(650,subject)   subject: "AlphaaBetabGammac"';
 {
     my $importer = Catmandu->importer(
         'MARC',
@@ -385,7 +388,7 @@ note "
         fix  => 'marc_spec(650,subject); retain_field(subject)'
     );
     my $record = $importer->first;
-    is_deeply $record->{subject}, 'AlphaBetaGamma', 'marc_spec(650,subject)';
+    is_deeply $record->{subject}, 'AlphaaBetabGammac', 'marc_spec(650,subject)';
 }
 
 note "
@@ -458,8 +461,9 @@ note "
     is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ], 'marc_spec(650$a,subject.$append)';
 }
 
-note
-    'marc_spec(650$a,subject, split:1)     subject: [ "Alpha", "Beta" , "Gamma" ]';
+note "
+---
+".'marc_spec(650$a,subject, split:1)     subject: [ "Alpha", "Beta" , "Gamma" ]';
 {
     my $importer = Catmandu->importer(
         'MARC',
@@ -471,8 +475,9 @@ note
     is_deeply $record->{subject}, [ 'Alpha', 'Beta', 'Gamma' ], 'marc_spec(650$a,subject, split:1)';
 }
 
-note
-    'marc_spec(650$a,subject.$append, split:1)     subject: [[ "Alpha" , "Beta" , "Gamma" ]]';
+note "
+---
+".'marc_spec(650$a,subject.$append, split:1)     subject: [[ "Alpha" , "Beta" , "Gamma" ]]';
 {
     my $importer = Catmandu->importer(
         'MARC',
@@ -485,22 +490,54 @@ note
     is_deeply $record->{subject}, [ [ 'Alpha', 'Beta', 'Gamma' ] ], 'marc_spec(650$a,subject.$append, split:1) ';
 }
 
-note
-    'marc_spec(650,subject, nested_arrays:1)    subject: [["Alpha"], ["Beta"] , ["Gamma"]]';
+note "
+---
+".'marc_spec(650,subject, nested_arrays:1)    subject: [["Alpha", "a"], ["Beta", "b"] , ["Gamma", "c"]]';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
         fix =>
-            'marc_spec(650,subject, split:1, nested_arrays:1); retain_field(subject)'
+            'marc_spec(650,subject, nested_arrays:1); retain_field(subject)'
     );
     my $record = $importer->first;
-    is_deeply $record->{subject}, [ ['Alpha'], ['Beta'], ['Gamma'] ], 'marc_spec(650,subject, nested_arrays:1)';
+    is_deeply $record->{subject}, [ ['Alpha', 'a'], ['Beta', 'b'], ['Gamma', 'c'] ], 'marc_spec(650,subject, nested_arrays:1)';
 }
 
-note
-    'marc_spec(650$a,subject, split:1, nested_arrays:1)    subject: [["Alpha"], ["Beta"] , ["Gamma"]]';
+note "
+---
+".'marc_spec(650$a$b,subject, nested_arrays:1)    subject: [["Alpha", "a"], ["Beta", "b"] , ["Gamma", "c"]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix =>
+            'marc_spec(650$a$b,subject, nested_arrays:1); retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, [ ['Alpha', 'a'], ['Beta', 'b'], ['Gamma', 'c'] ], 'marc_spec(650,subject, nested_arrays:1)';
+}
+
+note "
+---
+".'marc_spec(650$a$b,subject.$append, nested_arrays:1)    subject: [[["Alpha", "a"], ["Beta", "b"] , ["Gamma", "c"]]]';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix =>
+            'marc_spec(650$a$b, subject.$append, nested_arrays:1); retain_field(subject)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{subject}, [ [ ['Alpha', 'a'], ['Beta', 'b'], ['Gamma', 'c'] ] ], 'marc_spec(650$a$b,subject.$append, nested_arrays:1)';
+}
+
+note "
+---
+".'marc_spec(650$a,subject, split:1, nested_arrays:1)    subject: [["Alpha"], ["Beta"] , ["Gamma"]]';
 {
     my $importer = Catmandu->importer(
         'MARC',
@@ -727,7 +764,7 @@ note "
 
 note "
 ---
-".'marc_spec(..., all.$append)    all: [ "Title / Name", "ABCD", "Alpha", "Beta", "Gamma", "XY", "Z" ]';
+".'marc_spec(..., all.$append)    all: [ "Title / Name", "ABCD", "Alphaa", "Betab", "Gammac", "XY", "Z" ]';
 {
     my $importer = Catmandu->importer(
         'MARC',
@@ -736,7 +773,7 @@ note "
         fix  => 'marc_spec(..., all.$append); retain_field(all)'
     );
     my $record = $importer->first;
-    is_deeply $record->{all}, [ "                        ", "Title / Name", "ABCD", "Alpha", "Beta", "Gamma", "XY", "Z" ], 'marc_spec(..., all.$append)';
+    is_deeply $record->{all}, [ "                        ", "Title / Name", "ABCD", "Alphaa", "Betab", "Gammac", "XY", "Z" ], 'marc_spec(..., all.$append)';
 }
 
 note "
