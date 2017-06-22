@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Upgrading to Catmandu 1.06X
+  - Using the Catmandu::Fix::Bind::Group style for marc_each bind
 
 1.13  2017-06-15 09:19:13 CEST
   - Fixing join subfields per field correctly in marc_spec
