@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.14  2017-06-23 07:48:49 CEST
   - Upgrading to Catmandu 1.06X
   - Using the Catmandu::Fix::Bind::Group style for marc_each bind
 
