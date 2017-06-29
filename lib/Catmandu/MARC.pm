@@ -1003,6 +1003,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Fix::Condition::marc_has_many>
 
+=item * L<Catmandu::Fix::Condition::marc_has_ref>
+
 =item * L<Catmandu::Fix::Inline::marc_map>
 
 =item * L<Catmandu::Fix::Inline::marc_add>
