@@ -47,7 +47,7 @@ Set the value of a MARC subfield to a new value.
 
 =head2 marc_set(MARC_PATH , VALUE)
 
-Set a MARC subfield to a particular new value. This valeu can be a literal or
+Set a MARC subfield to a particular new value. This value can be a literal or
 reference an existing field in the record using the dollar JSON_PATH syntax.
 
 =head1 INLINE

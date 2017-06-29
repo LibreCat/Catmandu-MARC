@@ -33,6 +33,9 @@ Catmandu::Fix::marc_replace_all - regex replace (sub)field values in a MARC file
     # Replace all 'Joe'-s in 100a to 'Joey'
     marc_replace_all('100a','\bJoe\b','Joey')
 
+    # Replace all 'Joe'-s in 100a to the value in field x.y.z
+    marc_replace_all('100a','\bJoe\b',$.x.y.z)
+
 =head1 DESCRIPTION
 
 Use regex search and replace on MARC field values.
@@ -42,7 +45,8 @@ Use regex search and replace on MARC field values.
 =head2 marc_replace_all(MARC_PATH , REGEX, VALUE)
 
 For each (sub)field matching the MARC_PATH replace the pattern found by REGEX to
-a new VALUE
+a new VALUE. This value can be a literal or
+reference an existing field in the record using the dollar JSON_PATH syntax.
 
 =head1 INLINE
 
