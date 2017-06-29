@@ -1042,6 +1042,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Fix::marc_add>
 
+=item * L<Catmandu::Fix::marc_replace_all>
+
 =item * L<Catmandu::Fix::marc_remove>
 
 =item * L<Catmandu::Fix::marc_xml>

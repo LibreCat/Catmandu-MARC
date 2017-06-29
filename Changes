@@ -2,6 +2,7 @@ Revision history for Catmandu-MARC
 
 {{$NEXT}}
   - Adding the marc_spec_has Fix Condition (Carsten Klee)
+  - Adding marc_replace_all fix
   
 1.14  2017-06-23 07:48:49 CEST
   - Upgrading to Catmandu 1.06X
