@@ -23,44 +23,36 @@ sub fix {
 
 =head1 NAME
 
-Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
+Catmandu::Fix::marc_replace_all - regex replace (sub)field values in a MARC file
 
 =head1 SYNOPSIS
 
-    # Set a field in the leader
-    if marc_match('LDR/6','c')
-        marc_set('LDR/6','p')
-    end
+    # Append to all the 650-p values the string "xyz"
+    marc_replace_all('650p','$','xyz')
 
-    # Set all the 650-p fields to 'test'
-    marc_set('650p','test')
-
-    # Set the 100-a subfield where indicator-1 is 3
-    marc_set('100[3]a','Farquhar family.')
-
-    # Copy data from another field in a subfield
-    marc_set('100a','$.my.deep.field')
+    # Replace all 'Joe'-s in 100a to 'Joey'
+    marc_replace_all('100a','\bJoe\b','Joey')
 
 =head1 DESCRIPTION
 
-Set the value of a MARC subfield to a new value.
+Use regex search and replace on MARC field values.
 
 =head1 METHODS
 
-=head2 marc_set( MARC_PATH , VALUE , [OPT1:VAL, OPT2: VAL])
+=head2 marc_replace_all(MARC_PATH , REGEX, VALUE)
 
-Set a MARC subfield to a particular new value. This valeu can be a literal or
-reference an existing field in the record using the dollar JSON_PATH syntax.
+For each (sub)field matching the MARC_PATH replace the pattern found by REGEX to
+a new VALUE
 
 =head1 INLINE
 
 This Fix can be used inline in a Perl script:
 
-    use Catmandu::Fix::marc_set as => 'marc_xmarc_setml';
+    use Catmandu::Fix::marc_replace_all as => 'marc_replace_all';
 
     my $data = { record => [...] };
 
-    $data = marc_set($data, '245a', 'test');
+    $data = marc_replace_all($data, '245a', 'test' , 'rest');
 
 =head1 SEE ALSO
 

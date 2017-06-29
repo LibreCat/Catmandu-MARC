@@ -264,6 +264,64 @@ sub marc_replace_all {
     $data;
 }
 
+sub marc_replace_all {
+    my ($self,$data,$marc_path,$regex,$value) = @_;
+    my $record = $data->{'record'};
+
+    return $data unless defined $record;
+
+    if ($value =~ /^\$\.(\S+)/) {
+        my $path = $1;
+        $value = Catmandu::Util::data_at($path,$data);
+    }
+
+    if (Catmandu::Util::is_array_ref $value) {
+        $value = $value->[-1];
+    }
+    elsif (Catmandu::Util::is_hash_ref $value) {
+        my $last;
+        for (keys %$value) {
+            $last = $value->{$_};
+        }
+        $value = $last;
+    }
+
+    my $context = $self->compile_marc_path($marc_path, subfield_wildcard => 1);
+
+    confess "invalid marc path" unless $context;
+
+    for my $field (@$record) {
+        my ($tag, $ind1, $ind2, @subfields) = @$field;
+
+        if ($context->{is_regex_field}) {
+            next unless $tag =~ $context->{field_regex};
+        }
+        else {
+            next unless $tag eq $context->{field};
+        }
+
+        if (defined $context->{ind1}) {
+            if (!defined $ind1 || $ind1 ne $context->{ind1}) {
+                next;
+            }
+        }
+        if (defined $context->{ind2}) {
+            if (!defined $ind2 || $ind2 ne $context->{ind2}) {
+                next;
+            }
+        }
+
+        for (my $i = 0; $i < @subfields; $i += 2) {
+            if ($subfields[$i] =~ $context->{subfield}) {
+                $field->[$i + 4] =~ s{$regex}{$value}g;
+            }
+        }
+    }
+
+    $data;
+}
+
+
 sub marc_set {
     my ($self,$data,$marc_path,$value,%opts) = @_;
     my $record = $data->{'record'};

@@ -45,7 +45,7 @@ Set the value of a MARC subfield to a new value.
 
 =head1 METHODS
 
-=head2 marc_set( MARC_PATH , VALUE , [OPT1:VAL, OPT2: VAL])
+=head2 marc_set(MARC_PATH , VALUE)
 
 Set a MARC subfield to a particular new value. This valeu can be a literal or
 reference an existing field in the record using the dollar JSON_PATH syntax.
@@ -54,7 +54,7 @@ reference an existing field in the record using the dollar JSON_PATH syntax.
 
 This Fix can be used inline in a Perl script:
 
-    use Catmandu::Fix::marc_set as => 'marc_xmarc_setml';
+    use Catmandu::Fix::marc_set as => 'marc_set';
 
     my $data = { record => [...] };
 
