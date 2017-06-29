@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.15  2017-06-29 16:31:39 CEST
   - Adding the marc_spec_has Fix Condition (Carsten Klee)
   - Adding marc_replace_all fix
   - Adding marc_append fix
