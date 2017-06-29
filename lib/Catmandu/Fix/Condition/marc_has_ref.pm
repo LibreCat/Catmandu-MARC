@@ -1,4 +1,4 @@
-package Catmandu::Fix::Condition::marc_has_ref;
+package Catmandu::Fix::Condition::marc_spec_has;
 use Catmandu::Sane;
 use Catmandu::Fix::marc_spec;
 use Catmandu::Fix::Condition::exists;
@@ -38,13 +38,13 @@ sub emit {
 
 =head1 NAME
 
-Catmandu::Fix::Condition::marc_has_ref - Test if a MARCspec references data
+Catmandu::Fix::Condition::marc_spec_has - Test if a MARCspec references data
 
 =head1 SYNOPSIS
 
-   # marc_has_ref(MARCspec)
+   # marc_spec_has(MARCspec)
 
-   unless marc_has_ref('LDR{/6=\a}{/7=\a|/7=\c|/7=\d|/7=\m}')
+   unless marc_spec_has('LDR{/6=\a}{/7=\a|/7=\c|/7=\d|/7=\m}')
         set_field('type','Book')
    end
 
@@ -52,7 +52,7 @@ Catmandu::Fix::Condition::marc_has_ref - Test if a MARCspec references data
 
 Evaluate the enclosing fixes only if the MARCspec does reference data.
 
-Does the same like  L<marc_has|Catmandu::Fix::Condition::marc_has> but uses 
+Does the same like  L<marc_has|Catmandu::Fix::Condition::marc_has> but uses
 MARCspec - A common MARC record path language.
 
 See L<MARCspec - A common MARC record path language|http://marcspec.github.io/MARCspec/>
@@ -60,7 +60,7 @@ for documentation on the path syntax.
 
 =head1 METHODS
 
-=head2 marc_has_ref(MARCspec)
+=head2 marc_spec_has(MARCspec)
 
 Evaluates to true when the MARCspec references data, false otherwise.
 
