@@ -58,7 +58,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 - [Catmandu::Fix::Condition::marc\_match](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_match)
 - [Catmandu::Fix::Condition::marc\_has](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_has)
 - [Catmandu::Fix::Condition::marc\_has\_many](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_has_many)
-- [Catmandu::Fix::Condition::marc\_has\_ref](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_has_ref)
+- [Catmandu::Fix::Condition::marc\_spec\_has](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_spec_has)
 - [Catmandu::Fix::Inline::marc\_map](https://metacpan.org/pod/Catmandu::Fix::Inline::marc_map)
 - [Catmandu::Fix::Inline::marc\_add](https://metacpan.org/pod/Catmandu::Fix::Inline::marc_add)
 - [Catmandu::Fix::Inline::marc\_remove](https://metacpan.org/pod/Catmandu::Fix::Inline::marc_remove)
