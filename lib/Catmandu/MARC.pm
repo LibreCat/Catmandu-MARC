@@ -919,6 +919,68 @@ sub compile_marc_path {
     };
 }
 
+sub marc_struc {
+    my $self      = $_[0];
+
+    # $_[2] : marc_path
+    my $context = ref($_[2]) ?
+                    $_[2] :
+                    $self->compile_marc_path($_[2]);
+
+    confess "invalid marc path" unless $context;
+    carp "path segments like indicators, subfields and substrings are ignored" 
+        if(defined $context->{subfield} or defined $context->{from} or
+        defined $context->{ind1} or defined $context->{ind2});
+
+    # $_[1] : data record
+    my $record         = $_[1]->{'record'};
+
+    return wantarray ? () : undef unless (defined $record && ref($record) eq 'ARRAY');
+
+    my $fields;
+
+    for my $field (@$record) {
+        next if (
+            ($context->{is_regex_field} == 0 && $field->[0] ne $context->{field} )
+            ||
+            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
+        );
+
+        my $f = {};
+        $f->{tag} = $field->[0];
+
+        # indicator 1
+        if(defined $field->[1]) {
+            $f->{ind1} = $field->[1];
+        } else {
+            $f->{ind1} = undef;
+        }
+
+        # indicator 2
+        if(defined $field->[2]) {
+            $f->{ind2} = $field->[2];
+        } else {
+            $f->{ind2} = undef;
+        }
+
+        # fixed fields
+        if($field->[3] eq '_') {
+            $f->{content} = $field->[4];
+            push(@$fields, $f);
+            next;
+        }
+
+        # subfields
+        for (my $i = $context->{start}; $i < @{$field}; $i += 2) {
+            push(@{$f->{subfields}}, { $field->[$i] => $field->[$i + 1] });
+        }
+
+        push(@$fields, $f);
+    }
+
+    [$fields];
+}
+
 1;
 
 __END__
@@ -994,6 +1056,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 =item * L<Catmandu::Fix::marc_decode_dollar_subfields>
 
 =item * L<Catmandu::Fix::marc_set>
+
+=item * L<Catmandu::Fix::marc_struc>
 
 =item * L<Catmandu::Fix::Bind::marc_each>
 
