@@ -12,11 +12,11 @@ use Catmandu::Fix;
 
 
 my $fixes = <<EOF;
-if marc_has_ref('LDR{/6=\\a}{/7=\\a|/7=\\c|/7=\\d|/7=\\m}')
+if marc_spec_has('LDR{/6=\\a}{/7=\\a|/7=\\c|/7=\\d|/7=\\m}')
   add_field(type,'Book')
 end
 
-if marc_has_ref('LDR{/6=\\a}{/7=\\b}')
+if marc_spec_has('LDR{/6=\\a}{/7=\\b}')
   set_field(type,'Other')
 end
 

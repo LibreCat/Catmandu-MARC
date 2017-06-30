@@ -18,13 +18,13 @@ my %module_build_args = (
     "Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>"
   ],
   "dist_name" => "Catmandu-MARC",
-  "dist_version" => "1.13",
+  "dist_version" => "1.15",
   "license" => "perl",
   "module_name" => "Catmandu::MARC",
   "recursive_test_files" => 1,
   "requires" => {
     "Carp" => 0,
-    "Catmandu" => "1.0201",
+    "Catmandu" => "1.0601",
     "JSON::XS" => "2.3",
     "List::Util" => 0,
     "MARC::File::MARCMaker" => "0.05",
