@@ -1046,7 +1046,7 @@ sub marc_struc {
                     $self->compile_marc_path($_[2]);
 
     confess "invalid marc path" unless $context;
-    carp "path segments like indicators, subfields and substrings are ignored" 
+    carp "path segments like indicators, subfields and substrings are ignored"
         if(defined $context->{subfield} or defined $context->{from} or
         defined $context->{ind1} or defined $context->{ind2});
 
@@ -1097,6 +1097,56 @@ sub marc_struc {
     }
 
     [$fields];
+}
+
+sub marc_paste {
+    my $self      = $_[0];
+    my $data      = $_[1];
+    my $json_path = $_[2];
+
+    my $value = Catmandu::Util::data_at($json_path,$data);
+
+    return $data unless Catmandu::Util::is_array_ref($value);
+
+    my @new_parts;
+
+    for my $part (@$value) {
+        return $data unless
+                    Catmandu::Util::is_hash_ref($part) &&
+                    exists $part->{tag}  &&
+                    exists $part->{ind1} &&
+                    exists $part->{ind2} &&
+                    ( exists $part->{content} || exists $part->{subfields} );
+
+        my $tag       = $part->{tag};
+        my $ind1      = $part->{ind1} // ' ';
+        my $ind2      = $part->{ind2} // ' ';
+        my $content   = $part->{content};
+        my $subfields = $part->{subfields};
+
+        if (defined($content)) {
+            push @new_parts , [ $tag , $ind1 , $ind2 , '_' , $content ];
+        }
+        elsif (defined($subfields) && Catmandu::Util::is_array_ref($subfields)) {
+            my @tmp = ( $tag , $ind1 , $ind2 );
+
+            for my $sf (@$subfields) {
+                while (my ($key, $value) = each %$sf) {
+                    push @tmp, $key , $value;
+                }
+            }
+
+            push @new_parts , [ @tmp ];
+        }
+        else {
+            # Illegal input
+            return $data;
+        }
+    }
+
+    push @{$data->{record}} , @new_parts;
+
+    $data;
 }
 
 1;
