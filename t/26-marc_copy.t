@@ -68,45 +68,64 @@ note 'marc_copy(245,title)';
         ], 'marc_map(245,title)';
 }
 
-note 'marc_copy(001/0-3,substr)';
-{
-    warnings_like { Catmandu->importer(
-        'MARC',
-        file => \$mrc,
-        type => 'XML',
-        fix  => 'marc_copy(001/0-3,substr)'
-    )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
-}
-
-note 'marc_copy(245[,0],title)';
-{
-    warnings_like { Catmandu->importer(
-        'MARC',
-        file => \$mrc,
-        type => 'XML',
-        fix  => 'marc_copy("245[,0]",title)'
-    )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
-}
-
-
-note 'marc_copy(245[1],title)';
-{
-    warnings_like { Catmandu->importer(
-        'MARC',
-        file => \$mrc,
-        type => 'XML',
-        fix  => 'marc_copy(245[1],title)'
-    )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
-}
-
 note 'marc_copy(245a,title)';
 {
-    warnings_like { Catmandu->importer(
+    my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_copy(245a,title)'
-    )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
+        fix  => 'marc_copy(245a,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title},
+        [
+            {
+                tag => '245',
+                ind1 => '1',
+                ind2 => '0',
+                subfields => [
+                    { a => 'Title / '},
+                    { c => 'Name' },
+                ]
+            }
+        ], 'marc_map(245a,title)';
+}
+
+note 'marc_copy(245x,title)';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_copy(245x,title); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title},
+        [
+        ], 'marc_map(245x,title)';
+}
+
+note 'marc_copy(245a,title,equals:"Title / ")';
+{
+    my $importer = Catmandu->importer(
+        'MARC',
+        file => \$mrc,
+        type => 'XML',
+        fix  => 'marc_copy(245a,title,equals:"Title / "); retain_field(title)'
+    );
+    my $record = $importer->first;
+    is_deeply $record->{title},
+        [
+        {
+            tag => '245',
+            ind1 => '1',
+            ind2 => '0',
+            subfields => [
+                { a => 'Title / '},
+                { c => 'Name' },
+            ]
+        }
+        ], 'marc_map(245a,title,equals:"Title / ")';
 }
 
 note 'marc_copy(999,local)';

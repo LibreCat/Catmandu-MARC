@@ -1038,31 +1038,69 @@ sub compile_marc_path {
 }
 
 sub marc_copy {
-    my $self      = $_[0];
+    my $self       = $_[0];
+    my $data       = $_[1];
+    my $marc_path  = $_[2];
+    my $marc_value = $_[3];
 
     # $_[2] : marc_path
-    my $context = ref($_[2]) ?
-                    $_[2] :
-                    $self->compile_marc_path($_[2]);
+    my $context = ref($marc_path) ? $marc_path : $self->compile_marc_path($_[2], subfield_wildcard => 0);
 
     confess "invalid marc path" unless $context;
-    carp "path segments like indicators, subfields and substrings are ignored"
-        if(defined $context->{subfield} or defined $context->{from} or
-        defined $context->{ind1} or defined $context->{ind2});
 
     # $_[1] : data record
-    my $record         = $_[1]->{'record'};
+    my $record         = $data->{'record'};
 
     return wantarray ? () : undef unless (defined $record && ref($record) eq 'ARRAY');
 
-    my $fields;
+    my $fields = [];
 
     for my $field (@$record) {
+        my ($tag, $ind1, $ind2, @subfields) = @$field;
+
         next if (
-            ($context->{is_regex_field} == 0 && $field->[0] ne $context->{field} )
+            ($context->{is_regex_field} == 0 && $tag ne $context->{field} )
             ||
-            ($context->{is_regex_field} == 1 && $field->[0] !~ $context->{field_regex} )
+            ($context->{is_regex_field} == 1 && $tag !~ $context->{field_regex} )
         );
+
+        if (defined $context->{ind1}) {
+            if (!defined $ind1 || $ind1 ne $context->{ind1}) {
+                next;
+            }
+        }
+        if (defined $context->{ind2}) {
+            if (!defined $ind2 || $ind2 ne $context->{ind2}) {
+                next;
+            }
+        }
+
+        if ($context->{subfield}) {
+            my $found = 0;
+            for (my $i = 0; $i < @subfields; $i += 2) {
+                if ($subfields[$i] =~ $context->{subfield}) {
+                    if (defined($marc_value)) {
+                        $found = 1 if $subfields[$i+1] =~ /$marc_value/;
+                    }
+                    else {
+                        $found = 1;
+                    }
+                }
+            }
+            next unless $found;
+        }
+        else {
+            if (defined($marc_value)) {
+                my @sf = ();
+                for (my $i = 0; $i < @subfields; $i += 2) {
+                    push @sf , $subfields[$i+1];
+                }
+
+                my $string = join "", @sf;
+
+                next unless ($string =~ /$marc_value/);
+            }
+        }
 
         my $f = {};
         $f->{tag} = $field->[0];
@@ -1181,7 +1219,6 @@ sub marc_paste {
             if ($context->{subfield}) {
                 for (my $i = 0; $i < @subfields; $i += 2) {
                     if ($subfields[$i] =~ $context->{subfield}) {
-
                         if (defined($marc_value)) {
                             $found_match = $field_position if $subfields[$i+1] =~ /$marc_value/;
                         }

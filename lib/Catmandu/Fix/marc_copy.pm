@@ -11,6 +11,7 @@ our $VERSION = '1.13';
 
 has marc_path      => (fix_arg => 1);
 has path           => (fix_arg => 1);
+has equals         => (fix_opt => 1);
 
 sub emit {
     my ($self,$fixer) = @_;
@@ -19,9 +20,10 @@ sub emit {
     my $marc_obj     = Catmandu::MARC->instance;
 
     # Precompile the marc_path to gain some speed
-    my $marc_context = $marc_obj->compile_marc_path($self->marc_path);
+    my $marc_context = $marc_obj->compile_marc_path($self->marc_path, subfield_wildcard => 0);
     my $marc         = $fixer->capture($marc_obj);
     my $marc_path    = $fixer->capture($marc_context);
+    my $equals       = $fixer->capture($self->equals);
 
     my $var           = $fixer->var;
     my $result        = $fixer->generate_var;
@@ -32,7 +34,8 @@ sub emit {
     $perl .=<<EOF;
 if (my ${result} = ${marc}->marc_copy(
             ${var},
-            ${marc_path}) ) {
+            ${marc_path},
+            ${equals}) ) {
     ${result} = ref(${result}) ? ${result} : [${result}];
     for ${current_value} (\@{${result}}) {
 EOF
@@ -66,7 +69,7 @@ Catmandu::Fix::marc_copy - copy marc data in a structured way to a new field
     # fixed field
     marc_copy(001, fixed001)
 
-    May result into
+    Can result in:
 
     fixed001 : [
         {
@@ -82,7 +85,7 @@ Catmandu::Fix::marc_copy - copy marc data in a structured way to a new field
     # variable field
     marc_copy(650, subjects)
 
-    May result into
+    Can result in:
 
     subjects:[
         {
@@ -118,14 +121,27 @@ like tag, indicators and subfield codes into a nested data structure.
 
 =head1 METHODS
 
-=head2 marc_copy(MARC_TAG, JSON_PATH)
+=head2 marc_copy(MARC_PATH, JSON_PATH, [equals: REGEX])
 
-Copy this data referred by a MARC_TAG to a JSON_PATH.
+Copy this MARC fields referred by a MARC_PATH to a JSON_PATH.
 
-MARC_TAG (meaning the field tag) is the first segment of MARC_PATH.
+When the MARC_PATH points to a MARC tag then only the fields mathching the MARC
+tag will be copied. When the MATCH_PATH contains indicators or subfields, then
+only the MARC_FIELDS which contain data in these subfields will be copied. Optional,
+a C<equals> regular expression can be provided that should match the subfields that
+need to be copied:
 
-Using a MARC_PATH with subfield codes, indicators or substring will cause a
-warning and these segments will be ignored when referring the data.
+    # Copy all the 300 fields
+    marc_copy(300,tmp)
+
+    # Copy all the 300 fields with indicator 1 = 1
+    marc_copy(300[1],tmp)
+
+    # Copy all the 300 fields which have subfield c
+    marc_copy(300c,tmp)
+
+    # Copy all the 300 fields which have subfield c equal to 'ABC'
+    marc_copy(300c,tmp,equal:"^ABC")
 
 =head1 INLINE
 
