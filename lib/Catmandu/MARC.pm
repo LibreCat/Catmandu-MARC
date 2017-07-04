@@ -1100,9 +1100,11 @@ sub marc_copy {
 }
 
 sub marc_paste {
-    my $self      = $_[0];
-    my $data      = $_[1];
-    my $json_path = $_[2];
+    my $self       = $_[0];
+    my $data       = $_[1];
+    my $json_path  = $_[2];
+    my $marc_path  = $_[3];
+    my $marc_value = $_[4];
 
     my $value = Catmandu::Util::data_at($json_path,$data);
 
@@ -1144,7 +1146,84 @@ sub marc_paste {
         }
     }
 
-    push @{$data->{record}} , @new_parts;
+    if (defined($marc_path)) {
+        my $context = $self->compile_marc_path($marc_path, subfield_wildcard => 0);
+
+        confess "invalid marc path" unless $context;
+
+        my @record      = @{$data->{record}};
+        my $found_match = undef;
+
+        my $field_position = -1;
+
+        for my $field (@record) {
+            $field_position++;
+            my ($tag, $ind1, $ind2, @subfields) = @$field;
+
+            if ($context->{is_regex_field}) {
+                next unless $tag =~ $context->{field_regex};
+            }
+            else {
+                next unless $tag eq $context->{field};
+            }
+
+            if (defined $context->{ind1}) {
+                if (!defined $ind1 || $ind1 ne $context->{ind1}) {
+                    next;
+                }
+            }
+            if (defined $context->{ind2}) {
+                if (!defined $ind2 || $ind2 ne $context->{ind2}) {
+                    next;
+                }
+            }
+
+            if ($context->{subfield}) {
+                for (my $i = 0; $i < @subfields; $i += 2) {
+                    if ($subfields[$i] =~ $context->{subfield}) {
+
+                        if (defined($marc_value)) {
+                            $found_match = $field_position if $subfields[$i+1] =~ /$marc_value/;
+                        }
+                        else {
+                            $found_match = $field_position;
+                        }
+                    }
+                }
+            } else {
+                if (defined($marc_value)) {
+                    my @sf = ();
+                    for (my $i = 0; $i < @subfields; $i += 2) {
+                        push @sf , $subfields[$i+1];
+                    }
+
+                    my $string = join "", @sf;
+
+                    if ($string =~ /$marc_value/) {
+                        $found_match = $field_position;
+                    }
+                    else {
+                        # don't match anything
+                    }
+                }
+                else {
+                    $found_match = $field_position;
+                }
+            }
+        }
+
+        if (defined $found_match) {
+            my @new_record = (
+                @record[0..$found_match] ,
+                @new_parts ,
+                @record[$found_match+1..$#record]
+            );
+            $data->{record} = \@new_record;
+        }
+    }
+    else {
+        push @{$data->{record}} , @new_parts;
+    }
 
     $data;
 }
