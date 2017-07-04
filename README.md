@@ -56,6 +56,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 - [Catmandu::Fix::marc\_in\_json](https://metacpan.org/pod/Catmandu::Fix::marc_in_json)
 - [Catmandu::Fix::marc\_decode\_dollar\_subfields](https://metacpan.org/pod/Catmandu::Fix::marc_decode_dollar_subfields)
 - [Catmandu::Fix::marc\_set](https://metacpan.org/pod/Catmandu::Fix::marc_set)
+- [Catmandu::Fix::marc\_struc](https://metacpan.org/pod/Catmandu::Fix::marc_struc)
 - [Catmandu::Fix::Bind::marc\_each](https://metacpan.org/pod/Catmandu::Fix::Bind::marc_each)
 - [Catmandu::Fix::Condition::marc\_match](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_match)
 - [Catmandu::Fix::Condition::marc\_has](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_has)
