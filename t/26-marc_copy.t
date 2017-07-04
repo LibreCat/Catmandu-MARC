@@ -25,13 +25,13 @@ my $mrc = <<'MRC';
 </marc:collection>
 MRC
 
-note 'marc_struc(001,cntrl)';
+note 'marc_copy(001,cntrl)';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(001,cntrl); retain_field(cntrl)'
+        fix  => 'marc_copy(001,cntrl); retain_field(cntrl)'
     );
     my $record = $importer->first;
     is_deeply $record->{cntrl},
@@ -42,16 +42,16 @@ note 'marc_struc(001,cntrl)';
                 ind2 => undef,
                 content => "   92005291 "
             }
-        ], 'marc_struc(001,cntrl)';
+        ], 'marc_copy(001,cntrl)';
 }
 
-note 'marc_struc(245,title)';
+note 'marc_copy(245,title)';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(245,title); retain_field(title)'
+        fix  => 'marc_copy(245,title); retain_field(title)'
     );
     my $record = $importer->first;
     is_deeply $record->{title},
@@ -68,54 +68,54 @@ note 'marc_struc(245,title)';
         ], 'marc_map(245,title)';
 }
 
-note 'marc_struc(001/0-3,substr)';
+note 'marc_copy(001/0-3,substr)';
 {
     warnings_like { Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(001/0-3,substr)'
+        fix  => 'marc_copy(001/0-3,substr)'
     )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
 }
 
-note 'marc_struc(245[,0],title)';
+note 'marc_copy(245[,0],title)';
 {
     warnings_like { Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc("245[,0]",title)'
+        fix  => 'marc_copy("245[,0]",title)'
     )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
 }
 
 
-note 'marc_struc(245[1],title)';
+note 'marc_copy(245[1],title)';
 {
     warnings_like { Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(245[1],title)'
+        fix  => 'marc_copy(245[1],title)'
     )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
 }
 
-note 'marc_struc(245a,title)';
+note 'marc_copy(245a,title)';
 {
     warnings_like { Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(245a,title)'
+        fix  => 'marc_copy(245a,title)'
     )->first} [{carped => qr/^path segments.+/},{carped => qr/^path segments.+/}], "warn on substring usage";
 }
 
-note 'marc_struc(999,local)';
+note 'marc_copy(999,local)';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(999,local); retain_field(local)'
+        fix  => 'marc_copy(999,local); retain_field(local)'
     );
     my $record = $importer->first;
     is_deeply $record->{local},
@@ -137,16 +137,16 @@ note 'marc_struc(999,local)';
                     { a => 'Z'}
                 ]
             }
-        ], 'marc_struc(999,local)';
+        ], 'marc_copy(999,local)';
 }
 
-note 'marc_struc(...,all)';
+note 'marc_copy(...,all)';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_struc(...,all); retain_field(all)'
+        fix  => 'marc_copy(...,all); retain_field(all)'
     );
     my $record = $importer->first;
     is_deeply $record->{all},
@@ -189,7 +189,7 @@ note 'marc_struc(...,all)';
                     { a => 'Z'}
                 ]
             }
-        ], 'marc_struc(...,all)';
+        ], 'marc_copy(...,all)';
 }
 
 

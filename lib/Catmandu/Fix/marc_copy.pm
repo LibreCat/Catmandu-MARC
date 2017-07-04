@@ -1,4 +1,4 @@
-package Catmandu::Fix::marc_struc;
+package Catmandu::Fix::marc_copy;
 
 use Catmandu::Sane;
 use Catmandu::MARC;
@@ -30,7 +30,7 @@ sub emit {
     my $perl = "";
     $perl .= $fixer->emit_declare_vars($current_value, "[]");
     $perl .=<<EOF;
-if (my ${result} = ${marc}->marc_struc(
+if (my ${result} = ${marc}->marc_copy(
             ${var},
             ${marc_path}) ) {
     ${result} = ref(${result}) ? ${result} : [${result}];
@@ -59,14 +59,14 @@ __END__
 
 =head1 NAME
 
-Catmandu::Fix::marc_struc - copy marc data in a structured way to a new field
+Catmandu::Fix::marc_copy - copy marc data in a structured way to a new field
 
 =head1 SYNOPSIS
 
     # fixed field
-    marc_struc(001, fixed001)
+    marc_copy(001, fixed001)
 
-may result into
+    May result into
 
     fixed001 : [
         {
@@ -77,12 +77,12 @@ may result into
         }
     ]
 
-And
+    And
 
     # variable field
-    marc_struc(650, subjects)
+    marc_copy(650, subjects)
 
-may result into
+    May result into
 
     subjects:[
         {
@@ -112,30 +112,30 @@ may result into
 
 Copy MARC data referred by MARC_TAG in a structured way to JSON path.
 
-In contrast to L<Catmandu::Fix::marc_map> and L<Catmandu::Fix::marc_spec> 
-marc_struc will not only copy data content (values) but also all data elements 
-like tag, indicators and subfield codes into a nested data structure. 
+In contrast to L<Catmandu::Fix::marc_map> and L<Catmandu::Fix::marc_spec>
+marc_copy will not only copy data content (values) but also all data elements
+like tag, indicators and subfield codes into a nested data structure.
 
 =head1 METHODS
 
-=head2 marc_struc(MARC_TAG, JSON_PATH)
+=head2 marc_copy(MARC_TAG, JSON_PATH)
 
 Copy this data referred by a MARC_TAG to a JSON_PATH.
 
 MARC_TAG (meaning the field tag) is the first segment of MARC_PATH.
 
-Using a MARC_PATH with subfield codes, indicators or substring will cause a 
+Using a MARC_PATH with subfield codes, indicators or substring will cause a
 warning and these segments will be ignored when referring the data.
 
 =head1 INLINE
 
 This Fix can be used inline in a Perl script:
 
-    use Catmandu::Fix::marc_struc as => 'marc_struc';
+    use Catmandu::Fix::marc_copy as => 'marc_copy';
 
     my $data = { record => ['650', ' ', 0, 'a', 'Perl'] };
 
-    $data = marc_struc($data,'650','subject');
+    $data = marc_copy($data,'650','subject');
 
     print $data->{subject}->[0]->{tag} , "\n"; # '650'
     print $data->{subject}->[0]->{ind1} , "\n"; # ' '
@@ -146,33 +146,7 @@ This Fix can be used inline in a Perl script:
 
 =over
 
-=item * L<Catmandu::Fix>
-
-=item * L<Catmandu::Fix::marc_map>
-
-=item * L<Catmandu::Fix::marc_spec>
-
-=item * L<Catmandu::Fix::marc_add>
-
-=item * L<Catmandu::Fix::marc_remove>
-
-=item * L<Catmandu::Fix::marc_xml>
-
-=item * L<Catmandu::Fix::marc_in_json>
-
-=item * L<Catmandu::Fix::marc_decode_dollar_subfields>
-
-=item * L<Catmandu::Fix::marc_set>
-
-=item * L<Catmandu::Fix::Bind::marc_each>
-
-=item * L<Catmandu::Fix::Condition::marc_match>
-
-=item * L<Catmandu::Fix::Condition::marc_has>
-
-=item * L<Catmandu::Fix::Condition::marc_has_many>
-
-=item * L<Catmandu::Fix::Condition::marc_has_ref>
+=item * L<Catmandu::Fix::marc_paste>
 
 =back
 

@@ -1037,7 +1037,7 @@ sub compile_marc_path {
     };
 }
 
-sub marc_struc {
+sub marc_copy {
     my $self      = $_[0];
 
     # $_[2] : marc_path
@@ -1229,7 +1229,9 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Fix::marc_set>
 
-=item * L<Catmandu::Fix::marc_struc>
+=item * L<Catmandu::Fix::marc_copy>
+
+=item * L<Catmandu::Fix::marc_paste>
 
 =item * L<Catmandu::Fix::Bind::marc_each>
 
