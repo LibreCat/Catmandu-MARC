@@ -318,7 +318,8 @@ sub marc_replace_all {
 
         for (my $i = 0; $i < @subfields; $i += 2) {
             if ($subfields[$i] =~ $context->{subfield}) {
-                $field->[$i + 4] =~ s{$regex}{$value}g;
+                # Trick to double eval the right hand side
+                $field->[$i + 4] =~ s{$regex}{"\"$value\""}eeg;
             }
         }
     }
