@@ -35,7 +35,7 @@ sub emit {
                             '-nested_arrays' => $self->nested_arrays // 0 ,
                             '-invert'      => $self->invert // 0 ,
                             '-value'       => $self->value ,
-                            '-force_array' => ($key =~ /^(\$.*|\d+)$/) ? 1 : 0
+                            '-force_array' => ($key =~ /^(\$.*|[0-9]+)$/) ? 1 : 0
                         });
 
     my $var          = $fixer->var;

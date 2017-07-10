@@ -983,7 +983,7 @@ sub compile_marc_path {
     my ($field,$field_regex,$ind1,$ind2,
         $subfield,$subfield_regex,$from,$to,$len,$is_regex_field);
 
-    my $MARC_PATH_REGEX = qr/(\S{1,3})(\[([^,])?,?([^,])?\])?([\$_a-z0-9^]+)?(\/(\d+)(-(\d+))?)?/;
+    my $MARC_PATH_REGEX = qr/(\S{1,3})(\[([^,])?,?([^,])?\])?([\$_a-z0-9^]+)?(\/([0-9]+)(-([0-9]+))?)?/;
     if ($marc_path =~ $MARC_PATH_REGEX) {
         $field          = $1;
         $ind1           = $3;

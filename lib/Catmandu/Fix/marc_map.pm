@@ -33,7 +33,7 @@ sub emit {
                             '-pluck'         => $self->pluck  // 0 ,
                             '-nested_arrays' => $self->nested_arrays // 0 ,
                             '-value'         => $self->value ,
-                            '-force_array'   => ($key =~ /^(\$.*|\d+)$/) ? 1 : 0
+                            '-force_array'   => ($key =~ /^(\$.*|[0-9]+)$/) ? 1 : 0
                         });
 
     my $var           = $fixer->var;
