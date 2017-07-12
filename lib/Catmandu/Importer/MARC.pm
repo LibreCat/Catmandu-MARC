@@ -32,12 +32,11 @@ sub BUILD {
     delete $args->{type};
     delete $args->{fix};
 
-    $self->{_importer} = $pkg->new(file => $self->file , type => $type, %$args);
+    $self->{_importer} = $pkg->new(file => $self->file, %$args);
 }
 
 sub generator {
-    my ($self) = @_;
-    $self->_importer->generator;
+    $_[0]->_importer->generator;
 }
 
 1;

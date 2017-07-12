@@ -52,7 +52,11 @@ This Fix can be used inline in a Perl script:
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix>
+L<Catmandu::Fix::marc_add>,
+L<Catmandu::Fix::marc_copy>,
+L<Catmandu::Fix::marc_cut>,
+L<Catmandu::Fix::marc_paste>,
+L<Catmandu::Fix::marc_set>
 
 =cut
 

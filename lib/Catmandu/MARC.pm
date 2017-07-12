@@ -349,7 +349,7 @@ sub marc_set {
         $value = $last;
     }
 
-    my $context = $self->compile_marc_path($marc_path, subfield_wildcard => 1);
+    my $context = $self->compile_marc_path($marc_path, subfield_default => 1);
 
     confess "invalid marc path" unless $context;
 
@@ -997,7 +997,7 @@ sub compile_marc_path {
             }
         }
         elsif ($opts{subfield_default}) {
-            $subfield = $field =~ /^0|LDR/ ? '_' : 'a';
+            $subfield = $field =~ /^0|LDR|FMT/ ? '_' : 'a';
         }
         elsif ($opts{subfield_wildcard}) {
             $subfield = '[a-z0-9_]';
@@ -1367,6 +1367,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 =item * L<Catmandu::Fix::marc_set>
 
 =item * L<Catmandu::Fix::marc_copy>
+
+=item * L<Catmandu::Fix::marc_cut>
 
 =item * L<Catmandu::Fix::marc_paste>
 

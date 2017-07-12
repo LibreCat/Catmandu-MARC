@@ -90,7 +90,9 @@ This Fix can be used inline in a Perl script:
 
 =over
 
-=item * L<Catmandu::Fix::marc_struc>
+=item * L<Catmandu::Fix::marc_copy>
+
+=item * L<Catmandu::Fix::marc_cut>
 
 =back
 

@@ -30,6 +30,9 @@ Catmandu::Fix::marc_set - set a marc value of one (sub)field to a new value
         marc_set('LDR/6','p')
     end
 
+    # Set a control field
+    marc_set('001',1234)
+
     # Set all the 650-p fields to 'test'
     marc_set('650p','test')
 
@@ -62,7 +65,10 @@ This Fix can be used inline in a Perl script:
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix>
+L<Catmandu::Fix::marc_add>,
+L<Catmandu::Fix::marc_copy>,
+L<Catmandu::Fix::marc_cut>,
+L<Catmandu::Fix::marc_paste>
 
 =cut
 
