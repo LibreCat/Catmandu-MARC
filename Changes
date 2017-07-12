@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.17  2017-07-12 11:45:56 CEST
   - Fixing 0 as false bug when using from/until
   - Fixing double fix execution bug
   - Using better subfield defaults for marc_set

@@ -3,7 +3,7 @@ package Catmandu::Fix::Bind::marc_each;
 use Moo;
 use Catmandu::Util;
 
-our $VERSION = '1.161';
+our $VERSION = '1.17';
 
 with 'Catmandu::Fix::Bind', 'Catmandu::Fix::Bind::Group';
 
