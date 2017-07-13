@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing 0 as false bug in marc_spec
+  
 1.17  2017-07-12 11:45:56 CEST
   - Fixing 0 as false bug when using from/until
   - Fixing double fix execution bug
