@@ -45,10 +45,10 @@ sub emit {
     my $perl = "";
     $perl .= $fixer->emit_declare_vars($current_value, "[]");
     $perl .=<<EOF;
-if (my ${result} = ${marc}->marc_spec(
+if (defined(my ${result} = ${marc}->marc_spec(
             ${var},
             ${marc_spec},
-            ${marc_opt}) ) {
+            ${marc_opt})) ) {
     ${result} = ref(${result}) ? ${result} : [${result}];
     for ${current_value} (\@{${result}}) {
 EOF
