@@ -3,7 +3,7 @@ use Catmandu::Sane;
 use Catmandu::Util;
 use Moo;
 
-our $VERSION = '1.17';
+our $VERSION = '1.171';
 
 has type           => (is => 'ro' , default => sub { 'ISO' });
 has _exporter      => (is => 'ro');
