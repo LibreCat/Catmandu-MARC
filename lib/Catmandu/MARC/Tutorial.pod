@@ -232,6 +232,35 @@ output
 
     $ catmandu -D convert MARC to Null --fix myfix.fix < data.mrc
 
+=head2 Rename MARC subfields
+
+In the example below we rename each $1 subfield in the MARC record to $0 using
+the L<Catmandu::Fix::marc_cut>, L<Catmandu::Fix::marc_paste> and L<Catmandu::Fix::rename>
+fixes:
+
+    # For each marc field...
+    do marc_each()
+       # Cut the field into tmp..
+       marc_cut(***,tmp)
+
+       # Rename every 1 subfield to 0
+       rename(tmp.*.subfields.*,1,0)
+
+       # And paste it back
+       marc_paste(tmp)
+    end
+
+Put this Fix script in a file C<myfix.fix> and execute the Catmandu command:
+
+  $ catmandu convert MARC to MARC --fix myfix.fix < data.mrc > output.mrc
+
+The C<marc_each> bind will loop over all the MARC fields. With C<marc_cut> we
+store any field (C<***> matches every field) into a C<tmp> field. The C<marc_cut>
+creates an array structure in C<tmp> which is easy to process using the Fix
+language. Using the C<rename> function we search for all the subfields, and replace
+the field matching the regular expression C<1> with C<0>. At the end, we paste
+back the C<tmp> field into the record.  
+
 =head1 WRITING
 
 =head2 Convert a MARC record into a MARC record (do nothing)
