@@ -5,7 +5,7 @@ use warnings;
 
 use Catmandu::Importer::MARC;
 use MARC::File::USMARC;
-use Test::Simple tests => 9;
+use Test::Simple tests => 10;
 
 my $importer = Catmandu::Importer::MARC->new(
     file => 't/camel.mrc',
@@ -43,3 +43,13 @@ $importer = Catmandu::Importer::MARC->new(
 );
 $records = $importer->to_array();
 ok( $records->[0]->{'_id'} eq '2000.', 'got _id from subfield' );
+
+# Test broken records
+$importer = Catmandu::Importer::MARC->new(
+    file => 't/broken.xml',
+    type => "XML",
+    skip_errors => 1,
+);
+$records = $importer->to_array();
+
+ok (@$records == 9, 'skipped one record');
