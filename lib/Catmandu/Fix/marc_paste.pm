@@ -31,14 +31,24 @@ Catmandu::Fix::marc_paste - paste a MARC structured field back into the MARC rec
 
 =head1 SYNOPSIS
 
-    # Copy a MARC field
+    # Copy and paste to the end of the record
     marc_copy(001, fixed001)
-
-    # Change it
-    set_fieldfixed001.0.tag,002)
-
-    # Paste it back into the record
+    set_fieldfixed001.$first.tag,002)
     marc_paste(fixed001)
+
+    # Copy and paste in place (rename a field)
+    do marc_each()
+      if marc_has(001)
+        # Copy a MARC field
+        marc_copy(001, fixed001)
+
+        # Change it
+        set_fieldfixed001.$first.tag,002)
+
+        # Paste it back into the record
+        marc_paste(fixed001)
+      end
+    end
 
 
 =head1 DESCRIPTION
