@@ -7,7 +7,7 @@ use Catmandu::Fix::Has;
 
 with 'Catmandu::Fix::Inlineable';
 
-our $VERSION = '1.171';
+our $VERSION = '1.18';
 
 has path  => (fix_arg => 1);
 
