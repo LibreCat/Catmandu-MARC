@@ -232,6 +232,174 @@ output
 
     $ catmandu -D convert MARC to Null --fix myfix.fix < data.mrc
 
+=head1 TRANSFORMING
+
+=head2 Add a new MARC field
+
+In the example bellow we add new 856 field to the record with a $u subfield containing
+the Google homepage:
+
+   marc_add(856,u,"http://www.google.com")
+
+A control field can be added by using the '_' subfield
+
+   marc_add(009,_,0123456789)
+
+Maybe you want to copy the data from one subfield to another. Use the marc_map to
+store the data first in a temporary field and add it later to the new field:
+
+   # copy a subfield
+   marc_map(001,tmp)
+
+   # maybe process the data a bit
+   append(tmp,"-mytest")
+
+   # add the contents of the tmp field to the new 009 field
+   marc_add(009,_,$.tmp)
+
+=head2 Set a MARC subfield
+
+Set the $h subfield to a new value (or create it when it doesn't exist yet):
+
+   marc_set(100h, test123)
+
+Only set the 100 field if the first indicator is 3
+
+   marc_set(100[3]h, test123)
+
+=head2 Remove a MARC (sub)field
+
+Remove all fields 500 , 501 , 5** :
+
+   marc_remove(5**)
+
+Remove all 245h fields:
+
+   marc_remove(245h)
+
+=head2 Append text to a MARC field
+
+Append a period to the 500 field is there isn't already there:
+
+  do marc_each()
+    unless marc_match(500, "\.$")    # Only if the current field 500 doesn't end with a period
+      marc_append(500,".")           # Add to the current 500 field a period
+    end
+  end
+
+Use the L<Catmandu::Fix::Bind::marc_each> Bind to loop over all MARC fields. In the
+context of the C<do -- end> only one MARC field at a time is visible for the C<marc_*> fixes.
+
+=head2 The marc_each binder
+
+All C<marc_*> fixes will operate on all MARC fields matching a MARC path. For example,
+
+   marc_remove(856)
+
+will remove all 856 MARC fields. In some cases you may want to change only some of the fields
+in a record. You could write:
+
+  if marc_match(856u,"google")
+     marc_remove(856)
+  end
+
+in the hope it would remove the 856 fields that contain the text "google" in the $u subfield.
+Alas, this is not what will happen. The C<if> condition will match when the record contains one or
+more 856u fields containing "google". The C<marc_remove> Fix will delete B<all> 856 fields. To
+correctly remove only the 856 fields in the context of the C<if> statement the C<marc_each> binder
+is required:
+
+  do marc_each()
+    if marc_match(856u,"google")
+       marc_remove(856)
+    end
+  end
+
+The C<marc_each> will loop over all MARC fields one at a time. The if statement will only match when
+the current MARC field is 856 and the $u field contains "google". The C<marc_remove(856)> will only
+delete the current 856 field.
+
+In C<marc_each> binder, it seems for all Fixes as if there is only one field at a time visible in the record.
+This Fix will not work:
+
+  do marc_each()
+    if marc_match(856u,"google")
+       marc_remove(900)           # <-- there is only a 856 field in the current context
+    end
+  end
+
+=head2 marc_copy, marc_cut and marc_paste
+
+The L<Catmandu::Fix::marc_copy>, L<Catmandu::Fix::marc_cut>, L<Catmandu::Fix::marc_paste> Fixes
+are needed when complicated edits are needed in MARC record.
+
+The C<marc_copy> fill copy parts of a MARC record matching a MARC_PATH to a temporary variable.
+This tempoarary variable will contain an ARRAY of HASHes containing the content of the MARC field.
+
+For instance,
+
+  marc_copy(650, tmp)
+
+The C<tmp> will contain something like:
+
+  tmp:[
+      {
+          "subfields" : [
+              {
+                  "a" : "Perl (Computer program language)"
+              }
+          ],
+          "ind1" : " ",
+          "ind2" : "0",
+          "tag" : "650"
+    },
+    {
+          "ind1" : " ",
+          "subfields" : [
+              {
+                  "a" : "Web servers."
+              }
+          ],
+          "tag" : "650",
+          "ind2" : "0"
+    }
+  ]
+
+This structure can be edited with all the Catmandu fixes. For instance you can set the first
+indicator to '1':
+
+  set_field(tmp.*.ind1 , 1)
+
+The JSON path C<tmp.*.ind1> will match all the first indicators. The JSON path
+C<tmp.*.tag> will match all the MARC tags. The JSON path C<tmp.*.subfields.*.a> will
+match all the $a subfields. For instance, to change all 'Perl' into 'Python' in the $a subfield
+use this Fix:
+
+  replace_all(tmp.*.subfields.*.a,"Perl","Python")
+
+When the fields need to be places back into the record the C<marc_paste> command can be used:
+
+   marc_paste(subjects)
+
+This will add all 650 fields in the C<tmp> temporary variable at the B<end> of the record. You can
+change the MARC fields in place using the C<march_each> binder:
+
+  do marc_each()
+     # Select only the 650 fields
+     if marc_has(650)
+        # Create a working copy
+        marc_copy(650,tmp)
+
+        # Change some fields
+        set_field(tmp.*.ind1 , 1)
+
+        # Paste the result back
+        marc_paste(tmp)
+     end
+  end
+
+The C<marc_cut> Fix works like C<marc_copy> but will delete the matching MARC field from the record.
+
 =head2 Rename MARC subfields
 
 In the example below we rename each $1 subfield in the MARC record to $0 using
@@ -250,16 +418,12 @@ fixes:
        marc_paste(tmp)
     end
 
-Put this Fix script in a file C<myfix.fix> and execute the Catmandu command:
-
-  $ catmandu convert MARC to MARC --fix myfix.fix < data.mrc > output.mrc
-
 The C<marc_each> bind will loop over all the MARC fields. With C<marc_cut> we
 store any field (C<***> matches every field) into a C<tmp> field. The C<marc_cut>
 creates an array structure in C<tmp> which is easy to process using the Fix
 language. Using the C<rename> function we search for all the subfields, and replace
 the field matching the regular expression C<1> with C<0>. At the end, we paste
-back the C<tmp> field into the record.  
+back the C<tmp> field into the record.
 
 =head1 WRITING
 

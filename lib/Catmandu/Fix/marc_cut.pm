@@ -101,6 +101,36 @@ need to be copied:
     # Cut all the 300 fields which have subfield c equal to 'ABC'
     marc_cut(300c,tmp,equal:"^ABC")
 
+=head1 JSON PATHS
+
+Catmandu Fixes can be used to edit the data in the cut fields. To have easy access
+to the data in the copied fields, these JSON paths can be used (where VAR is the
+name of field into which you copied the data)
+
+    VAR.*.tag       - The names of all MARC tags
+    VAR.*.ind1      - All first indicators
+    VAR.*.ind2      - All second indicators
+    VAR.*.subfields.*.a - The value of all $a subfields
+    VAR.*.subfields.$first.a - The value of the first $a subfield
+    VAR.*.subfields.$last.a - The value of the last $a subfield
+    VAR.*.content   - The value of the first control field
+
+    VAR.$first.subfields.$first.z - The value of the second $z subfield in the first MARC field
+
+These JSON paths can be used like:
+
+    # Set the first indicator of all 300 fields
+    do marc_each()
+      if marc_has(300)
+        marc_cut(300,tmp)
+
+        # Set the first indicator to 1
+        set_field(tmp.*.ind1,1)
+
+        marc_paste(tmp)
+      end
+    end
+
 =head1 INLINE
 
 This Fix can be used inline in a Perl script:
