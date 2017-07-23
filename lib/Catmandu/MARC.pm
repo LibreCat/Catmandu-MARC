@@ -1342,6 +1342,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =over
 
+=item * L<Catmandu::MARC::Tutorial>
+
 =item * L<Catmandu::Importer::MARC>
 
 =item * L<Catmandu::Exporter::MARC>
