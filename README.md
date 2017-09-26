@@ -44,6 +44,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 # MODULES
 
+- [Catmandu::MARC::Tutorial](https://metacpan.org/pod/Catmandu::MARC::Tutorial)
 - [Catmandu::Importer::MARC](https://metacpan.org/pod/Catmandu::Importer::MARC)
 - [Catmandu::Exporter::MARC](https://metacpan.org/pod/Catmandu::Exporter::MARC)
 - [Catmandu::Fix::marc\_map](https://metacpan.org/pod/Catmandu::Fix::marc_map)
