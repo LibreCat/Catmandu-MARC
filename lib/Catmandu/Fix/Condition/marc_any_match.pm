@@ -1,4 +1,4 @@
-package Catmandu::Fix::Condition::marc_match;
+package Catmandu::Fix::Condition::marc_any_match;
 use Catmandu::Sane;
 use Catmandu::Fix::marc_map;
 use Catmandu::Fix::Condition::any_match;
@@ -23,7 +23,7 @@ sub emit {
     my $marc_map = Catmandu::Fix::marc_map->new($self->marc_path , "$tmp_var.\$append");
     $perl .= $marc_map->emit($fixer,$label);
 
-    my $any_match = Catmandu::Fix::Condition::any_match->new("$tmp_var.*",$self->value);
+    my $any_match    = Catmandu::Fix::Condition::any_match->new("$tmp_var.*",$self->value);
     my $remove_field = Catmandu::Fix::remove_field->new($tmp_var);
 
     my $pass_fixes = $self->pass_fixes;
@@ -39,30 +39,42 @@ sub emit {
 
 =head1 NAME
 
-Catmandu::Fix::Condition::marc_match - Test if a MARC (sub)field matches a value
+Catmandu::Fix::Condition::marc_any_match - Test if a MARC (sub)field matches a value
 
 =head1 SYNOPSIS
 
-   # marc_match(MARC_PATH,REGEX)
+   # marc_any_match(MARC_PATH,REGEX)
 
-   if marc_match('245','My funny title')
+   # Match if 245 contains the value "My funny title"
+   if marc_any_match('245','My funny title')
    	add_field('my.funny.title','true')
+   end
+
+   # Match if 245a contains the value "My funny title"
+   if marc_any_match('245a','My funny title')
+   	add_field('my.funny.title','true')
+   end
+
+   # Match if at least one 650 field contains digits
+   if marc_any_match('650','[0-9]')
+     add_field('has_digits','true')
    end
 
 =head1 DESCRIPTION
 
 Evaluate the enclosing fixes only if the MARC (sub)field matches a
-regular expression.
+regular expression. When the MARC field is a repeated fiels, then at
+least one MARC fields should match the regular expression.
 
 =head1 METHODS
 
-=head2 marc_match(MARC_PATH, REGEX)
+=head2 marc_any_match(MARC_PATH, REGEX)
 
 Evaluates to true when the MARC_PATH values matches the REGEX, false otherwise.
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix>
+L<Catmandu::Fix::marc_all_match>
 
 =cut
 
