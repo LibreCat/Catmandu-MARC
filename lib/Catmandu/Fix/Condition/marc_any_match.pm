@@ -74,7 +74,7 @@ Evaluates to true when the MARC_PATH values matches the REGEX, false otherwise.
 
 =head1 SEE ALSO
 
-L<Catmandu::Fix::marc_all_match>
+L<Catmandu::Fix::Condition::marc_all_match>
 
 =cut
 
