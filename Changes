@@ -1,7 +1,12 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding marc_all_match
+  - Adding marc_any_match
+  - Deprecating marc_match (on favor ot marc_all_match)
+  - Fixing ALEPHSEQ exporter: adding a default 'FMT' field
+  - Moving all tests into a new tree for each seperate module
+  
 1.18  2017-07-22 11:46:52 CEST
   - Adding skip_errors option in the importer and exporter
   - More POD
