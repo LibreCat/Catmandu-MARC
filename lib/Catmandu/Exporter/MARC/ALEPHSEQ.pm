@@ -133,6 +133,7 @@ sub add {
 sub commit {
 	my $self = shift;
 	$self->fh->flush;
+    1;
 }
 
 1;

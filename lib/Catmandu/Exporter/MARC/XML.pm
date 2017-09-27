@@ -97,6 +97,8 @@ sub commit {
     }
 
     $self->fh->flush;
+
+    1;
 }
 
 1;
@@ -180,4 +182,3 @@ L<Catmandu::Counter>, and L<Catmandu::Logger> for a full list of methods.
 L<Catmandu::Importer::MARC::XML>
 
 =cut
-
