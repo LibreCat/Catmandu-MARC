@@ -99,6 +99,9 @@ sub generator {
     $file = $self->decoder->fake_marc_file($self->fh,'MARC::File::USMARC') unless $file;
     sub  {
        my $marc = $file->next();
+
+       return undef unless $marc;
+       
        my $doc  = $self->decoder->decode($marc,$self->id);
        $lint->check_record( $marc );
        $doc->{lint} = [$lint->warnings];

@@ -15,9 +15,9 @@ BEGIN {
 
 require_ok $pkg;
 
-my $xml = undef;
+my $alephseq = undef;
 
-my $exporter = Catmandu::Exporter::MARC->new(file => \$xml, type=> 'ALEPHSEQ' , skip_empty_subfields => 1);
+my $exporter = Catmandu::Exporter::MARC->new(file => \$alephseq, type=> 'ALEPHSEQ' , skip_empty_subfields => 1);
 
 ok $exporter , 'got an MARC/ALEPHSEQ exporter';
 
@@ -38,13 +38,13 @@ ok $exporter->add({
 
 ok $exporter->commit;
 
-ok($xml =~ /^000000001/, 'test id');
-ok($xml =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
-ok($xml !~ /000000001 500/, 'test skip empty subfields');
+ok($alephseq =~ /^000000001/, 'test id');
+ok($alephseq =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
+ok($alephseq !~ /000000001 500/, 'test skip empty subfields');
 
-$xml = '';
+$alephseq = '';
 $exporter = Catmandu::Exporter::MARC->new(
-                  file => \$xml,
+                  file => \$alephseq,
                   type=> 'ALEPHSEQ',
                   record_format => 'MARC-in-JSON',
                   skip_empty_subfields => 1
@@ -66,9 +66,9 @@ $exporter->add({
   ]
 });
 
-ok($xml =~ /^000000001/, 'test id');
-ok($xml =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
-ok($xml !~ /000000001 500/, 'test skip empty subfields');
-ok($xml =~ /000000001 540   L \$\$aabcd/, 'test skip newlines');
+ok($alephseq =~ /^000000001/, 'test id');
+ok($alephseq =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
+ok($alephseq !~ /000000001 500/, 'test skip empty subfields');
+ok($alephseq =~ /000000001 540   L \$\$aabcd/, 'test skip newlines');
 
 done_testing;
