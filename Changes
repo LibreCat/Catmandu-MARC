@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.19  2017-10-02 11:16:17 CEST
   - Adding marc_all_match
   - Adding marc_any_match
   - Deprecating marc_match (in favor of marc_all_match)

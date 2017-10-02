@@ -69,7 +69,7 @@ use Catmandu::Sane;
 use Moo;
 use MARC::Parser::RAW;
 
-our $VERSION = '1.18';
+our $VERSION = '1.19';
 
 with 'Catmandu::Importer';
 

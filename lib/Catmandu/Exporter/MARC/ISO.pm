@@ -60,7 +60,7 @@ use MARC::Record;
 use MARC::Field;
 use MARC::File::USMARC;
 
-our $VERSION = '1.18';
+our $VERSION = '1.19';
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
