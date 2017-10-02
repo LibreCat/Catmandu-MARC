@@ -45,27 +45,21 @@ Catmandu::Fix::Condition::marc_any_match - Test if a MARC (sub)field matches a v
 
    # marc_any_match(MARC_PATH,REGEX)
 
-   # Match if 245 contains the value "My funny title"
+   # Match when 245 contains the value "My funny title"
    if marc_any_match('245','My funny title')
    	add_field('my.funny.title','true')
    end
 
-   # Match if 245a contains the value "My funny title"
+   # Match when 245a contains the value "My funny title"
    if marc_any_match('245a','My funny title')
    	add_field('my.funny.title','true')
    end
 
-   # Match if at least one 650 field contains digits
+   # Match when at least one 650 field contains digits
    if marc_any_match('650','[0-9]')
      add_field('has_digits','true')
    end
 
-   # Match if /one/ of the 650 fields contain digits
-   do marc_each()
-       if marc_all_match('650','[0-9]')
-         add_field('has_digits','true')
-       end
-   end
 =head1 DESCRIPTION
 
 Evaluate the enclosing fixes only if the MARC (sub)field matches a
@@ -76,7 +70,7 @@ least one MARC fields should match the regular expression.
 
 =head2 marc_any_match(MARC_PATH, REGEX)
 
-Evaluates to true when the MARC_PATH values matches the REGEX, false otherwise.
+Evaluates to true when at least one MARC_PATH values matches the REGEX, false otherwise.
 
 =head1 SEE ALSO
 

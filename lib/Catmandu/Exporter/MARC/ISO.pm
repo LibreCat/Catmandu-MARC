@@ -82,6 +82,8 @@ sub add {
 sub commit {
 	my ($self) = @_;
 	$self->fh->flush;
+
+    1;
 }
 
 1;
