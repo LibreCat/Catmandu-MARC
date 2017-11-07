@@ -66,49 +66,11 @@ Catmandu::Fix::marc_copy - copy marc data in a structured way to a new field
 
 =head1 SYNOPSIS
 
-    # fixed field
+    # Cut the 001 field out of the MARC record into the fixed001
     marc_copy(001, fixed001)
 
-    Can result in:
-
-    fixed001 : [
-        {
-            "tag": "001",
-            "ind1": null,
-            "ind2": null,
-            "content": "fol05882032 "
-        }
-    ]
-
-    And
-
-    # variable field
+    # Cut all 650 fields out of the MARC record into the subjects array
     marc_copy(650, subjects)
-
-    Can result in:
-
-    subjects:[
-        {
-            "subfields" : [
-                {
-                    "a" : "Perl (Computer program language)"
-                }
-            ],
-            "ind1" : " ",
-            "ind2" : "0",
-            "tag" : "650"
-      },
-      {
-            "ind1" : " ",
-            "subfields" : [
-                {
-                    "a" : "Web servers."
-                }
-            ],
-            "tag" : "650",
-            "ind2" : "0"
-      }
-    ]
 
 
 =head1 DESCRIPTION
@@ -125,12 +87,6 @@ like tag, indicators and subfield codes into a nested data structure.
 
 Copy this MARC fields referred by a MARC_PATH to a JSON_PATH.
 
-When the MARC_PATH points to a MARC tag then only the fields mathching the MARC
-tag will be copied. When the MATCH_PATH contains indicators or subfields, then
-only the MARC_FIELDS which contain data in these subfields will be copied. Optional,
-a C<equals> regular expression can be provided that should match the subfields that
-need to be copied:
-
     # Copy all the 300 fields
     marc_copy(300,tmp)
 
@@ -143,35 +99,55 @@ need to be copied:
     # Copy all the 300 fields which have subfield c equal to 'ABC'
     marc_copy(300c,tmp,equal:"^ABC")
 
-=head1 JSON PATHS
+    The JSON_PATH C<tmp> will contain an array with one item per field that was copied.
+    Each item is a hash containing the following fields:
 
-Catmandu Fixes can be used to edit the data in the copied fields. To have easy access
-to the data in the copied fields, these JSON paths can be used (where VAR is the
-name of field into which you copied the data)
+      tmp.*.tag        - The names of the MARC field
+      tmp.*.ind1       - The value of the first indicator
+      tmp.*.ind2       - The value of the second indicator
+      tmp.*.subfields  - An array of subfield item. Each subfield item is a
+                         hash of the subfield code and subfield value
 
-    VAR.*.tag       - The names of all MARC tags
-    VAR.*.ind1      - All first indicators
-    VAR.*.ind2      - All second indicators
-    VAR.*.subfields.*.a - The value of all $a subfields
-    VAR.*.subfields.$first.a - The value of the first $a subfield
-    VAR.*.subfields.$last.a - The value of the last $a subfield
-    VAR.*.content   - The value of the first control field
+    E.g.
 
-    VAR.$first.subfields.$first.z - The value of the second $z subfield in the first MARC field
+        tmp:
+        - tag: '300'
+          ind1: ' '
+          ind2: ' '
+          subfields:
+          - a: 'blabla:'
+          - v: 'test123'
+          - c: 'ok123'
 
-These JSON paths can be used like:
+    These JSON paths can be used like:
 
-    # Set the first indicator of all 300 fields
-    do marc_each()
-      if marc_has(300)
-        marc_copy(300,tmp)
+        # Set the first indicator of all 300 fields
+        do marc_each()
+          if marc_has(300)
+            marc_copy(300,tmp)
 
-        # Set the first indicator to 1
-        set_field(tmp.*.ind1,1)
+            # Set the first indicator to 1
+            # We only check the first item in tmp because the march_each
+            # binder can contain only one MARC field at a time
+            set_field(tmp.0.ind1,1)
 
-        marc_paste(tmp)
-      end
-    end
+            marc_paste(tmp)
+          end
+        end
+
+        # Capitalize all the v subfields of 300
+        do marc_each()
+          if marc_has(300)
+             marc_copy(300,tmp)
+
+             do list(path:tmp.0.subfields, var:loop)
+                if (exists(loop.v))
+                    upcase(loop.v)
+                end
+             end
+          end
+        end
+
 
 =head1 INLINE
 
