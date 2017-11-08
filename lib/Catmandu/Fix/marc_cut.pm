@@ -141,6 +141,8 @@ These JSON paths can be used like:
                 upcase(loop.v)
             end
          end
+
+         marc_paste(tmp)
       end
     end
 

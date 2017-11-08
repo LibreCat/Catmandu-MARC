@@ -145,6 +145,8 @@ Copy this MARC fields referred by a MARC_PATH to a JSON_PATH.
                     upcase(loop.v)
                 end
              end
+
+             marc_paste(tmp)
           end
         end
 

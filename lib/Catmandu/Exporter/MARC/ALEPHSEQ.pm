@@ -101,6 +101,9 @@ sub add {
         next if $#data == -1;
 
         # Joins are faster than perl string concatenation
+        if (@data < 2) {
+            $self->log->warn("$tag doesn't have any data");
+        }
         if (index($tag,'LDR') == 0) {
             my $ldr = $data[1];
             $ldr =~ s/ /^/og;
