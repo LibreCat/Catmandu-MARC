@@ -5,6 +5,7 @@ use warnings;
 use Test::More;
 use Test::Exception;
 use Catmandu::Exporter::MARC;
+use utf8;
 
 my $pkg;
 
@@ -15,60 +16,114 @@ BEGIN {
 
 require_ok $pkg;
 
-my $alephseq = undef;
+note("catmandu marc export");
+{
+    my $alephseq = undef;
 
-my $exporter = Catmandu::Exporter::MARC->new(file => \$alephseq, type=> 'ALEPHSEQ' , skip_empty_subfields => 1);
-
-ok $exporter , 'got an MARC/ALEPHSEQ exporter';
-
-ok $exporter->add({
-  _id => '1' ,
-  record => [
-            ['001', undef, undef, '_', 'rec001'],
-            ['100', ' ', ' ', 'a', 'Davis, Miles' , 'c' , 'Test'],
-            ['245', ' ', ' ',
-                'a', 'Sketches in Blue' ,
-            ],
-            ['500', ' ', ' ', 'a', undef],
-            ['501', ' ', ' ' ],
-            ['502', ' ', ' ', 'a', undef, 'b' , 'ok'],
-            ['503'. ' ', ' ', 'a', ''],
+    my $record = {
+        _id => '000000002',
+        record => [
+          [ 'FMT', ' ', ' ' , '_', 'BK' ] ,
+          [ 'LDR', ' ', ' ' , '_', '00000nam a2200301 i 4500' ] ,
+          [ '001', ' ', ' ' , '_', '000000002' ] ,
+          [ '245', '1', '0' , 'a', 'Catmandu Test' ] ,
+          [ '650', ' ', '0' , 'a', 'Perl' ] ,
+          [ '650', ' ', '0' , 'a', 'MARC' , 'a' , 'MARC2' ] ,
+          [ '650', ' ', '0' , 'a', '加德滿都' ] ,
         ]
-});
+    };
 
-ok $exporter->commit;
+    my $expected =<<'EOF';
+000000002 FMT   L BK
+000000002 LDR   L 00000nam^a2200301^i^4500
+000000002 001   L 000000002
+000000002 24510 L $$aCatmandu Test
+000000002 650 0 L $$aPerl
+000000002 650 0 L $$aMARC$$aMARC2
+000000002 650 0 L $$a加德滿都
+EOF
 
-ok($alephseq =~ /^000000001/, 'test id');
-ok($alephseq =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
-ok($alephseq !~ /000000001 500/, 'test skip empty subfields');
+    my $exporter = Catmandu::Exporter::MARC->new(file => \$alephseq, type=> 'ALEPHSEQ' , skip_empty_subfields => 1);
 
-$alephseq = '';
-$exporter = Catmandu::Exporter::MARC->new(
-                  file => \$alephseq,
-                  type=> 'ALEPHSEQ',
-                  record_format => 'MARC-in-JSON',
-                  skip_empty_subfields => 1
-);
+    ok $exporter , 'got an MARC/ALEPHSEQ exporter';
 
-ok($exporter, "create exporter ALEPHSEQ for MARC-in-JSON");
+    ok $exporter->add($record) , 'add a record';
 
-$exporter->add({
-  _id => '1',
-  fields => [
-    { '001' => 'rec001' } ,
-    { '100' => { 'subfields' => [ { 'a' => 'Davis, Miles'} , { 'c' => 'Test'}], 'ind1' => ' ', 'ind2' => ' '}} ,
-    { '245' => { 'subfields' => [ { 'a' => 'Sketches in Blue'}], 'ind1' => ' ', 'ind2' => ' '}} ,
-    { '500' => { 'subfields' => [ { 'a' => undef }] , 'ind1' => ' ', 'ind2' => ' '}} ,
-    { '501' => { 'ind1' => ' ', 'ind2' => ' ' }} ,
-    { '502' => { 'subfields' => [ { 'a' => undef} , { 'b' , 'ok' } ] , 'ind1' => ' ', 'ind2' => ' ' } } ,
-    { '503' => { 'subfields' => [ { 'a' => '' }] , 'ind1' => ' ', 'ind2' => ' '}} ,
-    { '540' => { 'subfields' => [ { 'a' => "\nabcd\n" }] , 'ind1' => ' ', 'ind2' => ' '}}
-  ]
-});
+    ok $exporter->commit , 'commit';
 
-ok($alephseq =~ /^000000001/, 'test id');
-ok($alephseq =~ /000000001 100   L \$\$aDavis, Miles\$\$cTest/, 'test subfields');
-ok($alephseq !~ /000000001 500/, 'test skip empty subfields');
-ok($alephseq =~ /000000001 540   L \$\$aabcd/, 'test skip newlines');
+    is_deeply $alephseq , $expected , 'got expected results';
+}
+
+note("marc-in-json export");
+{
+    my $alephseq ;
+
+
+    my $exporter = Catmandu::Exporter::MARC->new(
+                      file => \$alephseq,
+                      type=> 'ALEPHSEQ',
+                      record_format => 'MARC-in-JSON',
+                      skip_empty_subfields => 1
+    );
+
+    ok($exporter, "create exporter ALEPHSEQ for MARC-in-JSON");
+
+    my $record = {
+        _id => '000000002',
+        leader => "00000nam a2200301 i 4500" ,
+        fields => [
+            { '001'  => '000000002' } ,
+            { '245'  => {
+                    ind1 => '1' ,
+                    ind2 => '0' ,
+                    subfields => [
+                        { a => 'Catmandu Test'}
+                    ]
+                }
+            } ,
+            { '650'  => {
+                    ind1 => ' ' ,
+                    ind2 => '0' ,
+                    subfields => [
+                        { a => 'Perl'}
+                    ]
+                }
+            } ,
+            { '650'  => {
+                    ind1 => ' ' ,
+                    ind2 => '0' ,
+                    subfields => [
+                        { a => 'MARC'} ,
+                        { a => 'MARC2'}
+                    ]
+                }
+            } ,
+            { '650'  => {
+                    ind1 => ' ' ,
+                    ind2 => '0' ,
+                    subfields => [
+                        { a => '加德滿都'}
+                    ]
+                }
+            } ,
+        ]
+    };
+
+    my $expected =<<'EOF';
+000000002 FMT   L BK
+000000002 LDR   L 00000nam^a2200301^i^4500
+000000002 001   L 000000002
+000000002 24510 L $$aCatmandu Test
+000000002 650 0 L $$aPerl
+000000002 650 0 L $$aMARC$$aMARC2
+000000002 650 0 L $$a加德滿都
+EOF
+
+    ok $exporter->add($record), 'add record';
+
+    ok $exporter->commit() , 'commit';
+
+    is_deeply $alephseq , $expected , 'got expected results';
+}
 
 done_testing;
