@@ -14,7 +14,7 @@ sub _raw_to_marc_record {
 
         $ind1 //= ' ';
         $ind2 //= ' ';
-        
+
         @data = $self->_clean_raw_data($tag,@data);
 
         if (@data < 2) {
