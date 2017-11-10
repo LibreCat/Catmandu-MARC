@@ -48,8 +48,8 @@ note 'marc_copy(001,cntrl)';
         [
             {
                 tag => '001',
-                ind1 => undef,
-                ind2 => undef,
+                ind1 => ' ',
+                ind2 => ' ',
                 content => "   92005291 "
             }
         ], 'marc_copy(001,cntrl)';
@@ -182,14 +182,14 @@ note 'marc_copy(...,all)';
         [
             {
                 tag => 'LDR',
-                ind1 => undef,
-                ind2 => undef,
+                ind1 => ' ',
+                ind2 => ' ',
                 content => "                        "
             },
             {
                 tag => '001',
-                ind1 => undef,
-                ind2 => undef,
+                ind1 => ' ',
+                ind2 => ' ',
                 content => "   92005291 "
             },
             {
