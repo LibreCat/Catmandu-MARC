@@ -95,7 +95,7 @@ sub generator {
                warn "skipping $sysid $tag unknown data";
                next;
            }
-           if ($tag eq 'LDR') {
+           if ($tag eq 'LDR' || $tag eq '008') {
                $data =~ s/\^/ /g;
            }
            my @parts = ('_' , split(/\$\$(.)/, $data) );
