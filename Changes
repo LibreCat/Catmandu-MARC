@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.21  2017-11-13 14:21:16 CET
   - Fixing ^ to space conversion in ALEPHSEQ imports
 
 1.20  2017-11-08 10:29:27 CET

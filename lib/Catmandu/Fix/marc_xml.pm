@@ -8,7 +8,7 @@ use Clone qw(clone);
 
 with 'Catmandu::Fix::Inlineable';
 
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 
 has path  => (fix_arg => 1);
 
