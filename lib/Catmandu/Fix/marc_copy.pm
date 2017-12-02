@@ -122,31 +122,27 @@ Copy this MARC fields referred by a MARC_PATH to a JSON_PATH.
     These JSON paths can be used like:
 
         # Set the first indicator of all 300 fields
-        do marc_each()
-          if marc_has(300)
-            marc_copy(300,tmp)
+        do marc_each(var:this)
+          if all_match(this.tag,300)
 
             # Set the first indicator to 1
-            # We only check the first item in tmp because the march_each
-            # binder can contain only one MARC field at a time
-            set_field(tmp.0.ind1,1)
+            set_field(this.ind1,1)
 
-            marc_paste(tmp)
+            marc_paste(this)
           end
         end
 
         # Capitalize all the v subfields of 300
-        do marc_each()
-          if marc_has(300)
-             marc_copy(300,tmp)
+        do marc_each(var:this)
+            if all_match(this.tag,300)
 
-             do list(path:tmp.0.subfields, var:loop)
+             do list(path:this.subfields, var:loop)
                 if (exists(loop.v))
                     upcase(loop.v)
                 end
              end
 
-             marc_paste(tmp)
+             marc_paste(this)
           end
         end
 

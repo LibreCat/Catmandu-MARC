@@ -1,7 +1,9 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Add support for passing a loop variable in marc_each
+  - Making the syntax of marc_copy and marc_paste more intuitive for marc_each loops
+  
 1.21  2017-11-13 14:21:16 CET
   - Fixing ^ to space conversion in ALEPHSEQ imports
 

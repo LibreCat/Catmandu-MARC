@@ -1167,7 +1167,9 @@ sub marc_paste {
 
     my $value = Catmandu::Util::data_at($json_path,$data);
 
-    return $data unless Catmandu::Util::is_array_ref($value);
+    return $data unless Catmandu::Util::is_array_ref($value) || Catmandu::Util::is_hash_ref($value);
+
+    $value = [$value] unless Catmandu::Util::is_array_ref($value);
 
     my @new_parts;
 
