@@ -435,3 +435,34 @@ back the C<tmp> field into the record.
 =head2 Select only the records with 900a == book
 
     $ catmandu convert MARC to MARC --fix 'marc_map(900a,type); select all_match(type,book)' < data.mrc > output.mrc
+
+The C<all_match> also allows a regular expressions:
+
+    $ catmandu convert MARC to MARC --fix 'marc_map(900a,type); select all_match(type,"[Bb]ook")' < data.mrc > output.mrc
+
+=head2 Select only the rcords with 900a values in a given CSV file
+
+Create a CSV file with name,value pairs (need two columns):
+
+    $ cat values.csv
+    name,values
+    book,1
+    journal,1
+    movie,1
+
+    $ catmandu convert MARC to MARC --fix myfixes.txt < data.mrc > output.mrc
+
+    with myfixes.txt like:
+
+    do marc_each()
+       marc_map(900a,test)
+       lookup(test,values.csv,default:0)
+       select all_match(test,1)
+       remove_field(test)
+    end
+
+We use a "do marc_each() ... end" loop because 900a fields can be repeated. If a
+MARC tag isn't repeatable this loop not isn't needed. With marc_map we copy
+first the value of a marc subfield to a 'test' field. This test we lookup against
+the CSV file. Then, we select only the records that are found in the CSV file
+(and return the correct value).
