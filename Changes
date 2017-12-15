@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Forcing MARC::Spec 1.0.0 for now
 
 1.22  2017-12-02 10:23:48 CET
   - Add support for passing a loop variable in marc_each
