@@ -70,7 +70,7 @@ use Moo;
 use MARC::File::USMARC;
 use Catmandu::Importer::MARC::Decoder;
 
-our $VERSION = '1.22';
+our $VERSION = '1.23';
 
 with 'Catmandu::Importer';
 
