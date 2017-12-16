@@ -33,7 +33,7 @@ my %module_build_args = (
     "MARC::Lint" => 0,
     "MARC::Parser::RAW" => 0,
     "MARC::Record" => "v2.0.6",
-    "MARC::Spec" => "== v1.0.0",
+    "MARC::Spec" => "v2.0.3",
     "Memoize" => 0,
     "Moo" => "1.0",
     "MooX::Singleton" => 0,

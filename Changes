@@ -1,6 +1,7 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Implementing marc_spec 2.0 in the fixes
 
 1.23  2017-12-15 09:52:08 CET
   - Forcing MARC::Spec 1.0.0 for now
@@ -8,7 +9,7 @@ Revision history for Catmandu-MARC
 1.22  2017-12-02 10:23:48 CET
   - Add support for passing a loop variable in marc_each
   - Making the syntax of marc_copy and marc_paste more intuitive for marc_each loops
-  
+
 1.21  2017-11-13 14:21:16 CET
   - Fixing ^ to space conversion in ALEPHSEQ imports
 
