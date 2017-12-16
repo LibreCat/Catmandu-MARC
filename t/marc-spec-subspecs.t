@@ -253,149 +253,149 @@ note 'marc_spec(650[0]{!300}, exists_not)     exists_not: "Alpha"';
     is_deeply $record->{exists_not}, 'Alpha', 'marc_spec(650[0]{!300}, exists_not)';
 }
 
-note 'marc_spec(650[1]{245_0}, indicator1)     indicator1: "Beta"';
+note 'marc_spec(650[1]{245^1=\0}, indicator1)     indicator1: "Beta"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245_0}", indicator1); retain_field(indicator1)'
+        fix  => 'marc_spec("650[1]{245^1=\0}", indicator1); retain_field(indicator1)'
     );
     my $record = $importer->first;
-    is_deeply $record->{indicator1}, 'Beta', 'marc_spec(650[1]{245_0}, indicator1)';
+    is_deeply $record->{indicator1}, 'Beta', 'marc_spec(650[1]{245^1=\0}, indicator1)';
 }
 
-note 'marc_spec(999$a{_1}, indicator1)     indicator1: "Z"';
+note 'marc_spec(999$a{^1=\1}, indicator1)     indicator1: "Z"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999$a{999_1}", indicator1); retain_field(indicator1)'
+        fix  => 'marc_spec("999$a{^1=\1}", indicator1); retain_field(indicator1)'
     );
     my $record = $importer->first;
-    is_deeply $record->{indicator1}, 'Z', 'marc_spec(999$a{_1}, indicator1)';
+    is_deeply $record->{indicator1}, 'Z', 'marc_spec(999$a{^1=\1}, indicator1)';
 }
 
-note 'marc_spec(650[1]{245_1}, indicator1)     indicator1: undef';
+note 'marc_spec(650[1]{245^1=\1}, indicator1)     indicator1: undef';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245_1}", indicator1); retain_field(indicator1)'
+        fix  => 'marc_spec("650[1]{245^1=\1}", indicator1); retain_field(indicator1)'
     );
     my $record = $importer->first;
-    ok !$record->{indicator1}, 'marc_spec(650[1]{245_1}, indicator1)';
+    ok !$record->{indicator1}, 'marc_spec(650[1]{245^1=\1}, indicator1)';
 }
 
-note 'marc_spec(650[1]{245__1}, indicator2)     indicator1: "Beta"';
+note 'marc_spec(650[1]{245^2=\1}, indicator2)     indicator2: "Beta"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245__1}", indicator2); retain_field(indicator2)'
+        fix  => 'marc_spec("650[1]{245^2=\1}", indicator2); retain_field(indicator2)'
     );
     my $record = $importer->first;
-    is_deeply $record->{indicator2}, 'Beta', 'marc_spec(650[1]{245__1}, indicator2)';
+    is_deeply $record->{indicator2}, 'Beta', 'marc_spec(650[1]{245^2=\1}, indicator2)';
 }
 
-note 'marc_spec(650[1]{245__0}, indicator2)     indicator2: undef';
+note 'marc_spec(650[1]{245^2=\0}, indicator2)     indicator2: undef';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245__0}", indicator2); retain_field(indicator2)'
+        fix  => 'marc_spec("650[1]{245^2=\0}", indicator2); retain_field(indicator2)'
     );
     my $record = $importer->first;
-    ok !$record->{indicator2}, 'marc_spec(650[1]{245__0}, indicator2)';
+    ok !$record->{indicator2}, 'marc_spec(650[1]{245^2=\0}, indicator2)';
 }
 
-note 'marc_spec(650[1]{245_01}, indicators)     indicator1: "Beta"';
+note 'marc_spec(650[1]{245^1=\0}{245^2=\1}, indicators)     indicator1: "Beta"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245_01}", indicators); retain_field(indicators)'
+        fix  => 'marc_spec("650[1]{245^1=\0}{245^2=\1}", indicators); retain_field(indicators)'
     );
     my $record = $importer->first;
-    is_deeply $record->{indicators}, 'Beta', 'marc_spec(650[1]{245_01}, indicators)';
+    is_deeply $record->{indicators}, 'Beta', 'marc_spec(650[1]{245^1=\0}{245^2=\1}, indicators)';
 }
 
-note 'marc_spec(650[1]{245_00}, indicators)     indicator2: undef';
+note 'marc_spec(650[1]{245^1=\0}{245^2=\0}, indicators)     indicator2: undef';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("650[1]{245_00}", indicators); retain_field(indicators)'
+        fix  => 'marc_spec("650[1]{245^1=\0}{245^2=\0}", indicators); retain_field(indicators)'
     );
     my $record = $importer->first;
-    ok !$record->{indicators}, 'marc_spec(650[1]{245_00}, indicators)';
+    ok !$record->{indicators}, 'marc_spec(650[1]{245^1=\0}{245^2=\0}, indicators)';
 }
 
 
-note 'marc_spec(999{245_00|$a=\Y}, or)     or: "XY"';
+note 'marc_spec(999{245^2=\0|$a=\Y}, or)     or: "XY"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999{245_00|$a=\Y}", or); retain_field(or)'
+        fix  => 'marc_spec("999{245^2=\0|$a=\Y}", or); retain_field(or)'
     );
     my $record = $importer->first;
-    is_deeply $record->{or}, 'XY', 'marc_spec(999{245_00|$a=\Y}, or)';
+    is_deeply $record->{or}, 'XY', 'marc_spec(999{245^2=\0|$a=\Y}, or)';
 }
 
-note 'marc_spec(999$a[#]{245_00|$a=\Y}, or)     or: "Y"';
+note 'marc_spec(999$a[#]{245^2=\0|$a=\Y}, or)     or: "Y"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999$a[#]{245_00|$a=\Y}", or); retain_field(or)'
+        fix  => 'marc_spec("999$a[#]{245^2=\0|$a=\Y}", or); retain_field(or)'
     );
     my $record = $importer->first;
-    is_deeply $record->{or}, 'Y', 'marc_spec(999$a[#]{245_00|$a=\Y}, or)';
+    is_deeply $record->{or}, 'Y', 'marc_spec(999$a[#]{245^2=\0|$a=\Y}, or)';
 }
 
-note 'marc_spec(999$a[#]{245_00}{$a=\Y}, and)     and: undef';
+note 'marc_spec(999$a[#]{245^1=\0}{245^2=\0}{$a=\Y}, and)     and: undef';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999$a[#]{245_00}{$a=\Y}", and); retain_field(and)'
+        fix  => 'marc_spec("999$a[#]{245^1=\0}{245^2=\0}{$a=\Y}", and); retain_field(and)'
     );
     my $record = $importer->first;
-    ok !$record->{and}, 'marc_spec(999$a[#]{245_00}{$a=\Y}, and)';
+    ok !$record->{and}, 'marc_spec(999$a[#]{245^1=\0}{245^2=\0}{$a=\Y}, and)';
 }
 
-note 'marc_spec(999$a[#]{245_01}{$a=\Y}, and)     and: "Y"';
+note 'marc_spec(999$a[#]{245^1=\0}{245^2=\1}{$a=\Y}, and)     and: "Y"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999$a[#]{245_01}{$a=\Y}", and); retain_field(and)'
+        fix  => 'marc_spec("999$a[#]{245^1=\0}{245^2=\1}{$a=\Y}", and); retain_field(and)'
     );
     my $record = $importer->first;
-    is_deeply $record->{and}, 'Y', 'marc_spec(999$a[#]{245_01}{$a=\Y}, and)';
+    is_deeply $record->{and}, 'Y', 'marc_spec(999$a[#]{245^1=\0}{245^2=\1}{$a=\Y}, and)';
 }
 
-note 'marc_spec(999$a[#]{245_01}{$a=\Foo|$a=\Y}, and)     and: "Y"';
+note 'marc_spec(999$a[#]{245^1=\0}{245^2=\1}{$a=\Foo|$a=\Y}, and)     and: "Y"';
 {
     my $importer = Catmandu->importer(
         'MARC',
         file => \$mrc,
         type => 'XML',
-        fix  => 'marc_spec("999$a[#]{245_01}{$a=\Foo|$a=\Y}", and); retain_field(and)'
+        fix  => 'marc_spec("999$a[#]{245^1=\0}{245^2=\1}{$a=\Foo|$a=\Y}", and); retain_field(and)'
     );
     my $record = $importer->first;
-    is_deeply $record->{and}, 'Y', 'marc_spec(999$a[#]{245_01}{$a=\Foo|$a=\Y}, and)';
+    is_deeply $record->{and}, 'Y', 'marc_spec(999$a[#]{245^1=\0}{245^2=\1}{$a=\Foo|$a=\Y}, and)';
 }
 
 
