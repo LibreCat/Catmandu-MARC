@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.231  2017-12-16 13:40:53 CET
   - Implementing marc_spec 2.0 in the fixes
 
 1.23  2017-12-15 09:52:08 CET
