@@ -495,17 +495,6 @@ sub marc_spec {
     @fields = grep { $_->[0] =~ /$tag_spec/ } @{ $record };
     return unless @fields;
 
-    # filter by indicator
-    my ( $indicator1, $indicator2 );
-    if ( $field_spec->has_indicator1 ) {
-        $indicator1 = $field_spec->indicator1;
-        $indicator1 = qr/$indicator1/;
-    }
-   if ( $field_spec->has_indicator2 ) {
-        $indicator2 = $field_spec->indicator2;
-        $indicator2 = qr/$indicator2/;
-   }
-
     # calculate char start
     my $chst = sub {
         my ($sp) = @_;
@@ -579,16 +568,6 @@ sub marc_spec {
         $tag_index   = ( $prev_tag eq $current_tag and defined $tag_index)
             ? ++$tag_index
             : 0; #: $field_spec->index_start;
-
-        # filter by indicator
-        if( defined $indicator1 ) {
-            next unless ( defined $field->[1] && $field->[1] =~ $indicator1);
-        }
-
-        if( defined $indicator2 ) {
-            #next unless $field->[2] =~ $indicator2;
-            next unless ( defined $field->[2] && $field->[2] =~ $indicator2);
-        }
 
         # filter by index
         if ( defined $index_range ) {
@@ -695,6 +674,11 @@ sub marc_spec {
             } # end of subfield iteration
             $to_referred->(@subfields) if @subfields;
         } # end of subfield handling
+        elsif($ms->has_indicator){
+            my @indicators = ();
+            push @indicators, $field->[$ms->indicator->position];
+            $to_referred->(@indicators);
+        }
         else { # no particular subfields requested
             my @contents = ();
             for ( my $i = 4 ; $i < @{$field} ; $i += 2 ) {
