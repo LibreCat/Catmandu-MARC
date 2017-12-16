@@ -76,9 +76,9 @@ is_deeply
 is_deeply
     $records->[0]->{my}{fields}{indicators10},
     ['Cross-platform Perl /Eric F. Johnson.'],
-    q|fix: marc_spec('..._10', my.fields.indicators10.$append);|;
+    q|fix: marc_spec('...{^1=\1}{^2=\0}', my.fields.indicators10.$append);|;
 
-is  scalar @{$records->[0]->{my}{fields}{indicators_0}}, 9,  q|fix: marc_spec('...__0', my.fields.indicators_0, split:1);|;
+is  scalar @{$records->[0]->{my}{fields}{indicators_0}}, 9,  q|fix: marc_spec('...{^2=\0}', my.fields.indicators_0, split:1);|;
 
 is $records->[0]->{my}{ldr}{all}, '00696nam  22002538a 4500', q|fix: marc_spec('LDR', my.ldr.all);|;
 
@@ -88,7 +88,7 @@ is $records->[0]->{my}{lastcharpos}{ldr}, '4500', q|fix: marc_spec('LDR/#-3', my
 
 is $records->[0]->{my}{title}{proper}, 'Cross-platform Perl /', q|fix: marc_spec('245$a', my.title.proper);|;
 
-is $records->[0]->{my}{title}{indicator}{proper}, 'Cross-platform Perl /', q|fix: marc_spec('245_10$a', my.title.indicator.proper);|;
+is $records->[0]->{my}{title}{indicator}{proper}, 'Cross-platform Perl /', q|fix: marc_spec('245$a{^1=\1}{^2=\0}', my.title.indicator.proper);|;
 
 is $records->[0]->{my}{title}{charpos}, 'Cr', q|fix: marc_spec('245$a/0-1', my.title.charpos);|;
 

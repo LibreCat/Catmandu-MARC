@@ -576,7 +576,7 @@ sub marc_spec {
 
         # filter field by subspec
         if( $field_spec->has_subspecs) {
-            my $valid = $self->_it_subspecs( $data, $field_spec->tag, $field_spec->subspecs, $tag_index );
+            my $valid = $self->_it_subspecs( $data, $current_tag, $field_spec->subspecs, $tag_index );
             next unless $valid;
         }
 
@@ -675,8 +675,14 @@ sub marc_spec {
             $to_referred->(@subfields) if @subfields;
         } # end of subfield handling
         elsif($ms->has_indicator){
+            # filter field by subspec
+            if( $ms->indicator->has_subspecs) {
+                my $valid = $self->_it_subspecs( $data, $current_tag, $ms->indicator->subspecs, $tag_index );
+                next unless $valid;
+            }
             my @indicators = ();
-            push @indicators, $field->[$ms->indicator->position];
+            push @indicators, $field->[$ms->indicator->position]
+                if defined $field->[$ms->indicator->position];
             $to_referred->(@indicators);
         }
         else { # no particular subfields requested
@@ -706,13 +712,15 @@ sub marc_spec {
 }
 
 sub _it_subspecs {
-    my ( $self, $data, $tag, $subspecs, $tag_index, $code_index ) = @_;
+    my ( $self, $data, $tag, $subspecs, $tag_index ) = @_;
+
     my $set_index = sub {
         my ( $subspec ) = @_;
         foreach my $side ( ('left', 'right') ) {
             next if ( ref $subspec->$side eq 'MARC::Spec::Comparisonstring' );
             # only set new index if subspec field tag equals spec field tag!!
-            next unless ( $tag eq $subspec->$side->field->tag );
+            my $spec_tag = $subspec->$side->field->tag;
+            next unless ( $tag =~ /$spec_tag/ );
             $subspec->$side->field->set_index_start_end( $tag_index );
         }
     };
@@ -722,14 +730,14 @@ sub _it_subspecs {
         if( ref $subspec eq 'ARRAY' ) { # chained subSpecs (OR)
             foreach my $or_subspec ( @{$subspec} ) {
                 $set_index->( $or_subspec );
-                $valid = $self->_validate_subspec( $or_subspec, $data );
+                $valid = $self->_validate_subspec( $or_subspec, $data, $tag );
                 # at least one of them is true (OR)
                 last if $valid;
             }
         }
         else { # repeated SubSpecs (AND)
             $set_index->( $subspec );
-            $valid = $self->_validate_subspec( $subspec, $data );
+            $valid = $self->_validate_subspec( $subspec, $data, $tag );
             # all of them have to be true (AND)
             last unless $valid;
         }
@@ -738,14 +746,16 @@ sub _it_subspecs {
 }
 
 sub _validate_subspec {
-    my ( $self, $subspec, $data ) = @_;
+    my ( $self, $subspec, $data, $tag ) = @_;
     my ($left_subterm, $right_subterm);
 
     if('!' ne $subspec->operator && '?' ne $subspec->operator) {
         if ( ref $subspec->left ne 'MARC::Spec::Comparisonstring' ) {
+            my $new_spec = $subspec->left->to_string();
+            $new_spec =~ s/^\.\.\./$tag/;
             $left_subterm = $self->marc_spec(
                     $data,
-                    $subspec->left,
+                    $new_spec,
                     { '-split' => 1 }
                 ); # split should result in an array ref
             return 0 unless defined $left_subterm;
@@ -756,9 +766,11 @@ sub _validate_subspec {
     }
 
     if ( ref $subspec->right ne 'MARC::Spec::Comparisonstring' ) {
+        my $new_spec = $subspec->right->to_string();
+        $new_spec =~ s/^\.\.\./$tag/;
         $right_subterm = $self->marc_spec(
                 $data,
-                $subspec->right,
+                $new_spec,
                 { '-split' => 1 }
             ); # split should result in an array ref
         unless( defined $right_subterm ) {
