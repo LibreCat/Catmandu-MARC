@@ -440,7 +440,7 @@ The C<all_match> also allows a regular expressions:
 
     $ catmandu convert MARC to MARC --fix 'marc_map(900a,type); select all_match(type,"[Bb]ook")' < data.mrc > output.mrc
 
-=head2 Select only the rcords with 900a values in a given CSV file
+=head2 Select only the records with 900a values in a given CSV file
 
 Create a CSV file with name,value pairs (need two columns):
 
@@ -466,3 +466,53 @@ MARC tag isn't repeatable this loop not isn't needed. With marc_map we copy
 first the value of a marc subfield to a 'test' field. This test we lookup against
 the CSV file. Then, we select only the records that are found in the CSV file
 (and return the correct value).
+
+=head1 DEDUPLICATION
+
+=head2 Check for duplicate ISBN numbers in a MARC file
+
+In this example we extract from a MARC file all the ISBN numbers from
+the 020 and do a little bit of data cleaning using the L<Catmandu::Identifier>
+project. To install this package, we run this command:
+
+    $ cpanm Catmandu::Identifier
+
+To extract all the ISBN numbers we use this Fix script 'dedup.fix':
+
+    marc_map(020a, identifier.$append)
+    replace_all(identifier.*,"\s+.*","")
+    do list(path:identifier)
+      isbn13(.)
+    end
+    do hashmap(exporter:YAML)
+      copy_field(identifier,key)
+      copy_field(_id,value)
+    end
+
+The first C<marc_map> fix maps every 020 field to an identifier array.
+The C<replace_all> cleans the data a bit and deletes some unwanted text.
+The C<do list> will transform all the ISBN numbers to ISBN13.
+The C<do hashmap> will create an internal mapping table of identifier,_id key
+value pairs. For very identifier, one or more _id can be stored. At the end
+of all MARC processing this mapping table is dumped from memory as a YAML document.
+
+Run this fix as:
+
+    $ catmandu convert MARC to Null --fix dedup.fix < marc.mrc > output.yml
+
+The output YAML file will contain the ISBN to document ID mapping. We
+only need the ISBN numbers with more than one hit. We need a little bit
+of cleanup on this YAML file to reach our final result. Use the following
+'cleanup.fix' script:
+
+    select exists(value.1)
+    join_field(value,",")
+
+This first C<select> fix selects only the records with more than one hit.
+The C<join_field> will turn the array of results into a string. Execute
+this Fix like:
+
+    $ catmandu convert YAML to TSV --fix cleanup.fix < output.yml > result.csv
+
+This will provide a tab delimited file of double isbn numbers in the MARC
+input file.
