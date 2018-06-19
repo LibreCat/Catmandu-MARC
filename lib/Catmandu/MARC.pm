@@ -848,14 +848,21 @@ sub _get_index_range {
 }
 
 sub marc_xml {
-    my ($self,$data) = @_;
+    my ($self,$data,%opts) = @_;
 
-    my $xml;
-    my $exporter = Catmandu::Exporter::MARC::XML->new(file => \$xml , xml_declaration => 0 , collection => 0);
-    $exporter->add($data);
-    $exporter->commit;
+    if ($opts{reverse}) {
+        my $record = Catmandu->import_from_string($data,'MARC', type=>'XML');
+        return $record->[0]->{record} if $record;
+        return undef;
+    }
+    else {
+        my $xml;
+        my $exporter = Catmandu::Exporter::MARC::XML->new(file => \$xml , xml_declaration => 0 , collection => 0);
+        $exporter->add({record => $data});
+        $exporter->commit;
 
-    $xml;
+        return $xml;
+    }
 }
 
 sub marc_record_to_json {
