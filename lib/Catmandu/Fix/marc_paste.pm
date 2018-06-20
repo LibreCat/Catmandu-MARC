@@ -88,12 +88,12 @@ in C<at> matches the regular expression C<equals>.
 
 This Fix can be used inline in a Perl script:
 
-    use Catmandu::Fix::marc_struc as => 'marc_struc';
+    use Catmandu::Fix::marc_copy as => 'marc_copy';
     use Catmandu::Fix::marc_paste as => 'marc_paste';
 
     my $data = { record => ['650', ' ', 0, 'a', 'Perl'] };
 
-    $data = marc_struc($data,'650','subject');
+    $data = marc_copy($data,'650','subject');
     $data = marc_paste($data,'subject');
 
 

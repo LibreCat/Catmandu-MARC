@@ -44,11 +44,11 @@ dollar JSON_PATH syntax.
 
 This Fix can be used inline in a Perl script:
 
-    use Catmandu::Fix::marc_replace_all as => 'marc_replace_all';
+    use Catmandu::Fix::marc_append as => 'marc_append';
 
     my $data = { record => [...] };
 
-    $data = marc_replace_all($data, '245a', 'test' , 'rest');
+    $data = marc_append($data, '100', '.');
 
 =head1 SEE ALSO
 
