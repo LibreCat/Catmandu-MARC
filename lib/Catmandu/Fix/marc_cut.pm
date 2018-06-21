@@ -124,7 +124,7 @@ Each item is a hash containing the following fields:
   tmp.*.tag        - The names of the MARC field
   tmp.*.ind1       - The value of the first indicator
   tmp.*.ind2       - The value of the second indicator
-  tmp.*.subfields  - An array of subfield item. Each subfield item is a
+  tmp.*.subfields  - An array of subfield items. Each subfield item is a
                      hash of the subfield code and subfield value
 
 E.g.

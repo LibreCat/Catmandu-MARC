@@ -414,6 +414,25 @@ language. Using the C<rename> function we search for all the subfields, and repl
 the field matching the regular expression C<1> with C<0>. At the end, we paste
 back the C<tmp> field into the record.
 
+=head2 Setting and remove MARC indicators
+
+In the example below we set every indicator1 of the 500 field to the value "0".
+We will use the L<Catmandu::Fix::Bind::marc_each> bind with a loop variable:
+
+    # For each marc field...
+    do marc_each(var:this)
+       # If the marc field is a 500 field
+       if marc_has(500)
+          # Set the indicator1 to value "0"
+          set_field(this.ind1,0)
+          # Store the result back into the MARC record
+          marc_paste(this)
+       end
+     end
+
+Using the same method indicators can also be deleted by setting their value to
+a space " ".
+
 =head1 WRITING
 
 =head2 Convert a MARC record into a MARC record (do nothing)
