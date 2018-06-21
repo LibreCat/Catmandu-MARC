@@ -7,7 +7,7 @@ use Catmandu::Fix::Has;
 
 with 'Catmandu::Fix::Inlineable';
 
-our $VERSION = '1.231';
+our $VERSION = '1.24';
 
 sub fix {
 	my ($self,$data) = @_;
