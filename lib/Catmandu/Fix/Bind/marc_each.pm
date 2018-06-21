@@ -133,6 +133,7 @@ MARC fields.
       if all_match(this.tag,500)
         set_field(tag.ind1,3)
         # Store the result in the MARC file
+        marc_remove(500)
         marc_paste(this)
       end
     end

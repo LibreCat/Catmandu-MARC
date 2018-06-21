@@ -16,7 +16,6 @@ has equals         => (fix_opt => 1);
 sub emit {
     my ($self,$fixer) = @_;
     my $path         = $fixer->split_path($self->path);
-    my $key          = $path->[-1];
     my $marc_obj     = Catmandu::MARC->instance;
 
     # Precompile the marc_path to gain some speed

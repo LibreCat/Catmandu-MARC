@@ -426,12 +426,30 @@ We will use the L<Catmandu::Fix::Bind::marc_each> bind with a loop variable:
           # Set the indicator1 to value "0"
           set_field(this.ind1,0)
           # Store the result back into the MARC record
+          marc_remove(500)
           marc_paste(this)
        end
      end
 
 Using the same method indicators can also be deleted by setting their value to
 a space " ".
+
+=head2 Adding a new MARC subfield
+
+In the example below we append a new MARC subfield $z to the 500 field with value test.
+We will use the L<Catmandu::Fix::Bind::marc_each> bind with a loop variable:
+
+    # For each marc field...
+    do marc_each(var:this)
+       # If the marc field is a 500 field
+       if marc_has(500)
+          # add a new subfield z
+          add_field(this.subfields.$append.z,Test)
+          # Store the result back into the MARC record
+          marc_remove(500)
+          marc_paste(this)
+       end
+    end
 
 =head1 WRITING
 
