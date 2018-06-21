@@ -51,7 +51,8 @@ Convert MARC data into a MARCXML string
 
 Transform the MARC record found at PATH to MARC XML. If an
 C<reverse> option is given, then XML found at C<PATH> will be transformed
-into an internal MARC format.
+into an internal MARC format. The MARC representation needs to be
+stored in the C<record> key to be used with other L<Catmandu::MARC> fixes.
 
 =head1 INLINE
 
