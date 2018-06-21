@@ -451,6 +451,17 @@ We will use the L<Catmandu::Fix::Bind::marc_each> bind with a loop variable:
        end
     end
 
+=head2 Remove all non-numeric fields from the MARC record
+
+    # For each marc field...
+    do marc_each(var:this)
+       # If we have a non-numeric fields
+       unless all_match(this.tag,"\d{3}")
+          # Remove this tag
+          marc_remove(***)
+       end
+    end
+
 =head1 WRITING
 
 =head2 Convert a MARC record into a MARC record (do nothing)
