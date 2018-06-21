@@ -40,6 +40,11 @@ sub marc_map {
     my $nested_arrays  = $_[3]->{'-nested_arrays'} // 0;
     my $append         = $_[3]->{'-force_array'} // undef;
 
+    # Do an implicit split for nested_arrays , except when no-implicit-split is set
+    if ($nested_arrays == 1) {
+        $split = 1 unless $_[3]->{'-no-implicit-split'};
+    }
+
     my $vals;
 
     for my $field (@$record) {
@@ -483,7 +488,7 @@ sub marc_spec {
     my $nested_arrays = $_[3]->{'-nested_arrays'} // 0;
     my $append        = $_[3]->{'-force_array'} // 0;
 
-    if($nested_arrays) {
+    if ($nested_arrays) {
         $split = 1
     }
 
@@ -701,10 +706,10 @@ sub marc_spec {
     } # end of field iteration
     return unless ($referred);
 
-    if($append) {
+    if ($append) {
         return [$referred] if $split;
         return $referred;
-    } elsif($split) {
+    } elsif ($split) {
         return [$referred];
     }
 

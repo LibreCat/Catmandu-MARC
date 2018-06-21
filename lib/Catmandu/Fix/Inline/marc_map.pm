@@ -74,7 +74,7 @@ sub marc_map {
     $opts{'-split'} = 0         unless exists $opts{'-split'};
     $opts{'-pluck'} = 0         unless exists $opts{'-pluck'};
     $opts{'-nested_arrays'} = 1 unless exists $opts{'-nested_arrays'};
-
+    $opts{'-no-implicit-split'} = 1;
     $opts{'-force_array'} = 1 if (wantarray);
 
     my $vals = Catmandu::MARC->instance->marc_map(
