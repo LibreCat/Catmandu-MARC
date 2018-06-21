@@ -47,7 +47,6 @@ Catmandu::Fix::marc_paste - paste a MARC structured field back into the MARC rec
       end
     end
 
-
 =head1 DESCRIPTION
 
 Paste a MARC stucture created by L<Catmandu::Fix::marc_struc> back at the end of

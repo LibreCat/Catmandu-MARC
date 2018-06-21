@@ -29,7 +29,6 @@ Catmandu::Fix::marc_remove - remove marc (sub)fields
     # remove the 245-a subfield
     marc_remove('245a')
 
-
 =head1 DESCRIPTION
 
 Remove (sub)fields in a MARC record

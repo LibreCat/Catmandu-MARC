@@ -136,7 +136,6 @@ In a fix file e.g. 'my.fix':
     # to my.two.join.subjects
     marc_spec('650[#-1]', my.two.join.subjects, join:'###')
 
-
     # Assign value of first subfield a of all fields 020 to my.isbn.number
     marc_spec('020$a[0]', my.isbn.number)
 
@@ -160,7 +159,7 @@ In a fix file e.g. 'my.fix':
 
     # Assign values of of all other subfields than a of field 020
     # to my.isbn.other.subfields
-    marc_spec('020$a' my.isbn.other.subfields, invert:1)
+    marc_spec('020$a', my.isbn.other.subfields, invert:1)
 
     # Assign value of subfield a of field 245 only, if subfield a of field 246
     # with value 1 for indicator1 exists
