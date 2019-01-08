@@ -108,7 +108,7 @@ In a fix file e.g. 'my.fix':
 
     # Assign values of all subfields of all fields having indicator 1 = 1
     # and indicator 2 = 0 to the my.fields.indicators10 array.
-    marc_spec('..._10', my.fields.indicators10.$append)
+    marc_spec('...{^1=\1}{^2=\0}', my.fields.indicators10.$append)
 
     # Assign first four characters of leader to my.firstcharpos.ldr
     marc_spec('LDR/0-3', my.firstcharpos.ldr)
@@ -163,7 +163,7 @@ In a fix file e.g. 'my.fix':
 
     # Assign value of subfield a of field 245 only, if subfield a of field 246
     # with value 1 for indicator1 exists
-    marc_spec('245$a{246_1$a}', my.var.title)
+    marc_spec('245$a{246^1=\1}', my.var.title)
 
 And then on command line:
 
