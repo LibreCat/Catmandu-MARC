@@ -1,3 +1,5 @@
+=encoding utf8
+
 =head1 NAME
 
 Catmandu::MARC::Tutorial - A documentation-only module for new users of Catmandu::MARC
