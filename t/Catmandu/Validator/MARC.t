@@ -6,7 +6,6 @@ use Test::More;
 use Catmandu::Importer::MARC;
 use Catmandu::Validator::MARC;
 use Catmandu qw(importer);
-use DDP;
 
 require_ok( 'Catmandu::Validator::MARC' );
 can_ok('Catmandu::Validator::MARC', ('validate_data'));
