@@ -1,10 +1,11 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding support for MARC validation (jorol)
+  
 1.241  2019-02-20 13:02:08 CET
   - Fixing missing Test::Exception dependency #95
-  
+
 1.24  2018-06-21 15:33:11 CEST
   - Adding support for subfield ranges in marc_map #85
   - Adding example how to remove non-numeric fields #84
