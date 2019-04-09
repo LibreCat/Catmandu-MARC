@@ -1,10 +1,11 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing minimal MARC::Schema version dependency
+  
 1.25  2019-04-08 11:31:22 CEST
   - Adding support for MARC validation (jorol)
-  
+
 1.241  2019-02-20 13:02:08 CET
   - Fixing missing Test::Exception dependency #95
 
