@@ -1296,6 +1296,19 @@ sub marc_paste {
     $data;
 }
 
+sub marc_sort {
+    my ( $self, $data ) = @_;
+    if ( defined $data->{record} ) {
+        my @record
+            = map { $_->[0] }
+            sort { $a->[1] <=> $b->[1] }
+            map { [ $_, $_->[0] =~ m/^[0-9]+$/ ? $_->[0] : '000' ] }
+            @{ $data->{record} };
+        $data->{record} = \@record;
+    }
+    return $data;
+}
+
 1;
 
 __END__
@@ -1383,6 +1396,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 =item * L<Catmandu::Fix::marc_cut>
 
 =item * L<Catmandu::Fix::marc_paste>
+
+=item * L<Catmandu::Fix::marc_sort>
 
 =item * L<Catmandu::Fix::Bind::marc_each>
 
