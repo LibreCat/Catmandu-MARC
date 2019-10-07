@@ -39,7 +39,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
     my $store    = Catmandu->store('ElasticSearch', index_name => 'catmandu');
 
     $store->add_many(
-           $fixer->fix($importer)
+       $fixer->fix($importer)
     );
 
 # MODULES
@@ -60,6 +60,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 - [Catmandu::Fix::marc\_copy](https://metacpan.org/pod/Catmandu::Fix::marc_copy)
 - [Catmandu::Fix::marc\_cut](https://metacpan.org/pod/Catmandu::Fix::marc_cut)
 - [Catmandu::Fix::marc\_paste](https://metacpan.org/pod/Catmandu::Fix::marc_paste)
+- [Catmandu::Fix::marc\_sort](https://metacpan.org/pod/Catmandu::Fix::marc_sort)
 - [Catmandu::Fix::Bind::marc\_each](https://metacpan.org/pod/Catmandu::Fix::Bind::marc_each)
 - [Catmandu::Fix::Condition::marc\_match](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_match)
 - [Catmandu::Fix::Condition::marc\_has](https://metacpan.org/pod/Catmandu::Fix::Condition::marc_has)
