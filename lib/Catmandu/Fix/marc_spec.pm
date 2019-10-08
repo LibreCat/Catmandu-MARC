@@ -219,7 +219,7 @@ mapping rules at L<https://github.com/LibreCat/Catmandu-MARC/wiki/Mapping-rules>
     }
 
 Third and every other parameters are optional and must
-be in the form of key:value (see L</"OPTONS"> for a deeper
+be in the form of key:value (see L</"OPTIONS"> for a deeper
 understanding of options).
 
 =head1 OPTIONS
