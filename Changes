@@ -1,10 +1,11 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+  - Fixing dependencies [manwar] 
 
 1.252  2019-10-07 16:00:01 CEST
   - Adding marc_sort support (jorol)
-  
+
 1.251  2019-04-09 09:40:50 CEST
   - Fixing minimal MARC::Schema version dependency
 
