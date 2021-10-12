@@ -1527,12 +1527,16 @@ Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
 
 =back
 
-=head1 LICENSE AND COPYRIGHT
+=head1 COPYRIGHT 
+
+Copyright 2012- Patrick Hochstenbach
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
-See http://dev.perl.org/licenses/ for more information.
+See L<ttp://dev.perl.org/licenses/> for more information.
 
 =cut
