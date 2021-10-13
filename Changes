@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.26  2021-10-13 19:24:47 CEST
   - Making MARCMarker default in utf8 mode
    
 1.254  2019-10-17 14:30:11 CEST
