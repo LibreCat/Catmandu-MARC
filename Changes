@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.261  2021-10-14 08:42:38 CEST
   - Removing unstable Lint test
   
 1.26  2021-10-13 19:24:47 CEST
