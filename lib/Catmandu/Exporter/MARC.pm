@@ -102,6 +102,7 @@ The MARC format to parse. The following MARC parsers are available:
 
   ISO: L<Catmandu::Importer::MARC::ISO> (default) - a strict ISO 2709 exporter
   ALEPHSEQ: L<Catmandu::Importer::MARC::ALEPHSEQ> - an exporter for Ex Libris Aleph sequential files
+  Line: L<Catmandu::Importer::MARC::Line> - an exporter for Index Data's MARC line format
   MARCMaker: L<Catmandu::Importer::MARC::MARCMaker> - an exporter for MARCMaker/MARCBreaker records
   MiJ: L<Catmandu::Importer::MARC::MiJ> (MARC in JSON) - an export for the MARC-in-JSON format
   XML: L<Catmandu::Importer::MARC::XML> - an exporter for the MARC XML format
