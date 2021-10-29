@@ -109,4 +109,8 @@ Don't report subfields not included in the schema.
 
 =back
 
+=head1 AUTHOR
+
+Johann Rolschewski,  E<lt>jorol at cpanE<gt>
+
 =cut

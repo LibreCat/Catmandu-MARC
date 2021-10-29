@@ -47,6 +47,10 @@ Binmode of the output stream C<fh>. Set to "C<:utf8>" by default.
 See L<Catmandu::Exporter>, L<Catmandu::Addable>, L<Catmandu::Fixable>,
 L<Catmandu::Counter>, and L<Catmandu::Logger> for a full list of methods.
 
+=head1 AUTHOR
+
+Johann Rolschewski,  E<lt>jorol at cpanE<gt>
+
 =head1 SEE ALSO
 
 L<Catmandu::Exporter>

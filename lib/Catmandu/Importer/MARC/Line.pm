@@ -56,6 +56,10 @@ An ARRAY of one or more fixes or file scripts to be applied to imported items.
 
 Every Catmandu::Importer is a Catmandu::Iterable all its methods are inherited.
 
+=head1 AUTHOR
+
+Johann Rolschewski,  E<lt>jorol at cpanE<gt>
+
 =head1 SEE ALSO
 
 L<Catmandu::Importer>,
