@@ -16,7 +16,8 @@ my %module_build_args = (
   "dist_abstract" => "Catmandu modules for working with MARC data",
   "dist_author" => [
     "Patrick Hochstenbach <patrick.hochstenbach\@ugent.be>",
-    "Carsten Klee"
+    "Carsten Klee",
+    "Johann Rolschewski"
   ],
   "dist_name" => "Catmandu-MARC",
   "dist_version" => "1.261",

@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Adding the MARC Line importer and exporter [jorol]
+  
 1.261  2021-10-14 08:42:38 CEST
   - Removing unstable Lint test
   
