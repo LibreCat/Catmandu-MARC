@@ -20,7 +20,7 @@ my %module_build_args = (
     "Johann Rolschewski"
   ],
   "dist_name" => "Catmandu-MARC",
-  "dist_version" => "1.261",
+  "dist_version" => "1.27",
   "license" => "perl",
   "module_name" => "Catmandu::MARC",
   "recursive_test_files" => 1,

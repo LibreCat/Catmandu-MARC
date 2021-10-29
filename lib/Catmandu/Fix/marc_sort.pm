@@ -4,7 +4,7 @@ use Catmandu::Sane;
 use Moo;
 use Catmandu::MARC;
 
-our $VERSION = '1.261';
+our $VERSION = '1.27';
 
 sub fix {
     my ( $self, $data ) = @_;
