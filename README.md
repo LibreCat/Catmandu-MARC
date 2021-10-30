@@ -46,29 +46,48 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 - [Catmandu::MARC::Tutorial](https://metacpan.org/pod/Catmandu%3A%3AMARC%3A%3ATutorial)
 - [Catmandu::Importer::MARC](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC)
+- [Catmandu::Importer::MARC::ALEPHSEQ](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AALEPHSEQ)
+- [Catmandu::Importer::MARC::ISO](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AISO)
+- [Catmandu::Importer::MARC::Line](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3ALine)
+- [Catmandu::Importer::MARC::Lint](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3ALint)
+- [Catmandu::Importer::MARC::MARCMaker](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AMARCMaker)
+- [Catmandu::Importer::MARC::MicroLIF](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AMicroLIF)
+- [Catmandu::Importer::MARC::MiJ](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AMiJ)
+- [Catmandu::Importer::MARC::RAW](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3ARAW)
+- [Catmandu::Importer::MARC::Record](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3ARecord)
+- [Catmandu::Importer::MARC::XML](https://metacpan.org/pod/Catmandu%3A%3AImporter%3A%3AMARC%3A%3AXML)
 - [Catmandu::Exporter::MARC](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC)
-- [Catmandu::Fix::marc\_map](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_map)
-- [Catmandu::Fix::marc\_spec](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_spec)
+- [Catmandu::Exporter::MARC::ALEPHSEQ](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3AALEPHSEQ)
+- [Catmandu::Exporter::MARC::ISO](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3AISO)
+- [Catmandu::Exporter::MARC::Line](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3ALine)
+- [Catmandu::Exporter::MARC::MARCMaker](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3AMARCMaker)
+- [Catmandu::Exporter::MARC::MiJ](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3AMiJ)
+- [Catmandu::Exporter::MARC::XML](https://metacpan.org/pod/Catmandu%3A%3AExporter%3A%3AMARC%3A%3AXML)
 - [Catmandu::Fix::marc\_add](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_add)
 - [Catmandu::Fix::marc\_append](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_append)
-- [Catmandu::Fix::marc\_replace\_all](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_replace_all)
-- [Catmandu::Fix::marc\_remove](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_remove)
-- [Catmandu::Fix::marc\_xml](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_xml)
-- [Catmandu::Fix::marc\_in\_json](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_in_json)
-- [Catmandu::Fix::marc\_decode\_dollar\_subfields](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_decode_dollar_subfields)
-- [Catmandu::Fix::marc\_set](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_set)
 - [Catmandu::Fix::marc\_copy](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_copy)
 - [Catmandu::Fix::marc\_cut](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_cut)
+- [Catmandu::Fix::marc\_decode\_dollar\_subfields](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_decode_dollar_subfields)
+- [Catmandu::Fix::marc\_in\_json](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_in_json)
+- [Catmandu::Fix::marc\_map](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_map)
 - [Catmandu::Fix::marc\_paste](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_paste)
+- [Catmandu::Fix::marc\_remove](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_remove)
+- [Catmandu::Fix::marc\_replace\_all](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_replace_all)
+- [Catmandu::Fix::marc\_set](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_set)
 - [Catmandu::Fix::marc\_sort](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_sort)
+- [Catmandu::Fix::marc\_spec](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_spec)
+- [Catmandu::Fix::marc\_xml](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3Amarc_xml)
 - [Catmandu::Fix::Bind::marc\_each](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ABind%3A%3Amarc_each)
-- [Catmandu::Fix::Condition::marc\_match](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_match)
+- [Catmandu::Fix::Condition::marc\_all\_match](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_all_match)
+- [Catmandu::Fix::Condition::marc\_any\_match](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_any_match)
 - [Catmandu::Fix::Condition::marc\_has](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_has)
 - [Catmandu::Fix::Condition::marc\_has\_many](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_has_many)
+- [Catmandu::Fix::Condition::marc\_match](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_match)
 - [Catmandu::Fix::Condition::marc\_spec\_has](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3ACondition%3A%3Amarc_spec_has)
 - [Catmandu::Fix::Inline::marc\_map](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3AInline%3A%3Amarc_map)
 - [Catmandu::Fix::Inline::marc\_add](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3AInline%3A%3Amarc_add)
 - [Catmandu::Fix::Inline::marc\_remove](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3AInline%3A%3Amarc_remove)
+- [Catmandu::Fix::Inline::marc\_set](https://metacpan.org/pod/Catmandu%3A%3AFix%3A%3AInline%3A%3Amarc_set)
 
 # DESCRIPTION
 
@@ -104,7 +123,7 @@ Patrick Hochstenbach, `<patrick.hochstenbach at ugent.be>`
 
 # COPYRIGHT 
 
-Copyright 2012- Patrick Hochstenbach
+Copyright 2012- Patrick Hochstenbach , Carsten Klee, Johann Rolschewski
 
 # LICENSE
 

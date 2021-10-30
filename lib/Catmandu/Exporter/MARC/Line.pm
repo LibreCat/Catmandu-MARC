@@ -61,7 +61,7 @@ package Catmandu::Exporter::MARC::Line;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '1.27';
+our $VERSION = '1.271';
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
