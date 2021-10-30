@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing the copyright and documentation of packages
+  
 1.27  2021-10-29 08:22:16 CEST
   - Adding the MARC Line importer and exporter [jorol]
   

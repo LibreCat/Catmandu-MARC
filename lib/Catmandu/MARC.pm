@@ -1438,43 +1438,79 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 
 =item * L<Catmandu::Importer::MARC>
 
+=item * L<Catmandu::Importer::MARC::ALEPHSEQ>
+
+=item * L<Catmandu::Importer::MARC::ISO>
+
+=item * L<Catmandu::Importer::MARC::Line>
+
+=item * L<Catmandu::Importer::MARC::Lint>
+
+=item * L<Catmandu::Importer::MARC::MARCMaker>
+
+=item * L<Catmandu::Importer::MARC::MicroLIF>
+
+=item * L<Catmandu::Importer::MARC::MiJ>
+
+=item * L<Catmandu::Importer::MARC::RAW>
+
+=item * L<Catmandu::Importer::MARC::Record>
+
+=item * L<Catmandu::Importer::MARC::XML>
+
 =item * L<Catmandu::Exporter::MARC>
 
-=item * L<Catmandu::Fix::marc_map>
+=item * L<Catmandu::Exporter::MARC::ALEPHSEQ>
 
-=item * L<Catmandu::Fix::marc_spec>
+=item * L<Catmandu::Exporter::MARC::ISO>
+
+=item * L<Catmandu::Exporter::MARC::Line>
+
+=item * L<Catmandu::Exporter::MARC::MARCMaker>
+
+=item * L<Catmandu::Exporter::MARC::MiJ>
+
+=item * L<Catmandu::Exporter::MARC::XML>
 
 =item * L<Catmandu::Fix::marc_add>
 
 =item * L<Catmandu::Fix::marc_append>
 
-=item * L<Catmandu::Fix::marc_replace_all>
-
-=item * L<Catmandu::Fix::marc_remove>
-
-=item * L<Catmandu::Fix::marc_xml>
-
-=item * L<Catmandu::Fix::marc_in_json>
-
-=item * L<Catmandu::Fix::marc_decode_dollar_subfields>
-
-=item * L<Catmandu::Fix::marc_set>
-
 =item * L<Catmandu::Fix::marc_copy>
 
 =item * L<Catmandu::Fix::marc_cut>
 
+=item * L<Catmandu::Fix::marc_decode_dollar_subfields>
+
+=item * L<Catmandu::Fix::marc_in_json>
+
+=item * L<Catmandu::Fix::marc_map>
+
 =item * L<Catmandu::Fix::marc_paste>
+
+=item * L<Catmandu::Fix::marc_remove>
+
+=item * L<Catmandu::Fix::marc_replace_all>
+
+=item * L<Catmandu::Fix::marc_set>
 
 =item * L<Catmandu::Fix::marc_sort>
 
+=item * L<Catmandu::Fix::marc_spec>
+
+=item * L<Catmandu::Fix::marc_xml>
+
 =item * L<Catmandu::Fix::Bind::marc_each>
 
-=item * L<Catmandu::Fix::Condition::marc_match>
+=item * L<Catmandu::Fix::Condition::marc_all_match>
+
+=item * L<Catmandu::Fix::Condition::marc_any_match>
 
 =item * L<Catmandu::Fix::Condition::marc_has>
 
 =item * L<Catmandu::Fix::Condition::marc_has_many>
+
+=item * L<Catmandu::Fix::Condition::marc_match>
 
 =item * L<Catmandu::Fix::Condition::marc_spec_has>
 
@@ -1483,6 +1519,8 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 =item * L<Catmandu::Fix::Inline::marc_add>
 
 =item * L<Catmandu::Fix::Inline::marc_remove>
+
+=item * L<Catmandu::Fix::Inline::marc_set>
 
 =back
 
@@ -1529,7 +1567,7 @@ Patrick Hochstenbach, C<< <patrick.hochstenbach at ugent.be> >>
 
 =head1 COPYRIGHT 
 
-Copyright 2012- Patrick Hochstenbach
+Copyright 2012- Patrick Hochstenbach , Carsten Klee, Johann Rolschewski
 
 =head1 LICENSE
 
