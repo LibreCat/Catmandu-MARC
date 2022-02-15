@@ -27,7 +27,7 @@ If you process UTF-8 encoded files which contain faulty characters, you will get
 
 Use the iconv (libc6-dev Linux package) tool, to preprocess the data and discard faulty characters:
 
-  $ iconv -c -f UTF-8 -t UTF-8 marc21.utf8.raw | catmandu convert MARC to JSON
+  $ iconv -c -f UTF-8 -t UTF-8 marc21.utf8.raw | catmandu convert MARC --type RAW to JSON
 
 =head2 Convert a decomposed UTF-8 file to a combined UTF-8 file and vice versa
 
