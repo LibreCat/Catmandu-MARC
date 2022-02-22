@@ -5,6 +5,7 @@ Catmandu::MARC - Catmandu modules for working with MARC data
 # STATUS
 
 [![Build Status](https://travis-ci.org/LibreCat/Catmandu-MARC.svg?branch=master)](https://travis-ci.org/LibreCat/Catmandu-MARC)
+[![Linux build status](https://github.com/LibreCat/Catmandu-MARC/actions/workflows/linux.yml/badge.svg)](https://github.com/LibreCat/Catmandu-MARC/actions/workflows/linux.yml)
 [![Coverage](https://coveralls.io/repos/LibreCat/Catmandu-MARC/badge.png?branch=master)](https://coveralls.io/r/LibreCat/Catmandu-MARC)
 [![CPANTS kwalitee](http://cpants.cpanauthors.org/dist/Catmandu-MARC.png)](http://cpants.cpanauthors.org/dist/Catmandu-MARC)
 
