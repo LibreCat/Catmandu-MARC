@@ -76,7 +76,9 @@ sub add {
             $self->_line($indent+1,'<marc:datafield tag="' . xml_escape($tag) . '" ind1="' . $ind1 . '" ind2="' . $ind2 . '">');
             while (@data) {
                 my ($code, $val) = splice(@data, 0, 2);
-                next unless $code =~ /[A-Za-z0-9]/;
+                # some special characters are allowed as subfiled codes in local defined field
+                # see https://www.loc.gov/marc/96principl.html#eight 8.4.2.3.
+                next unless $code =~ /[a-z0-9!"#\$%&'\(\)\*\+'-\.\/:;<=>]/g;
                 $self->_line($indent+2,'<marc:subfield code="' . $code . '">' . xml_escape($val) . '</marc:subfield>');
             }
             $self->_line($indent+1,'</marc:datafield>');
