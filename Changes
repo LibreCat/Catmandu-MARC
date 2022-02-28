@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.28  2022-02-28 08:23:55 CET
   - Adding github action workflows [jorol]
   - Adding support for special subfield codes that are allowed in MARC [jorol]
   - Special subfield code support for all importers and exporters

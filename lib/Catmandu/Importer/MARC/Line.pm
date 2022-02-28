@@ -71,7 +71,7 @@ package Catmandu::Importer::MARC::Line;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '1.271';
+our $VERSION = '1.28';
 
 with 'Catmandu::Importer';
 
