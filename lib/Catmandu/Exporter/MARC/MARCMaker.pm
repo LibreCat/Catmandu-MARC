@@ -56,7 +56,7 @@ package Catmandu::Exporter::MARC::MARCMaker;
 use Catmandu::Sane;
 use Moo;
 
-our $VERSION = '1.281';
+our $VERSION = '1.29';
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base';
 
