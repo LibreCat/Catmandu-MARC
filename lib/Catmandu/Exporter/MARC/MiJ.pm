@@ -131,7 +131,9 @@ sub add {
 
 	my $marc = $self->_raw_to_marc_record($data->{$self->record});
 
-	$self->fh->print(MARC::File::MiJ::encode($marc) . "\n");
+  my $res  = MARC::File::MiJ::encode($marc);
+  utf8::decode($res);
+	$self->fh->print("$res\n");
 }
 
 sub commit {
