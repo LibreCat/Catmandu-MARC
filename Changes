@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing MiJ utf8 bug (obj Uldis Bojars)
+  
 1.281  2022-08-17 09:26:17 CEST
   - Minor fixes in tutorial [VladimirAlexiev]
   
