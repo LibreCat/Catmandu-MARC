@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.30  2023-05-27 06:14:57 CEST
   - Fixing marc_add data_at path for indicators (obj Tiago Murakami)
   
 1.29  2022-11-23 19:55:54 CET
