@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Fixing marc_add data_at path for indicators (obj Tiago Murakami)
+  
 1.29  2022-11-23 19:55:54 CET
   - Fixing MiJ utf8 bug (obj Uldis Bojars)
   

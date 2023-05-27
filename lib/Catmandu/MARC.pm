@@ -182,9 +182,24 @@ sub marc_add {
 
     if ( $marc_path =~ /^\w{3}$/ ) {
         my @field = ();
+
         push @field, $marc_path;
-        push @field, $subfields{ind1} // ' ';
-        push @field, $subfields{ind2} // ' ';
+
+        my $ind1 = $subfields{ind1} // ' ';
+        my $ind2 = $subfields{ind2} // ' ';
+
+        if ($ind1 =~ /^\$\.(\S+)$/) {
+            my $path = $1;
+            $ind1 = Catmandu::Util::data_at( $path, $data ); 
+        }
+
+        if ($ind2 =~ /^\$\.(\S+)$/) {
+            my $path = $1;
+            $ind2 = Catmandu::Util::data_at( $path, $data ); 
+        }
+       
+        push @field, $ind1;
+        push @field, $ind2;
 
         for ( my $i = 0; $i < @subfields; $i += 2 ) {
             my $code = $subfields[$i];
