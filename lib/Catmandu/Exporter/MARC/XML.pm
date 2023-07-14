@@ -13,7 +13,21 @@ has skip_empty_subfields => (is => 'ro' , default => sub { 1 });
 has collection           => (is => 'ro' , default => sub { 1 });
 has xml_declaration      => (is => 'ro' , default => sub { 1 });
 has pretty               => (is => 'rw' , default => sub { 0 });
-has _n                   => (is => 'rw' , default => sub { 0 });
+
+sub BUILD {
+    my ($self, $args) = @_;
+
+    if ($self->xml_declaration) {
+        $self->buffer_add( Catmandu::Util::xml_declaration );
+    }
+
+    if ($self->collection) {
+        $self->_line(0,'<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">');
+    }
+
+    $self->fh->print( join('', @{ $self->buffer } ) );
+    $self->clear_buffer;
+}
 
 sub _line {
     my ($self, $indent, $line) = @_;
@@ -27,18 +41,6 @@ sub _line {
 
 sub add {
     my ($self, $data) = @_;
-
- 	if ($self->_n == 0) {
-    	if ($self->xml_declaration) {
-            $self->buffer_add( Catmandu::Util::xml_declaration );
-    	}
-
-    	if ($self->collection) {
-            $self->_line(0,'<marc:collection xmlns:marc="http://www.loc.gov/MARC21/slim">');
-    	}
-
-    	$self->_n(1);
-    }
 
     my $indent = $self->collection ? 1 : 0;
 

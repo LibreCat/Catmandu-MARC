@@ -70,13 +70,17 @@ has record_format        => (is => 'ro' , default => sub { 'raw'} );
 sub add {
 	my ($self, $data) = @_;
 
-    if ($self->record_format eq 'MARC-in-JSON') {
-        $data = $self->_json_to_raw($data);
+    if (keys %$data) {
+        if ($self->record_format eq 'MARC-in-JSON') {
+            $data = $self->_json_to_raw($data);
+        }
+
+        if ($data->{$self->record}) {
+            my $marc = $self->_raw_to_marc_record($data->{$self->record});
+
+            $self->fh->print(MARC::File::USMARC::encode($marc));
+        }
     }
-
-	my $marc = $self->_raw_to_marc_record($data->{$self->record});
-
-	$self->fh->print(MARC::File::USMARC::encode($marc));
 }
 
 sub commit {
