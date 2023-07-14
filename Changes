@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.31  2023-07-14 10:16:54 CEST
   - Fixing empty record bug (obs FaMIbine)
 
 1.30  2023-05-27 06:14:57 CEST
