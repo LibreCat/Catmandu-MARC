@@ -3,7 +3,7 @@ use Catmandu::Sane;
 use Catmandu::Util qw(xml_escape is_different :array :is);
 use Moo;
 
-our $VERSION = '1.31';
+our $VERSION = '1.32';
 
 with 'Catmandu::Exporter', 'Catmandu::Exporter::MARC::Base', 'Catmandu::Buffer';
 

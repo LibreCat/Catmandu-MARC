@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.32  2024-01-31 19:25:19 CET
   - Allowing capitals to be used in marc paths
    
 1.31  2023-07-14 10:16:54 CEST
