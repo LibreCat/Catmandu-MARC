@@ -1,7 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
-
+  - Allowing MARC::Lint 1.52 installd (obs Uldis Bojars)
+  
 1.32  2024-01-31 19:25:19 CET
   - Allowing capitals to be used in marc paths
    
