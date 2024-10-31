@@ -1,6 +1,8 @@
 Revision history for Catmandu-MARC
 
 {{$NEXT}}
+
+1.33  2024-10-31 16:36:59 CET
   - Allowing MARC::Lint 1.52 installd (obs Uldis Bojars)
   
 1.32  2024-01-31 19:25:19 CET
