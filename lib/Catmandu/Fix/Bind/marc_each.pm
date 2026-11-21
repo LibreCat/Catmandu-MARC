@@ -86,7 +86,7 @@ When a MARC record contains:
     500  $aTest2$eskip
     500  $aTest3
 
-then the Fix bellow will copy all 500 fields to note field, except for 500 fields
+then the Fix below will copy all 500 fields to note field, except for 500 fields
 with a subfield $e equal to "skip".
 
     do marc_each()

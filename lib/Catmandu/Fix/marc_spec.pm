@@ -144,7 +144,7 @@ In a fix file e.g. 'my.fix':
 
     # Assign values of subfield q and a in the order stated as an array
     # to  my.isbns.pluck.all
-    # without option 'pluck:1' the elments will be in 'natural' order
+    # without option 'pluck:1' the elements will be in 'natural' order
     # see example below
     marc_spec('020$q$a', my.isbns.pluck.all, split:1, pluck:1)
 

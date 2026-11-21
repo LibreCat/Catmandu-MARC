@@ -34,7 +34,7 @@ Catmandu::Fix::marc_add - add new fields to marc
     # Set control fields
     marc_add('009','_','23123131')
 
-    # Copy data from an other field (when the field value is an array, the
+    # Copy data from another field (when the field value is an array, the
     # subfield will be repeated)
     marc_add('900', a, '$.my.data.field')
 

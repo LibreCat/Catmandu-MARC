@@ -12,7 +12,7 @@ Catmandu::MARC::Tutorial - A documentation-only module for new users of Catmandu
 
 =head2 MARC8 and UTF-8
 
-The current Catmandu MARC tools are targetted for processing UTF-8 encoded files.
+The current Catmandu MARC tools are targeted for processing UTF-8 encoded files.
 When you have MARC8 encoded data tools like MarcEdit <https://marcedit.reeset.net/>
 or C<yaz-marcdump> <https://software.indexdata.com/yaz/doc/yaz-marcdump.html> can
 be used to create a UTF-8 encoded file:
@@ -261,7 +261,7 @@ output
 
 =head2 Add a new MARC field
 
-In the example bellow we add new 856 field to the record with a $u subfield containing
+In the example below we add new 856 field to the record with a $u subfield containing
 the Google homepage:
 
    marc_add(856,u,"http://www.google.com")
