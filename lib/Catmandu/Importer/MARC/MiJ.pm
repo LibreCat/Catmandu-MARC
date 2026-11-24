@@ -31,7 +31,7 @@ Catmandu::Importer::MARC::MiJ - Package that imports MARC-in-JSON records
 =head2 new(file => $file , fh => $fh , id => $field)
 
 Parse a file or a filehandle into a L<Catmandu::Iterable>. Optionally provide an
-id attribute specifying the source of the system identifer '_id' field (e.g. '001').
+id attribute specifying the source of the system identifier '_id' field (e.g. '001').
 
 =head1 INHERTED METHODS
 

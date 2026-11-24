@@ -33,7 +33,7 @@ Catmandu::Importer::MARC::Record - Package that imports an array of MARC::Record
 =head2 new(records => [ <Marc::Record> , ... ] , id => $field)
 
 Parse an array of L<MARC::Record> into a L<Catmandu::Iterable>. Optionally provide an
-id attribute specifying the source of the system identifer '_id' field (e.g. '001').
+id attribute specifying the source of the system identifier '_id' field (e.g. '001').
 
 =head1 INHERTED METHODS
 
